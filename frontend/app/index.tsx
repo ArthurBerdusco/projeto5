@@ -8,7 +8,7 @@ export default function Index() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://localhost:8080/motorista", {
+      const response = await fetch("http://192.168.15.21:8080/motorista", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -68,6 +68,10 @@ export default function Index() {
       <Button title="Salvar Motorista" onPress={handleSubmit} />
       <Link href={"/screen/motorista"}>
         <Text>About</Text>
+      </Link>
+
+      <Link href={"/screen/auth/loginScreen"}>
+        <Text>Tela de Login</Text>
       </Link>
     </View>
   );
