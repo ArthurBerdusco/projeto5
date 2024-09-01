@@ -1,3 +1,4 @@
+import { Link } from "expo-router";
 import React, { useState } from "react";
 import { Text, TextInput, View, Button, Alert } from "react-native";
 
@@ -6,7 +7,6 @@ export default function Index() {
   const [idade, setIdade] = useState("");
 
   const handleSubmit = async () => {
-    alert('ENTREI AQUI')
     try {
       const response = await fetch("http://localhost:8080/motorista", {
         method: "POST",
@@ -66,6 +66,9 @@ export default function Index() {
         onChangeText={setIdade}
       />
       <Button title="Salvar Motorista" onPress={handleSubmit} />
+      <Link href={"/screen/motorista"}>
+        <Text>About</Text>
+      </Link>
     </View>
   );
 }
