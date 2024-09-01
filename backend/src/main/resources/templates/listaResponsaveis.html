@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsaveis</title>
+</head>
+<body>
+    <h1>Responsaveis</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Idade</th>
+                <th>Editar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Itera sobre a lista de responsaveis -->
+            <tr th:each="responsavel : ${responsaveis}">
+                <td th:text="${responsavel.id}">ID</td>
+                <td th:text="${responsavel.nome}">Nome</td>
+                <td th:text="${responsavel.idade}">Idade</td>
+                <td th:text="${responsavel.status}">Status</td>
+                <td><a th:href="'/responsaveis/' + ${responsavel.id}">Editar</a></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

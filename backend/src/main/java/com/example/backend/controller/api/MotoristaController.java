@@ -1,10 +1,13 @@
-package com.example.demo;
+package com.example.backend.controller.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.backend.model.Motorista;
+import com.example.backend.repository.MotoristaRepository;
 
 @RestController
 @RequestMapping("/motorista")
@@ -15,7 +18,7 @@ public class MotoristaController {
 
     @PostMapping
     public void salvar(@RequestBody Motorista motorista){
-        System.out.println("\n\n\n FUNCIONOU \n\n\n");
+        motorista.setStatus("Pendente ativação");
         motoristaRepository.save(motorista);
     }
 
