@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/paginas/**", "/h2-console/**",
                                          "/swagger-ui.html", "/swagger-ui/**",
-                                         "/v3/api-docs/**").permitAll()
+                                         "/v3/api-docs/**", "/loginapi").permitAll()
                         .requestMatchers("/**").hasAuthority("OPERADOR")
                         .anyRequest().authenticated())
                 .formLogin(form -> form
@@ -63,5 +63,12 @@ public class SecurityConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public AuthenticationFilter authenticationFilter() throws Exception {
+        AuthenticationFilter filter = new AuthenticationFilter();
+        filter.setAuthenticationManager(authenticationManager());
+        return filter;
     }
 }
