@@ -9,7 +9,7 @@ export default function loginScreen() {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch("http://192.168.15.21:8080/login", {
+            const response = await fetch("http://192.168.15.161:8080/loginapi", {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
@@ -22,7 +22,15 @@ export default function loginScreen() {
             });
 
             if (response.ok) {
-                Alert.alert("Success", "Login feito com sucesso!");
+                const resultado = await response.json();
+                if (resultado.role == "MOTORISTA") {
+                    Alert.alert("NAVEGA PARA TELA MOTORISTA")
+                }
+
+                if (resultado.role == "RESPONSAVEL") {
+                    Alert.alert("NAVEGA PARA TELA RESPONSAVEL")
+                }
+
             } else {
                 Alert.alert("Error", "Não foi possível fazer login.");
             }
@@ -30,8 +38,6 @@ export default function loginScreen() {
             Alert.alert("Error", "Erro de conexão com o backend.");
         }
     };
-
-
 
     return (
         <SafeAreaView style={styles.container}>
