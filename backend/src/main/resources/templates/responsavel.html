@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsavel</title>
+</head>
+
+<body>
+    <form action="" th:object="${responsavel}" th:method="put">
+        <h2>Responsavel</h2>
+        <input type="text" th:field="*{id}">
+        <input type="text" th:field="*{nome}">
+        <input type="text" th:field="*{idade}">
+        <select th:field="*{status}">
+            <option value="Pendente ativação">Pendente ativação</option>
+            <option value="Ativo">Ativo</option>
+            <option value="Desativado">Desativado</option>
+        </select>
+        <button>Salvar</button>
+    </form>
+
+</body>
+
+</html>
