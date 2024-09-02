@@ -11,12 +11,9 @@ export default function loginScreen() {
 
 
     const handleSubmit = async () => {
-        try {
-<<<<<<< refs/remotes/origin/samuel
-            const response = await fetch("http://192.168.15.21:8080/login", {
-=======
-            const response = await fetch("http://192.168.15.21:8080/loginapi", {
->>>>>>> local
+        try {   
+            const response = await fetch("http://192.168.15.161:8080/loginapi", {
+
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
@@ -29,21 +26,19 @@ export default function loginScreen() {
             });
 
             if (response.ok) {
-<<<<<<< refs/remotes/origin/samuel
+
                 Alert.alert("Success", "Login feito com sucesso!");
-=======
+
                 const resultado = await response.json();
                 if (resultado.role == "MOTORISTA") {
-                    router.push('/screen/motorista');
-                }
+                    router.push('/screen/motorista');   
 
                 if (resultado.role == "RESPONSAVEL") {
-                    Alert.alert("NAVEGA PARA TELA RESPONSAVEL")
+                  
                     router.push('/screen/responsavel');
-
+                }
                 }
 
->>>>>>> local
             } else {
                 Alert.alert("Error", "Não foi possível fazer login.");
             }
@@ -51,8 +46,6 @@ export default function loginScreen() {
             Alert.alert("Error", "Erro de conexão com o backend.");
         }
     };
-
-
 
     return (
         <SafeAreaView style={styles.container}>
