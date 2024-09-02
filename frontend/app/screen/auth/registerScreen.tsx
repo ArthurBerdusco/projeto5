@@ -41,8 +41,7 @@ export default function CadastroScreen() {
         <SafeAreaView style={styles.total}>
             <KeyboardAvoidingView
                 style={styles.container}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            >
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <View style={styles.containerInputs}>
                     <TextInput
                         placeholder="Digite o seu email"
@@ -66,8 +65,7 @@ export default function CadastroScreen() {
                         setItems={setItems}
                         placeholder="Selecione o tipo de usuário"
                         style={styles.picker}
-                        dropDownContainerStyle={styles.dropdown}
-                    />
+                        dropDownContainerStyle={styles.dropdown} />
                 </View>
                 <View style={styles.containerButton}>
                     <Pressable style={styles.buttonSubmit} onPress={handleSubmit}>
