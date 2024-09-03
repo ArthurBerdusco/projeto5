@@ -6,16 +6,16 @@ import { useState } from "react";
 export default function CadastroScreen() {
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
-    const [role, setRole] = useState(null);
+    const [role, setRole] = useState("");
     const [open, setOpen] = useState(false);
     const [items, setItems] = useState([
-        { label: 'Motorista', value: 'motorista' },
-        { label: 'Responsavel', value: 'responsavel' }
+        { label: 'Motorista', value: 'MOTORISTA' },
+        { label: 'Responsavel', value: 'RESPONSAVEL' }
     ]);
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch("http://192.168.15.21:8080/cadastro", {
+            const response = await fetch("http://192.168.15.161:8080/cadastro", {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
@@ -26,6 +26,8 @@ export default function CadastroScreen() {
                     role: role,
                 }),
             });
+
+            Alert.alert(await response.text())
 
             if (response.ok) {
                 Alert.alert("Success", "Cadastro feito com sucesso!");
