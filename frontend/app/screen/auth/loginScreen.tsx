@@ -11,8 +11,8 @@ export default function loginScreen() {
 
 
     const handleSubmit = async () => {
-        try {   
-            const response = await fetch("http://192.168.15.161:8080/loginapi", {
+        try {
+            const response = await fetch("http://192.168.15.21:8080/loginapi", {
 
                 method: "POST",
                 headers: {
@@ -31,12 +31,10 @@ export default function loginScreen() {
 
                 const resultado = await response.json();
                 if (resultado.role == "MOTORISTA") {
-                    router.push('/screen/motorista');   
-
-                if (resultado.role == "RESPONSAVEL") {
-                  
-                    router.push('/screen/responsavel');
+                    router.push('/screen/motorista');
                 }
+                if (resultado.role == "RESPONSAVEL") {
+                    router.push('/screen/responsavel');
                 }
 
             } else {
@@ -91,6 +89,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-evenly',
         backgroundColor: "#ffffff",
+        flexDirection: "column"
     },
     logo: {
         display: "flex",
