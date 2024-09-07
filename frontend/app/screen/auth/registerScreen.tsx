@@ -4,8 +4,12 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { useState } from "react";
 
 export default function CadastroScreen() {
+    const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
+    const [idade, setIdade] = useState("");
+    const [cpf, setCpf] = useState("");
+    const [telefone, setTelefone] = useState("");
     const [role, setRole] = useState("");
     const [open, setOpen] = useState(false);
     const [items, setItems] = useState([
@@ -15,14 +19,18 @@ export default function CadastroScreen() {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch("http://192.168.15.161:8080/cadastro", {
+            const response = await fetch("http://192.168.15.21:8080/cadastro", {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
                 },
                 body: JSON.stringify({
+                    nome: nome,
                     email: email,
                     senha: senha,
+                    idade: idade,
+                    cpf: cpf,
+                    telefone: telefone,
                     role: role,
                 }),
             });
@@ -46,6 +54,12 @@ export default function CadastroScreen() {
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <View style={styles.containerInputs}>
                     <TextInput
+                        placeholder="Nome completo"
+                        style={styles.textInputs}
+                        value={nome}
+                        onChangeText={setNome}
+                    />
+                    <TextInput
                         placeholder="Digite o seu email"
                         style={styles.textInputs}
                         value={email}
@@ -57,6 +71,25 @@ export default function CadastroScreen() {
                         value={senha}
                         onChangeText={setSenha}
                         secureTextEntry
+                    />
+                    <TextInput
+                        placeholder="Idade"
+                        style={styles.textInputs}
+                        value={idade}
+                        onChangeText={setIdade}
+                        secureTextEntry
+                    />
+                    <TextInput
+                        placeholder="CPF"
+                        style={styles.textInputs}
+                        value={cpf}
+                        onChangeText={setCpf}
+                    />
+                    <TextInput
+                        placeholder="Telefone"
+                        style={styles.textInputs}
+                        value={telefone}
+                        onChangeText={setTelefone}
                     />
                     <DropDownPicker
                         open={open}
