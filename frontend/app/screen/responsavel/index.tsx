@@ -4,9 +4,9 @@ export default function Index() {
     return (
         <ScrollView style={{ backgroundColor: "white" }}>
             <View style={styles.container}>
-                <Text style={{ fontSize: 20, marginLeft: 20, marginTop: 20 }}>
+                {/* <Text style={{ fontSize: 20, marginLeft: 20, marginTop: 20 }}>
                     Meus dados
-                </Text>
+                </Text> */}
                 <View style={styles.cardDados}>
                     <Image source={require('../assets/icons/icone6.png')} style={{ resizeMode: "contain", height: 90, width: 90 }} />
                     <View>
@@ -15,8 +15,7 @@ export default function Index() {
                         <Text style={styles.textoDados}>Telefone: (11)95323232</Text>
                     </View>
                 </View>
-                <Text style={{ fontSize: 20, marginLeft: 20 }}>
-                    Crianças                </Text>
+                <Text style={{ fontSize: 20, marginLeft: 20 }}>Crianças</Text>
                 <View style={styles.containerCards}>
 
                     <View style={styles.cardsCriancas}>
@@ -50,7 +49,7 @@ const styles = StyleSheet.create({
     ,
 
     cardDados: {
-        backgroundColor: "#00b7ff",
+        backgroundColor: "#ffbf00",
         padding: 20,
         margin: 20,
         borderRadius: 20,

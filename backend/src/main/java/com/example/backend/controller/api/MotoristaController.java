@@ -12,12 +12,12 @@ import com.example.backend.repository.MotoristaRepository;
 @RestController
 @RequestMapping("/motorista")
 public class MotoristaController {
-    
+
     @Autowired
     MotoristaRepository motoristaRepository;
 
     @PostMapping
-    public void salvar(@RequestBody Motorista motorista){
+    public void salvar(@RequestBody Motorista motorista) {
         motorista.setStatus("Pendente ativação");
         motoristaRepository.save(motorista);
     }

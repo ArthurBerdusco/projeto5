@@ -48,38 +48,51 @@ export default function loginScreen() {
     return (
         <SafeAreaView style={styles.container}>
             <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+                style={{ flex: 1 }}
+            >
                 <View style={styles.containerInputs}>
                     <View style={styles.logo}>
                         <Image source={require('../assets/logo/logovan.png')} />
                     </View>
                     <View>
-                        <TextInput style={styles.input} placeholder="Digite seu email" placeholderTextColor={"gray"} value={email} onChangeText={setEmail}>
-                        </TextInput>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Digite seu email"
+                            placeholderTextColor={"gray"}
+                            value={email}
+                            onChangeText={setEmail}
+                        />
                     </View>
                     <View>
-                        <TextInput style={styles.input} placeholder="Senha" placeholderTextColor={"gray"} value={senha} onChangeText={setSenha}>
-                        </TextInput>
+                        <TextInput
+                            style={styles.input}
+                            placeholder="Senha"
+                            placeholderTextColor={"gray"}
+                            value={senha}
+                            onChangeText={setSenha}
+                            secureTextEntry
+                        />
                     </View>
                 </View>
 
                 <View style={styles.containerPressables}>
-                    <View>
-                        <Link style={styles.botaoCadastro} href={"/screen/auth/registerScreen"}>
-                            Cadastre-se
-                        </Link>
-                    </View>
 
-                    <View>
-                        <Pressable style={styles.botaoLogin} onPress={handleSubmit}>
-                            <Text style={{ color: "black", fontWeight: "700" }}>
-                                Login
-                            </Text>
-                        </Pressable>
-                    </View>
+                    <Pressable style={styles.botaoLogin} onPress={handleSubmit}>
+                        <Text style={{ color: "black", fontWeight: "700" }}>
+                            Entrar
+                        </Text>
+                    </Pressable>
+
+
+                    <Link style={styles.botaoCadastro} href={"/screen/auth/registerScreen"}>
+                        Cadastre-se
+                    </Link>
+
+
                 </View>
             </KeyboardAvoidingView>
-        </SafeAreaView >
+        </SafeAreaView>
     )
 }
 
@@ -87,9 +100,8 @@ export default function loginScreen() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'space-evenly',
+        justifyContent: 'space-between',
         backgroundColor: "#ffffff",
-        flexDirection: "column"
     },
     logo: {
         display: "flex",
@@ -123,7 +135,7 @@ const styles = StyleSheet.create({
 
     botaoCadastro: {
         padding: 15,
-        backgroundColor: "#ffbf00",
+        backgroundColor: "#0d99ff",
         width: 350,
         alignItems: "center",
         textAlign: "center",
@@ -134,7 +146,7 @@ const styles = StyleSheet.create({
 
 
     botaoLogin: {
-        backgroundColor: "#0d99ff",
+        backgroundColor: "#ffbf00",
         display: "flex",
         width: 350,
         height: 50,
@@ -148,8 +160,9 @@ const styles = StyleSheet.create({
     containerInputs: {
         display: "flex",
         gap: 20,
-        margin: 20,
-        alignItems: "center"
-
+        alignItems: "center",
+        alignContent: "center",
+        marginTop: 'auto', // Centraliza verticalmente
+        marginBottom: 'auto',
     }
 })

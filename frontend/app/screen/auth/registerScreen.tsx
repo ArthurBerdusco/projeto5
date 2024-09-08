@@ -77,7 +77,6 @@ export default function CadastroScreen() {
                         style={styles.textInputs}
                         value={idade}
                         onChangeText={setIdade}
-                        secureTextEntry
                     />
                     <TextInput
                         placeholder="CPF"

@@ -11,17 +11,21 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Motorista{
+public class Motorista {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
     private String nome;
+    private String email;
+    private String senha;
+    private String idade;
+    private String cpf;
+    private String telefone;
     private String status;
-    private int idade;
 
-            @OneToOne
+    @OneToOne
     private Usuario usuario;
 
 }

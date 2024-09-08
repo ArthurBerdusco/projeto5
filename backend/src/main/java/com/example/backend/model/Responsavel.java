@@ -11,16 +11,20 @@ import lombok.Data;
 
 @Entity
 @Data
-public class Responsavel{
+public class Responsavel {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
     private String nome;
+    private String email;
+    private String senha;
+    private String idade;
+    private String cpf;
+    private String telefone;
     private String status;
-    private int  idade;
 
-        @OneToOne
+    @OneToOne
     private Usuario usuario;
-    
+
 }
