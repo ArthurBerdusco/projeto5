@@ -13,7 +13,7 @@ import com.example.backend.model.Responsavel;
 import com.example.backend.repository.ResponsaveisRepository;
 
 @Controller
-@RequestMapping("responsaveis")
+@RequestMapping("/responsaveis")
 public class ResponsaveisBackofficeController {
 
     @Autowired
@@ -33,8 +33,8 @@ public class ResponsaveisBackofficeController {
 
     @PutMapping("{id}")
     public String atualizarReponsavel(@PathVariable Long id, @ModelAttribute Responsavel responsavel) {
-        
-        responsaveisRepository.save(responsavel);        
+
+        responsaveisRepository.save(responsavel);
 
         return "redirect:/responsaveis";
     }

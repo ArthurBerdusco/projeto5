@@ -12,16 +12,14 @@ import com.example.backend.repository.ResponsaveisRepository;
 @RestController
 @RequestMapping("/responsavel")
 public class ResponsavelController {
-    
+
     @Autowired
     ResponsaveisRepository responsaveisRepository;
 
     @PostMapping
-    public void salvar(@RequestBody Responsavel responsavel){
+    public void salvar(@RequestBody Responsavel responsavel) {
         responsavel.setStatus("Pendente ativação");
         responsaveisRepository.save(responsavel);
     }
-
-    
 
 }
