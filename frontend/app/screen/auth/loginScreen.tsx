@@ -31,10 +31,10 @@ export default function loginScreen() {
 
                 const resultado = await response.json();
                 if (resultado.role == "MOTORISTA") {
-                    router.push('/screen/motorista');
+                    router.push('/screen/motorista/cadastro');
                 }
                 if (resultado.role == "RESPONSAVEL") {
-                    router.push('/screen/responsavel');
+                    router.push('/screen/responsavel/cadastro');
                 }
 
             } else {

@@ -18,7 +18,7 @@ export default function Index() {
           idade: parseInt(idade),
         }),
       });
-      
+
       if (response.ok) {
         Alert.alert("Success", "Motorista salvo com sucesso!");
       } else {
@@ -72,6 +72,13 @@ export default function Index() {
 
       <Link href={"/screen/auth/loginScreen"}>
         <Text>Tela de Login</Text>
+      </Link>
+      <Link href={"/screen/motorista/cadastro"}>
+        <Text>CADASTRO MOTORISTA</Text>
+      </Link>
+
+      <Link href={"/screen/responsavel/cadastro"}>
+        <Text>CADASTRO responsavel</Text>
       </Link>
     </View>
   );
