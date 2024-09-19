@@ -1,34 +1,33 @@
 package com.example.backend.model;
 
-import com.example.backend.security.Usuario;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToMany;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Data
-@Getter
-@Setter
-public class Operador {
+public class Escola {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    Long id;
 
     private String nome;
-    private String email;
-    private String senha;
-    private String idade;
-    private String cpf;
+    private String rua;
+    private String numero;
     private String telefone;
+    private String status;
 
-    @OneToOne
-    private Usuario usuario;
+    @JsonIgnore
+    @ManyToMany(mappedBy = "escolas")
+    private List<Motorista> motoristas;
+
 
 }

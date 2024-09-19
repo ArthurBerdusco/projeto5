@@ -1,6 +1,8 @@
-import { ScrollView, View, StyleSheet, Text, Image } from "react-native";
+import { Link } from "expo-router";
+import { ScrollView, View, StyleSheet, Text, Image, Pressable } from "react-native";
 
 export default function Index() {
+
     return (
         <ScrollView style={{ backgroundColor: "white" }}>
             <View style={styles.container}>
@@ -15,99 +17,27 @@ export default function Index() {
                         <Text style={styles.textoDados}>Telefone: (11)95323232</Text>
                     </View>
                 </View>
-                <Text style={{ fontSize: 20, marginLeft: 20 }}>Escola de atuação</Text>
+                <Text style={{ fontSize: 20, marginLeft: 20 }}>Crianças</Text>
+                <View style={styles.containerCards}>
 
-
-                <View style={styles.cardEscola}>
-                    <View style={{ flexDirection: "row", gap: 20, alignSelf: "flex-end", marginRight: 20 }}>
-                        <Text style={styles.textoDados}>Horário: 08:00 </Text>
+                    <Link style={styles.cardsMotoristas} href={"/screen/motorista/listaEscolas"}>
+                        <Text style={styles.buttonText}>Ver escolas</Text>
+                    </Link>
+                    <View style={styles.cardsMotoristas}>
 
                     </View>
+                    <View style={styles.cardsMotoristas}>
 
-                    <View>
-                        <Text style={styles.textoEscola}>Colégio Paulicéia</Text>
-                        <Text style={styles.textoEndereco}>R. Zacarias de Góis, 1419 - São Paulo - SP</Text>
                     </View>
+                    <View style={styles.cardsMotoristas}>
 
-
-                    <View style={{ flexDirection: "row", alignSelf: "flex-end", marginRight: 20, gap: 15 }}>
-                        <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-                            <Image source={require('../assets/icons/ativado.png')} />
-                            <Text style={styles.textoDados}>12</Text>
-                        </View>
-
-
-                        <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-                            <Image source={require('../assets/icons/desativado.png')} />
-                            <Text style={styles.textoDados}>2</Text>
-                        </View>
                     </View>
                 </View>
 
 
-
-
-                <View style={styles.cardEscola}>
-                    <View style={{ flexDirection: "row", gap: 20, alignSelf: "flex-end", marginRight: 20 }}>
-                        <Text style={styles.textoDados}>Horário: 12:00 </Text>
-
-                    </View>
-
-                    <View>
-                        <Text style={styles.textoEscola}>Escola Bem Querer</Text>
-                        <Text style={styles.textoEndereco}>R. Dr. Jesuíno Maciel, 1833 - São Paulo - SP</Text>
-                    </View>
-
-
-                    <View style={{ flexDirection: "row", alignSelf: "flex-end", marginRight: 20, gap: 15 }}>
-                        <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-                            <Image source={require('../assets/icons/ativado.png')} />
-                            <Text style={styles.textoDados}>8</Text>
-                        </View>
-
-
-                        <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-                            <Image source={require('../assets/icons/desativado.png')} />
-                            <Text style={styles.textoDados}>5</Text>
-                        </View>
-                    </View>
+                <View style={styles.botaoProcura}>
+                    <Image source={require('../assets/icons/search.png')} style={{ height: 80, width: 80 }} />
                 </View>
-
-
-
-
-                <View style={styles.cardEscola}>
-                    <View style={{ flexDirection: "row", gap: 20, alignSelf: "flex-end", marginRight: 20 }}>
-                        <Text style={styles.textoDados}>Horário: 12:00 </Text>
-
-                    </View>
-
-                    <View style={{ flexDirection: "column", width: "90%" }}>
-                        <Text style={styles.textoEscola}>Colégio Guararapes</Text>
-                        <Text style={styles.textoEndereco}>R. Maria de Lourdes Salomão</Text>
-                    </View>
-
-
-                    <View style={{ flexDirection: "row", alignSelf: "flex-end", marginRight: 20, gap: 15 }}>
-                        <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-                            <Image source={require('../assets/icons/ativado.png')} />
-                            <Text style={styles.textoDados}>8</Text>
-                        </View>
-
-
-                        <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
-                            <Image source={require('../assets/icons/desativado.png')} />
-                            <Text style={styles.textoDados}>5</Text>
-                        </View>
-                    </View>
-                </View>
-
-
-
-
-
-
-
             </View>
         </ScrollView >
     )
@@ -121,9 +51,9 @@ const styles = StyleSheet.create({
     ,
 
     cardDados: {
-        backgroundColor: "#0d99ff",
+        backgroundColor: "#ffbf00",
         padding: 20,
-        margin: 10,
+        margin: 20,
         borderRadius: 20,
         height: 120,
         justifyContent: "center",
@@ -131,38 +61,33 @@ const styles = StyleSheet.create({
         alignItems: "center",
         gap: 20
     },
-
-    cardEscola: {
-        backgroundColor: "#ffbf00",
-        margin: 10,
-        borderRadius: 20,
-        height: 120,
+    containerCards: {
+        marginTop: 20,
+        flexDirection: "row",
         justifyContent: "center",
-        flexDirection: "column",
-        alignItems: "center",
+        flexWrap: "wrap",
         gap: 10
     },
+    cardsMotoristas: {
+        height: 150,
+        width: 150,
+        backgroundColor: "#a5a5a5",
+        borderRadius: 10
+    },
+
     textoDados: {
         fontSize: 15,
         fontWeight: "600"
     },
 
-    textoEscola: {
-        fontSize: 20,
-        fontWeight: "900"
-    },
-
-    textoEndereco: {
-        fontSize: 15,
-        fontWeight: "400",
-        flexWrap: "wrap"
-
-    },
-
     botaoProcura: {
         alignSelf: "center",
         marginTop: 20
-    }
+    },
+    buttonText: {
+        color: "black",
+        fontWeight: "700",
+    },
 
 
 })
