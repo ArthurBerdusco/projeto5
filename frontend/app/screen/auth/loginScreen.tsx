@@ -1,6 +1,8 @@
 import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import { Text, View, SafeAreaView, StyleSheet, Image, TextInput, Pressable, Alert, KeyboardAvoidingView, Platform } from "react-native";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 export default function loginScreen() {
 
@@ -12,7 +14,7 @@ export default function loginScreen() {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch("http://192.168.15.21:8080/loginapi", {
+            const response = await fetch("http://192.168.15.161:8080/loginapi", {
 
                 method: "POST",
                 headers: {
@@ -27,9 +29,18 @@ export default function loginScreen() {
 
             if (response.ok) {
 
+
+                
                 Alert.alert("Success", "Login feito com sucesso!");
 
                 const resultado = await response.json();
+                try { //GRAVANDO ID DO USUARIO PARA USAR DENTRO DO APP
+                    await AsyncStorage.setItem('idUsuario', resultado.id.toString());
+                } catch (e) {
+
+                }
+
+
                 if (resultado.role == "MOTORISTA") {
                     router.push('/screen/motorista/cadastro');
                 }

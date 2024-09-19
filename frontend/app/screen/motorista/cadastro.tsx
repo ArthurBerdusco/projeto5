@@ -3,7 +3,11 @@ import { View, StyleSheet, Text, Pressable, TextInput, SafeAreaView, Switch } fr
 import DropDownPicker from 'react-native-dropdown-picker';
 
 import { useState } from "react";
+import { useRouter } from 'expo-router';
+
 export default function CadastroResponsavel() {
+
+    const router = useRouter();  // Adicione isso para usar o roteamento
 
     const [placa, setPlaca] = useState('');
     const [quantidadeAcentos, setQuantidadeAcentos] = useState('');
@@ -23,6 +27,12 @@ export default function CadastroResponsavel() {
     const toggleSwitchTV = () => setIsEnabledTV(previousState => !previousState);
     const toggleSwitchCameras = () => setIsEnabledCameras(previousState => !previousState);
     const toggleSwitchAcessibilidade = () => setIsEnabledAcessibilidade(previousState => !previousState);
+
+
+    const navegarDash = async () => {
+        alert("navegando")
+        router.push('/screen/motorista');
+    }
 
     const handleSubmit = async () => {
         try {
@@ -163,7 +173,7 @@ export default function CadastroResponsavel() {
 
                 </View>
                 <View style={styles.containerButton}>
-                    <Pressable style={styles.buttonSubmit} onPress={handleSubmit}>
+                    <Pressable style={styles.buttonSubmit} onPress={navegarDash}>
                         <Text style={styles.buttonText}>Cadastrar</Text>
                     </Pressable>
                 </View>

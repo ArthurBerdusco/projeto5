@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Escolas</title>
+</head>
+<body>
+    <h1>Escolas</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Endereço</th>
+                <th>Status</th>
+                <th>Gerenciar</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Itera sobre a lista de escolas -->
+            <tr th:each="escola : ${escolas}">
+                <td th:text="${escola.id}">ID</td>
+                <td th:text="${escola.nome}">Nome</td>
+                <td th:text="${escola.rua} + ', ' + ${escola.numero}">Endereço</td>
+                <td th:text="${escola.status}">Status</td>
+                <td><a th:href="'/escolas/' + ${escola.id}">Editar</a></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

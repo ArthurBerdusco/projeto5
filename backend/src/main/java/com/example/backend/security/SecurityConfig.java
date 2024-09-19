@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/", "/paginas/**", "/h2-console/**",
                                          "/swagger-ui.html", "/swagger-ui/**",
-                                         "/v3/api-docs/**", "/loginapi", "/cadastro").permitAll()
+                                         "/v3/api-docs/**", "/loginapi", "/cadastro", "/**").permitAll()
                         .requestMatchers("/**").hasAuthority("OPERADOR")
                         .anyRequest().authenticated())
                 .formLogin(form -> form

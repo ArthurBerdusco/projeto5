@@ -19,7 +19,7 @@ export default function CadastroScreen() {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch("http://192.168.15.21:8080/cadastro", {
+            const response = await fetch("http://192.168.15.161:8080/cadastro", {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
