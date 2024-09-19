@@ -77,8 +77,13 @@ export default function Index() {
         <Text>CADASTRO MOTORISTA</Text>
       </Link>
 
-      <Link href={"/screen/responsavel/cadastro"}>
+      <Link href={"/screen/responsavel/"}>
         <Text>CADASTRO responsavel</Text>
+      </Link>
+
+
+      <Link href={"/screen/motorista/"}>
+        <Text>PERFIL Motorista</Text>
       </Link>
     </View>
   );

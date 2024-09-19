@@ -10,7 +10,6 @@ export default function CadastroResponsavel() {
     const [renavam, setRenavam] = useState('');
     const [anoVeiculo, setAnoVeiculo] = useState('');
     const [cnh, setCnh] = useState('');
-    const [antecedentes, setAntecedentes] = useState('');
 
     const [isEnabledAC, setIsEnabledAC] = useState(false);
     const [isEnabledCortina, setIsEnabledCortina] = useState(false);
@@ -26,19 +25,21 @@ export default function CadastroResponsavel() {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch("http://192.168.15.21:8080/cadastro", {
+            const response = await fetch("http://192.168.15.21:8080/motorista/cadastraVan", {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
                 },
                 body: JSON.stringify({
-                    nome: nome,
-                    email: email,
-                    senha: senha,
-                    idade: idade,
-                    cpf: cpf,
-                    telefone: telefone,
-                    role: role,
+                    placa: quantidadeAcentos,
+                    quantidadeAcentos: quantidadeAcentos,
+                    renavam: renavam,
+                    anoVeiculo: anoVeiculo,
+                    arCondicionado: isEnabledAC,
+                    cortina: isEnabledCortina,
+                    tv: isEnabledTV,
+                    camera: isEnabledCameras,
+                    acessibilidade: isEnabledAcessibilidade
                 }),
             });
 
@@ -86,14 +87,6 @@ export default function CadastroResponsavel() {
                         style={styles.textInputs}
                         value={cnh}
                         onChangeText={setCnh}
-                    />
-
-
-                    <TextInput
-                        placeholder="Número de registro de antecedentes criminais"
-                        style={styles.textInputs}
-                        value={antecedentes}
-                        onChangeText={setAntecedentes}
                     />
 
 
