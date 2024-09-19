@@ -31,4 +31,7 @@ public class Responsavel {
     @OneToOne
     private Usuario usuario;
 
+    @OneToOne
+    @JoinColumn(name = "id_endereco")
+    private Endereco endereco;
 }
