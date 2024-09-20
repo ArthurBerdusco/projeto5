@@ -35,8 +35,5 @@ public class Responsavel {
     @OneToOne
     @JoinColumn(name = "id_endereco")
     private Endereco endereco;
-<<<<<<< HEAD
-=======
 
->>>>>>> 9c67acc (corrigido bugs na tela de atendimento de escola e adicionado classes commit eliseu)
 }

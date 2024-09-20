@@ -13,6 +13,7 @@ export default function CadastroResponsavel() {
     const [renavam, setRenavam] = useState('');
     const [anoVeiculo, setAnoVeiculo] = useState('');
     const [cnh, setCnh] = useState('');
+    const [antecedentes, setAntecedentes] = useState('');
 
     const [isEnabledAC, setIsEnabledAC] = useState(false);
     const [isEnabledCortina, setIsEnabledCortina] = useState(false);
@@ -28,25 +29,19 @@ export default function CadastroResponsavel() {
 
     const handleSubmit = async () => {
         try {
-<<<<<<< HEAD
-            const response = await fetch("http://192.168.15.21:8080/motorista/cadastraVan", {
-=======
             const response = await fetch(`${config.IP_SERVER}/cadastro`, {
->>>>>>> 9c67acc (corrigido bugs na tela de atendimento de escola e adicionado classes commit eliseu)
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
                 },
                 body: JSON.stringify({
-                    placa: quantidadeAcentos,
-                    quantidadeAcentos: quantidadeAcentos,
-                    renavam: renavam,
-                    anoVeiculo: anoVeiculo,
-                    arCondicionado: isEnabledAC,
-                    cortina: isEnabledCortina,
-                    tv: isEnabledTV,
-                    camera: isEnabledCameras,
-                    acessibilidade: isEnabledAcessibilidade
+                    nome: nome,
+                    email: email,
+                    senha: senha,
+                    idade: idade,
+                    cpf: cpf,
+                    telefone: telefone,
+                    role: role,
                 }),
             });
 
@@ -94,6 +89,14 @@ export default function CadastroResponsavel() {
                         style={styles.textInputs}
                         value={cnh}
                         onChangeText={setCnh}
+                    />
+
+
+                    <TextInput
+                        placeholder="Número de registro de antecedentes criminais"
+                        style={styles.textInputs}
+                        value={antecedentes}
+                        onChangeText={setAntecedentes}
                     />
 
 

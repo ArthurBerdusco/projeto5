@@ -19,7 +19,6 @@ public class MotoristaController {
 
     @Autowired
     MotoristaRepository motoristaRepository;
-    VanRepository
 
     @Autowired
     VanRepository vanRepository;
@@ -31,30 +30,6 @@ public class MotoristaController {
     }
 
     @PostMapping("/cadastro-van")
-<<<<<<< HEAD
-public ResponseEntity<String> cadastrar(@RequestBody Motorista motorista) {
-    try {
-        Van van = new Van();
-        van.setPlaca(motorista.getPlaca());
-        van.setRenavam(motorista.getRenavam());
-        van.setAnoVeiculo(motorista.getAnoVeiculo());
-        van.setCnh(motorista.getCnh());
-        van.setQuantidadeAcentos(motorista.getQuantidadeAcentos());
-        van.setArCondicionado(motorista.isArCondicionado());
-        van.setCortina(motorista.isCortina());
-        van.setTv(motorista.isTv());
-        van.setCamera(motorista.isCamera());
-        van.setAcessibilidade(motorista.isAcessibilidade());
-        van.setMotorista(motorista);
-
-        vanRepository.save(van);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body("Cadastro realizado com sucesso!");
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar o usuário.");
-        }
-    }
-=======
     public ResponseEntity<String> cadastrar(@RequestBody Van van) {
         try {
             Van vanEntity = new Van();
@@ -76,5 +51,4 @@ public ResponseEntity<String> cadastrar(@RequestBody Motorista motorista) {
         }
     }
 
->>>>>>> 9c67acc (corrigido bugs na tela de atendimento de escola e adicionado classes commit eliseu)
 }

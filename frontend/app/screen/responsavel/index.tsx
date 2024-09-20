@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
     ,
 
     cardDados: {
-        backgroundColor: "#0d99ff",
+        backgroundColor: "#ffbf00",
         padding: 20,
         margin: 20,
         borderRadius: 20,

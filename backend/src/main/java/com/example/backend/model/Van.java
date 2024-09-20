@@ -1,18 +1,10 @@
 package com.example.backend.model;
 
-<<<<<<< HEAD
-import com.example.backend.security.Usuario;
-
-=======
->>>>>>> 9c67acc (corrigido bugs na tela de atendimento de escola e adicionado classes commit eliseu)
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-<<<<<<< HEAD
-=======
 import jakarta.persistence.JoinColumn;
->>>>>>> 9c67acc (corrigido bugs na tela de atendimento de escola e adicionado classes commit eliseu)
 import jakarta.persistence.OneToOne;
 import lombok.Data;
 
@@ -23,21 +15,11 @@ public class Van {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
-<<<<<<< HEAD
-
-    private string placa;
-    private string renavam;
-    private string anoVeiculo;
-    private string cnh;
-    private int quantidadeAcentos;
-
-=======
     private String placa;
     private String renavam;
     private String anoVeiculo;
     private String cnh;
     private int quantidadeAcentos;
->>>>>>> 9c67acc (corrigido bugs na tela de atendimento de escola e adicionado classes commit eliseu)
     private boolean arCondicionado;
     private boolean cortina;
     private boolean tv;
@@ -143,8 +125,4 @@ public class Van {
     public void setMotorista(Motorista motorista) {
         this.motorista = motorista;
     }
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> 9c67acc (corrigido bugs na tela de atendimento de escola e adicionado classes commit eliseu)
