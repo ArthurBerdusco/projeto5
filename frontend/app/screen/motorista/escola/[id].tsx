@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Button, ActivityIndicator, Alert } from 'react-native';
 import { useRouter, useLocalSearchParams } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import config from '@/app/config';
 
 export default function Escola() {
     const [escola, setEscola] = useState(null);
@@ -10,15 +11,24 @@ export default function Escola() {
     const router = useRouter();
     const { id } = useLocalSearchParams();
 
-
+    // Função para verificar se o motorista já atende a escola
+    const verificarAtendimento = async () => {
+        try {
+            const idUsuario = await AsyncStorage.getItem('idUsuario');
+            const response = await fetch(`${config.IP_SERVER}/api/escolas/motorista/atende/${idUsuario}/${id}`);
+            const data = await response.json();
+            setAtende(data); // Corrigido para data diretamente, que deve ser true ou false
+        } catch (error) {
+            console.error('Erro ao verificar atendimento:', error);
+        }
+    };
 
     // Função para buscar os dados da escola pelo ID
     const fetchEscola = async () => {
         try {
-            const response = await fetch(`http://192.168.15.161:8080/api/escolas/${id}`);
+            const response = await fetch(`${config.IP_SERVER}/api/escolas/${id}`);
             const data = await response.json();
             setEscola(data);
-            setAtende(data.atendido); // Ajusta o status inicial
         } catch (error) {
             console.error('Erro ao buscar os detalhes da escola:', error);
         } finally {
@@ -27,17 +37,21 @@ export default function Escola() {
     };
 
     useEffect(() => {
-        fetchEscola();
+        const carregarDados = async () => {
+            setLoading(true);
+            await fetchEscola(); // Buscar dados da escola
+            await verificarAtendimento(); // Verificar se já atende a escola
+            setLoading(false);
+        };
+        carregarDados();
     }, []);
 
     const confirmarAtendimento = async () => {
         try {
             const idUsuario = await AsyncStorage.getItem('idUsuario');
             const idEscola = id;
-    
-            Alert.alert(`Dados enviados: { ${idUsuario}, ${idEscola} }`);
-    
-            const response = await fetch(`http://192.168.15.161:8080/api/escolas/motorista`, {
+
+            const response = await fetch(`${config.IP_SERVER}/api/escolas/motorista`, {
                 method: atende ? 'DELETE' : 'POST', // POST para atender, DELETE para parar de atender
                 headers: {
                     'Content-Type': 'application/json',
@@ -47,12 +61,12 @@ export default function Escola() {
                     idEscola: idEscola,
                 }),
             });
-    
-            const result = await response.text(); // Captura a resposta como texto
-    
+
+            const result = await response.text(); 
+
             if (response.ok) {
-                setAtende(!atende); // Inverte o status de atendimento
-                Alert.alert('Sucesso', atende ? 'Você não atende mais essa escola.' : 'Você agora atende essa escola.');
+                setAtende(prev => !prev); // Inverte o status de atendimento
+                router.push('/screen/motorista/escola/escolasAtendidas');
             } else {
                 Alert.alert('Erro', result); // Exibe a mensagem de erro do backend
             }
@@ -61,8 +75,6 @@ export default function Escola() {
             Alert.alert('Erro de conexão.');
         }
     };
-    
-    
 
     if (loading) {
         return <ActivityIndicator size="large" color="#0000ff" />;
@@ -78,7 +90,7 @@ export default function Escola() {
                     <Button
                         title={atende ? "Parar de atender" : "Atender esta escola"}
                         onPress={confirmarAtendimento}
-                        color={atende ? "red" : "green"}
+                        color={atende ? "red" : "green"} // A cor muda dinamicamente com base no estado 'atende'
                     />
                 </>
             ) : (

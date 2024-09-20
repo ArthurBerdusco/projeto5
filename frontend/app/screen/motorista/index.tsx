@@ -20,7 +20,7 @@ export default function Index() {
                 <Text style={{ fontSize: 20, marginLeft: 20 }}>Crianças</Text>
                 <View style={styles.containerCards}>
 
-                    <Link style={styles.cardsMotoristas} href={"/screen/motorista/listaEscolas"}>
+                    <Link style={styles.cardsMotoristas} href={"/screen/motorista/escola/escolasAtendidas"}>
                         <Text style={styles.buttonText}>Ver escolas</Text>
                     </Link>
                     <View style={styles.cardsMotoristas}>

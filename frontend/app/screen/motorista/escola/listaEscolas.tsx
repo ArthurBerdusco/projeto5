@@ -2,67 +2,42 @@ import React, { useEffect, useState } from 'react';
 import { Text, View, FlatList, ActivityIndicator, StyleSheet, Alert } from 'react-native';
 import { Link } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import config from '@/app/config';
 
 export default function ListaEscolas() {
     const [escolas, setEscolas] = useState([]);
-    const [escolasAtendidas, setEscolasAtendidas] = useState(new Set()); 
     const [loading, setLoading] = useState(true);
 
     const fetchEscolas = async () => {
         try {
-            const escolasResponse = await fetch('http://192.168.15.161:8080/api/escolas');
+            const escolasResponse = await fetch(`${config.IP_SERVER}/api/escolas`);
             const escolasData = await escolasResponse.json();
             setEscolas(escolasData);
         } catch (error) {
             console.error('Erro ao buscar dados:', error);
             Alert.alert('Erro', 'Ocorreu um erro ao buscar os dados.');
-        }
-    };
-
-    const fetchAtendidas = async () => {
-        try {
-            const idUsuario = await AsyncStorage.getItem('idUsuario');
-            const atendidasResponse = await fetch('http://192.168.15.161:8080/api/escolas/atendidas', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ idUsuario }),
-            });
-            const atendidasData = await atendidasResponse.json();
-
-            // Cria um Set com os IDs das escolas atendidas
-            const atendidasSet = new Set(atendidasData.map(item => item.idEscola));
-            setEscolasAtendidas(atendidasSet);
-
-        } catch (error) {
-            Alert.alert('Erro', 'Erro ao buscar escolas atendidas.');
-            console.log(error);
+        } finally {
+            setLoading(false);
         }
     };
 
     useEffect(() => {
         fetchEscolas();
-        fetchAtendidas();
-        setLoading(false);
     }, []);
 
     const renderItem = ({ item }) => {
-        // Verifica se a escola está no Set de escolas atendidas
-        const isAtendida = escolasAtendidas.has(item.id);
 
         return (
-            <View style={styles.itemContainer}>
+            <View style={styles.escolaAtendida}>
                 <Link
                     href={{
                         pathname: `/screen/motorista/escola/[id]`,
                         params: { id: item.id },
                     }}
-                    style={styles.link}
+                    style={styles.buttonEscola}
                 >
-                    <Text style={styles.schoolName}>{item.nome}</Text>
+                    <Text style={styles.textButton}>{item.nome}</Text>
                 </Link>
-                <View style={[styles.statusIndicator, { backgroundColor: isAtendida ? 'blue' : 'gray' }]} />
             </View>
         );
     };
@@ -106,9 +81,25 @@ const styles = StyleSheet.create({
     schoolName: {
         fontSize: 18,
     },
-    statusIndicator: {
-        width: 24,
-        height: 24,
-        borderRadius: 12,
+    escolaAtendida: {
+        marginTop: 10,
+        borderColor: 'black'
+    },
+    buttonEscola: {
+        alignItems: 'center',
+        textAlign: 'center',
+        justifyContent: 'center',
+        paddingVertical: 12,
+        paddingHorizontal: 32,
+        borderRadius: 4,
+        elevation: 3,
+        backgroundColor: '#0d99ff',
+    },
+    textButton: {
+        fontSize: 16,
+        lineHeight: 21,
+        fontWeight: 'bold',
+        letterSpacing: 0.25,
+        color: 'white',
     },
 });

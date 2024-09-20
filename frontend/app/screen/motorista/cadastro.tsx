@@ -3,11 +3,10 @@ import { View, StyleSheet, Text, Pressable, TextInput, SafeAreaView, Switch } fr
 import DropDownPicker from 'react-native-dropdown-picker';
 
 import { useState } from "react";
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
+import config from '@/app/config';
 
 export default function CadastroResponsavel() {
-
-    const router = useRouter();  // Adicione isso para usar o roteamento
 
     const [placa, setPlaca] = useState('');
     const [quantidadeAcentos, setQuantidadeAcentos] = useState('');
@@ -27,15 +26,13 @@ export default function CadastroResponsavel() {
     const toggleSwitchCameras = () => setIsEnabledCameras(previousState => !previousState);
     const toggleSwitchAcessibilidade = () => setIsEnabledAcessibilidade(previousState => !previousState);
 
-
-    const navegarDash = async () => {
-        alert("navegando")
-        router.push('/screen/motorista');
-    }
-
     const handleSubmit = async () => {
         try {
+<<<<<<< HEAD
             const response = await fetch("http://192.168.15.21:8080/motorista/cadastraVan", {
+=======
+            const response = await fetch(`${config.IP_SERVER}/cadastro`, {
+>>>>>>> 9c67acc (corrigido bugs na tela de atendimento de escola e adicionado classes commit eliseu)
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
@@ -107,10 +104,6 @@ export default function CadastroResponsavel() {
                         onChangeText={setAnoVeiculo}
                     />
 
-
-
-
-
                     <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
                         <View style={{ flexDirection: "row", alignItems: 'center' }}>
                             <Switch
@@ -166,9 +159,9 @@ export default function CadastroResponsavel() {
 
                 </View>
                 <View style={styles.containerButton}>
-                    <Pressable style={styles.buttonSubmit} onPress={navegarDash}>
+                    <Link style={styles.buttonSubmit} href={"/screen/motorista"}>
                         <Text style={styles.buttonText}>Cadastrar</Text>
-                    </Pressable>
+                    </Link>
                 </View>
             </KeyboardAvoidingView>
         </SafeAreaView>

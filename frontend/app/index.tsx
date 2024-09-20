@@ -1,6 +1,7 @@
 import { Link } from "expo-router";
 import React, { useState } from "react";
 import { Text, TextInput, View, Button, Alert } from "react-native";
+import config from "./config";
 
 export default function Index() {
   const [nome, setNome] = useState("");
@@ -8,7 +9,7 @@ export default function Index() {
 
   const handleSubmit = async () => {
     try {
-      const response = await fetch("http://192.168.15.21:8080/motorista", {
+      const response = await fetch(`${config.IP_SERVER}/motorista`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
