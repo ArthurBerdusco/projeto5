@@ -2,19 +2,21 @@ import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import { Text, View, SafeAreaView, StyleSheet, Image, TextInput, Pressable, Alert, KeyboardAvoidingView, Platform } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import config from "@/app/config";
+
 
 
 export default function loginScreen() {
 
-    const [email, setEmail] = useState("");
-    const [senha, setSenha] = useState("");
+    const [email, setEmail] = useState("mika@email.com.br");
+    const [senha, setSenha] = useState("1234");
 
     const router = useRouter();  // Adicione isso para usar o roteamento
 
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch("http://192.168.15.161:8080/loginapi", {
+            const response = await fetch(`${config.IP_SERVER}/loginapi`, {
 
                 method: "POST",
                 headers: {
@@ -28,8 +30,6 @@ export default function loginScreen() {
             });
 
             if (response.ok) {
-
-
                 
                 Alert.alert("Success", "Login feito com sucesso!");
 

@@ -2,6 +2,8 @@ import { Alert, KeyboardAvoidingView, Platform } from 'react-native';
 import { View, StyleSheet, Text, Pressable, TextInput, SafeAreaView } from "react-native";
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useState } from "react";
+import config from '@/app/config';
+
 
 export default function CadastroScreen() {
     const [nome, setNome] = useState("");
@@ -19,7 +21,7 @@ export default function CadastroScreen() {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch("http://192.168.15.161:8080/cadastro", {
+            const response = await fetch(`${config.IP_SERVER}/cadastro`, {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",

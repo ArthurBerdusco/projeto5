@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
 import lombok.Data;
 import lombok.Getter;
@@ -34,4 +35,8 @@ public class Responsavel {
     @OneToOne
     @JoinColumn(name = "id_endereco")
     private Endereco endereco;
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9c67acc (corrigido bugs na tela de atendimento de escola e adicionado classes commit eliseu)
 }
