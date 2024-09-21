@@ -38,10 +38,9 @@ public class Motorista {
     private Usuario usuario;
 
     @ManyToMany
-    @JoinTable(
-        name = "motorista_escolas", // Nome da tabela de junção
-        joinColumns = @JoinColumn(name = "motorista_id"), // Coluna para o motorista
-        inverseJoinColumns = @JoinColumn(name = "escola_id") // Coluna para a escola
+    @JoinTable(name = "motorista_escolas", // Nome da tabela de junção
+            joinColumns = @JoinColumn(name = "motorista_id"), // Coluna para o motorista
+            inverseJoinColumns = @JoinColumn(name = "escola_id") // Coluna para a escola
     )
     private List<Escola> escolas;
 

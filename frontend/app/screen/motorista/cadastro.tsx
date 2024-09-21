@@ -5,6 +5,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { useState } from "react";
 import { Link, useRouter } from 'expo-router';
 import config from '@/app/config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function CadastroResponsavel() {
 
@@ -29,23 +30,45 @@ export default function CadastroResponsavel() {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch(`${config.IP_SERVER}/cadastro`, {
+            const idUsuario = await AsyncStorage.getItem('idUsuario');
+
+            if (!idUsuario) {
+                Alert.alert("Error", "ID do motorista não encontrado.");
+                return;
+            }
+
+            console.log("Iniciando envio de dados...");
+
+            const data = {
+                placa: placa,
+                quantidadeAcentos: quantidadeAcentos,
+                renavam: renavam,
+                anoVeiculo: anoVeiculo,
+                arCondicionado: isEnabledAC,
+                cortina: isEnabledCortina,
+                cnh: cnh,
+                tv: isEnabledTV,
+                camera: isEnabledCameras,
+                acessibilidade: isEnabledAcessibilidade,
+                motorista: {
+                    id: idUsuario,
+                }
+            };
+
+            console.log("Dados a serem enviados:", data);
+
+            const response = await fetch(`${config.IP_SERVER}/motorista/cadastro-van/${idUsuario}`, {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
                 },
-                body: JSON.stringify({
-                    nome: nome,
-                    email: email,
-                    senha: senha,
-                    idade: idade,
-                    cpf: cpf,
-                    telefone: telefone,
-                    role: role,
-                }),
+                body: JSON.stringify(data),
             });
 
-            Alert.alert(await response.text())
+            console.log("Resposta do servidor:", response);
+
+            const responseBody = await response.text();
+            console.log("Corpo da resposta:", responseBody);
 
             if (response.ok) {
                 Alert.alert("Success", "Cadastro feito com sucesso!");
@@ -53,9 +76,12 @@ export default function CadastroResponsavel() {
                 Alert.alert("Error", "Não foi possível realizar o cadastro.");
             }
         } catch (error) {
+            console.error("Erro de conexão com o backend:", error);
             Alert.alert("Error", "Erro de conexão com o backend.");
         }
     };
+
+
 
     return (
         <SafeAreaView style={styles.total}>
@@ -162,9 +188,9 @@ export default function CadastroResponsavel() {
 
                 </View>
                 <View style={styles.containerButton}>
-                    <Link style={styles.buttonSubmit} href={"/screen/motorista"}>
+                    <Pressable style={styles.buttonSubmit} onPress={handleSubmit}>
                         <Text style={styles.buttonText}>Cadastrar</Text>
-                    </Link>
+                    </Pressable>
                 </View>
             </KeyboardAvoidingView>
         </SafeAreaView>

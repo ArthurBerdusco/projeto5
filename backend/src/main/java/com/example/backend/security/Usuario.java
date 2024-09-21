@@ -21,6 +21,7 @@ public class Usuario {
     private String idade;
     private String cpf;
     private String telefone;
+    private boolean status;
 
     @Enumerated(EnumType.STRING)
     private Role role;
