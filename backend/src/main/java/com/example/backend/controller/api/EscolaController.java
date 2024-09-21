@@ -48,25 +48,23 @@ public class EscolaController {
         // Buscar o motorista pelo ID do usuário
         Motorista motorista = motoristaRepository.findByUsuarioId(motoristaDTO.getIdUsuario())
                 .orElseThrow(() -> new RuntimeException("Motorista não encontrado"));
-    
-        // Buscar as associações MotoristaEscola (que contém os IDs das escolas atendidas)
+
+        // Buscar as associações MotoristaEscola (que contém os IDs das escolas
+        // atendidas)
         List<MotoristaEscola> motoristaIdEscolas = motoristaEscolaRepository.findByMotoristaId(motorista.getId());
 
         List<Long> idsEscolasAtendidas = new ArrayList<>();
 
-        for(MotoristaEscola motoristaIdEsc : motoristaIdEscolas){
+        for (MotoristaEscola motoristaIdEsc : motoristaIdEscolas) {
             idsEscolasAtendidas.add(motoristaIdEsc.getEscola().getId());
         }
 
-    
         // Buscar as escolas que correspondem aos IDs
         List<Escola> escolasAtendidas = escolaRepository.findByIdIn(idsEscolasAtendidas);
-    
+
         // Converter as entidades Escola para DTOs (se necessário)
         return escolasAtendidas;
     }
-    
-
 
     @GetMapping("escolas/{id}")
     public Escola getEscola(@PathVariable Long id) {
@@ -78,40 +76,46 @@ public class EscolaController {
         try {
 
             MotoristaEscola motoristaEscola = new MotoristaEscola();
-            motoristaEscola.setEscola(escolaRepository.findById(request.getIdEscola()).orElseThrow(() -> new RuntimeException("Escola não encontrada")));
-            motoristaEscola.setMotorista(motoristaRepository.findByUsuarioId(request.getIdUsuario()).orElseThrow(() -> new RuntimeException("Motorista não encontrado")));
+            motoristaEscola.setEscola(escolaRepository.findById(request.getIdEscola())
+                    .orElseThrow(() -> new RuntimeException("Escola não encontrada")));
+            motoristaEscola.setMotorista(motoristaRepository.findByUsuarioId(request.getIdUsuario())
+                    .orElseThrow(() -> new RuntimeException("Motorista não encontrado")));
 
             motoristaEscolaRepository.save(motoristaEscola);
             return ResponseEntity.ok("Atendimento registrado com sucesso.");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao registrar atendimento: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao registrar atendimento: " + e.getMessage());
         }
     }
 
     @Transactional
     @DeleteMapping("escolas/motorista")
     public void pararDeAtender(@RequestBody MotoristaEscolaDTO request) {
-        
-        Motorista motorista = motoristaRepository.findByUsuarioId(request.getIdUsuario()).orElseThrow(() -> new RuntimeException("Motorista não encontrado"));
-        System.out.println("\n\n\nMOTORISTA ID: " + motorista.getId()+ ", ESCOLA ID: " + request.getIdEscola() + "\n\n\n");
-        
+
+        Motorista motorista = motoristaRepository.findByUsuarioId(request.getIdUsuario())
+                .orElseThrow(() -> new RuntimeException("Motorista não encontrado"));
+        System.out.println(
+                "\n\n\nMOTORISTA ID: " + motorista.getId() + ", ESCOLA ID: " + request.getIdEscola() + "\n\n\n");
+
         motoristaEscolaRepository.deleteByMotoristaIdAndEscolaId(motorista.getId(), request.getIdEscola());
 
     }
 
     @GetMapping("escolas/motorista/atende/{idUsuario}/{idEscola}")
-public ResponseEntity<Boolean> verificaAtendimento(@PathVariable Long idUsuario, @PathVariable Long idEscola) {
-    
-    try {
-        Motorista motorista = motoristaRepository.findByUsuarioId(idUsuario)
-                .orElseThrow(() -> new RuntimeException("Motorista não encontrado"));
-        List<MotoristaEscola> motoristaEscola = motoristaEscolaRepository.findByMotoristaIdAndEscolaId(motorista.getId(), idEscola);
+    public ResponseEntity<Boolean> verificaAtendimento(@PathVariable Long idUsuario, @PathVariable Long idEscola) {
 
-        boolean atende = !motoristaEscola.isEmpty();
-        return ResponseEntity.ok(atende);
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        try {
+            Motorista motorista = motoristaRepository.findByUsuarioId(idUsuario)
+                    .orElseThrow(() -> new RuntimeException("Motorista não encontrado"));
+            List<MotoristaEscola> motoristaEscola = motoristaEscolaRepository
+                    .findByMotoristaIdAndEscolaId(motorista.getId(), idEscola);
+
+            boolean atende = !motoristaEscola.isEmpty();
+            return ResponseEntity.ok(atende);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+        }
     }
-}
 
 }

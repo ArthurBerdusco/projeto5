@@ -30,7 +30,7 @@ export default function loginScreen() {
             });
 
             if (response.ok) {
-                
+
                 Alert.alert("Success", "Login feito com sucesso!");
 
                 const resultado = await response.json();
@@ -41,11 +41,21 @@ export default function loginScreen() {
                 }
 
 
-                if (resultado.role == "MOTORISTA") {
-                    router.push('/screen/motorista/cadastro');
+                if (resultado.role === "MOTORISTA") {
+                    if (resultado.temVanCadastrada) {
+                        router.push('/screen/motorista/index');
+                    } else {
+                        router.push('/screen/motorista/');
+                    }
                 }
-                if (resultado.role == "RESPONSAVEL") {
-                    router.push('/screen/responsavel/cadastro');
+
+                if (resultado.role === "RESPONSAVEL") {
+                    router.push('/screen/responsavel/index');
+                    if (resultado.temEnderecoCadastrado) {
+                        router.push('/screen/responsavel/index');
+                    } else {
+                        router.push('/screen/responsavel/');
+                    }
                 }
 
             } else {

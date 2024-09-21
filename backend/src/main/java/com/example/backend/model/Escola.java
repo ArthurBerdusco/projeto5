@@ -29,5 +29,4 @@ public class Escola {
     @ManyToMany(mappedBy = "escolas")
     private List<Motorista> motoristas;
 
-
 }

@@ -27,7 +27,7 @@ public class LoginController {
 
     @PostMapping
     public ResponseEntity<?> login(@RequestBody Login login) {
-      
+
         // Verifica se o usuário existe
         Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(login.getEmail());
 

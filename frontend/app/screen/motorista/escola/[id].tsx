@@ -62,7 +62,7 @@ export default function Escola() {
                 }),
             });
 
-            const result = await response.text(); 
+            const result = await response.text();
 
             if (response.ok) {
                 setAtende(prev => !prev); // Inverte o status de atendimento
