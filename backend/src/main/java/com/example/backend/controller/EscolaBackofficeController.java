@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.backend.model.Escola;
 import com.example.backend.model.Motorista;
 import com.example.backend.repository.EscolaRepository;
-import com.example.backend.repository.MotoristaRepository;
 
 @Controller
 @RequestMapping("/escolas")
