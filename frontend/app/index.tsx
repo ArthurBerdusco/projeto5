@@ -74,6 +74,7 @@ export default function Index() {
       <Link href={"/screen/auth/loginScreen"}>
         <Text>Tela de Login</Text>
       </Link>
+
       <Link href={"/screen/motorista/cadastro"}>
         <Text>CADASTRO MOTORISTA</Text>
       </Link>
@@ -81,6 +82,7 @@ export default function Index() {
       <Link href={"/screen/responsavel/cadastro"}>
         <Text>CADASTRO responsavel</Text>
       </Link>
+
     </View>
   );
 }

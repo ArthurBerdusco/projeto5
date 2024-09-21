@@ -28,5 +28,4 @@ public class Escola {
     @JsonIgnore
     @ManyToMany(mappedBy = "escolas")
     private List<Motorista> motoristas;
-
 }
