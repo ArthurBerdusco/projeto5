@@ -13,6 +13,8 @@ import com.example.backend.model.Motorista;
 import com.example.backend.model.Van;
 import com.example.backend.repository.MotoristaRepository;
 import com.example.backend.repository.VanRepository;
+import com.example.backend.security.Usuario;
+import com.example.backend.security.UsuarioRepository;
 
 @RestController
 @RequestMapping("/motorista")
@@ -20,6 +22,9 @@ public class MotoristaController {
 
     @Autowired
     MotoristaRepository motoristaRepository;
+
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
     @Autowired
     VanRepository vanRepository;
@@ -47,10 +52,13 @@ public class MotoristaController {
             vanEntity.setTv(van.isTv());
             vanEntity.setCamera(van.isCamera());
             vanEntity.setAcessibilidade(van.isAcessibilidade());
-
             vanEntity.setMotorista(motorista);
 
             vanRepository.save(vanEntity);
+
+            Usuario usuario = motorista.getUsuario();
+            usuario.setStatus("ATIVADO");
+            usuarioRepository.save(usuario);
 
             return ResponseEntity.status(HttpStatus.CREATED).body("Cadastro realizado com sucesso!");
         } catch (Exception e) {

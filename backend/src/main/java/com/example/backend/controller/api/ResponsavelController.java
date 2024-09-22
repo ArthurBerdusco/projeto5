@@ -15,6 +15,8 @@ import com.example.backend.model.Endereco;
 import com.example.backend.model.Responsavel;
 import com.example.backend.repository.EnderecoRepository;
 import com.example.backend.repository.ResponsaveisRepository;
+import com.example.backend.security.Usuario;
+import com.example.backend.security.UsuarioRepository;
 
 @RestController
 @RequestMapping("/responsavel")
@@ -25,6 +27,9 @@ public class ResponsavelController {
 
     @Autowired
     EnderecoRepository enderecoRepository;
+
+    @Autowired
+    UsuarioRepository usuarioRepository;
 
     @PostMapping
     public void salvar(@RequestBody Responsavel responsavel) {
@@ -51,6 +56,10 @@ public class ResponsavelController {
                 novoEndereco.setComplemento(endereco.getComplemento());
                 // Associa o endereço ao responsável
                 endereco.setResponsavel(responsavel);
+
+                Usuario usuario = responsavel.getUsuario();
+                usuario.setStatus("ATIVADO");
+                usuarioRepository.save(usuario);
 
                 // Salva o endereço no banco de dados
                 enderecoRepository.save(endereco);

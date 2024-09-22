@@ -35,6 +35,7 @@ public class CadastroController {
 
         try {
             usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
+            usuario.setStatus("DESATIVADO");
             usuarioRepository.save(usuario);
 
             // Verifica a role do usuário e cria a entidade correspondente
