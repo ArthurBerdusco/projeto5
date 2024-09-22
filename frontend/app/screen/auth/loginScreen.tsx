@@ -50,9 +50,8 @@ export default function loginScreen() {
                 }
 
                 if (resultado.role === "RESPONSAVEL") {
-                    router.push('/screen/responsavel/index');
                     if (resultado.status === "DESATIVADO") {
-                        router.push('/screen/responsavel/index');
+                        router.push('/screen/responsavel/cadastro');
                     } else {
                         router.push('/screen/responsavel/');
                     }

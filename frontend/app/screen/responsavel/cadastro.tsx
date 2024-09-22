@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, Pressable, TextInput, SafeAreaView } from "reac
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useState } from "react";
 import config from '@/app/config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function CadastroScreen() {
     const [rua, setRua] = useState("");
@@ -15,33 +16,54 @@ export default function CadastroScreen() {
 
     const handleSubmit = async () => {
         try {
-            const response = await fetch(`${config.IP_SERVER}/cadastro`, {
+            const idUsuario = await AsyncStorage.getItem('idUsuario');
+
+            if (!idUsuario) {
+                Alert.alert("Error", "ID do responsável não encontrado.");
+                return;
+            }
+
+            console.log("Iniciando envio de dados para cadastro de endereço...");
+
+            const data = {
+                rua: rua,
+                numero: numero,
+                bairro: bairro,
+                cidade: cidade,
+                cep: cep,
+                estado: estado,
+                complemento: complemento,
+                responsavel: {
+                    idUsuario: idUsuario,
+                }
+            };
+
+            console.log("Dados a serem enviados:", data);
+
+            const response = await fetch(`${config.IP_SERVER}/responsavel/cadastro-endereco/${idUsuario}`, {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
                 },
-                body: JSON.stringify({
-                    rua: rua,
-                    numero: numero,
-                    bairro: bairro,
-                    cidade: cidade,
-                    cep: cep,
-                    estado: estado,
-                    complemento: complemento,
-                }),
+                body: JSON.stringify(data),
             });
 
-            Alert.alert(await response.text())
+            console.log("Resposta do servidor:", response);
+
+            const responseBody = await response.text();
+            console.log("Corpo da resposta:", responseBody);
 
             if (response.ok) {
-                Alert.alert("Success", "Cadastro feito com sucesso!");
+                Alert.alert("Success", "Cadastro de endereço feito com sucesso!");
             } else {
-                Alert.alert("Error", "Não foi possível realizar o cadastro.");
+                Alert.alert("Error", "Não foi possível realizar o cadastro do endereço.");
             }
         } catch (error) {
+            console.error("Erro de conexão com o backend:", error);
             Alert.alert("Error", "Erro de conexão com o backend.");
         }
     };
+
 
     return (
         <SafeAreaView style={styles.total}>
