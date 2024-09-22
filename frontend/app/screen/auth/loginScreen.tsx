@@ -42,8 +42,8 @@ export default function loginScreen() {
 
 
                 if (resultado.role === "MOTORISTA") {
-                    if (resultado.temVanCadastrada) {
-                        router.push('/screen/motorista/index');
+                    if (resultado.status === "DESATIVADO") {
+                        router.push('/screen/motorista/cadastro');
                     } else {
                         router.push('/screen/motorista/');
                     }
@@ -51,7 +51,7 @@ export default function loginScreen() {
 
                 if (resultado.role === "RESPONSAVEL") {
                     router.push('/screen/responsavel/index');
-                    if (resultado.temEnderecoCadastrado) {
+                    if (resultado.status === "DESATIVADO") {
                         router.push('/screen/responsavel/index');
                     } else {
                         router.push('/screen/responsavel/');
