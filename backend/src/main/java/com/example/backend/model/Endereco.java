@@ -22,9 +22,9 @@ public class Endereco {
     private String cep;
     private String estado;
     private String complemento;
-    
+
     @OneToOne
-    @JoinColumn(name = "id_reponsavel")
+    @JoinColumn(name = "id_responsavel")
     private Responsavel responsavel;
 
     public Long getId() {
