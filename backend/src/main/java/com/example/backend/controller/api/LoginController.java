@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.dto.Login;
+import com.example.backend.repository.MotoristaRepository;
+import com.example.backend.repository.ResponsavelRepository;
 import com.example.backend.security.Usuario;
 import com.example.backend.security.UsuarioRepository;
 
@@ -21,6 +23,12 @@ public class LoginController {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private MotoristaRepository motoristaRepository;
+
+    @Autowired
+    private ResponsavelRepository responsavelRepository;
 
     @Autowired
     private PasswordEncoder encoder;
@@ -38,12 +46,23 @@ public class LoginController {
         Usuario usuario = usuarioOptional.get();
 
         // Verifica se a senha está correta
-        boolean senhaCorreta = encoder.matches(login.getSenha(), usuario.getSenha());
-
-        if (senhaCorreta) {
-            return ResponseEntity.ok(usuario); // Retorna o usuário em caso de sucesso
-        } else {
+        if (!encoder.matches(login.getSenha(), usuario.getSenha())) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Senha incorreta");
         }
+
+        // Retorna os dados conforme o papel do usuário
+        switch (usuario.getRole()) {
+            case RESPONSAVEL:
+                return responsavelRepository.findByUsuarioId(usuario.getId())
+                        .<ResponseEntity<?>>map(responsavel -> ResponseEntity.ok().body(responsavel))
+                        .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Responsável não encontrado"));
+            case MOTORISTA:
+                return motoristaRepository.findByUsuarioId(usuario.getId())
+                        .<ResponseEntity<?>>map(motorista -> ResponseEntity.ok().body(motorista))
+                        .orElse(ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Motorista não encontrado"));
+            default:
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Papel do usuário inválido");
+        }
     }
+
 }

@@ -14,8 +14,8 @@ export default function Escola() {
     // Função para verificar se o motorista já atende a escola
     const verificarAtendimento = async () => {
         try {
-            const idUsuario = await AsyncStorage.getItem('idUsuario');
-            const response = await fetch(`${config.IP_SERVER}/api/escolas/motorista/atende/${idUsuario}/${id}`);
+            const idMotorista = await AsyncStorage.getItem('idMotorista');
+            const response = await fetch(`${config.IP_SERVER}/api/escolas/motorista/atende/${idMotorista}/${id}`);
             const data = await response.json();
             setAtende(data); // Corrigido para data diretamente, que deve ser true ou false
         } catch (error) {
@@ -48,7 +48,7 @@ export default function Escola() {
 
     const confirmarAtendimento = async () => {
         try {
-            const idUsuario = await AsyncStorage.getItem('idUsuario');
+            const idMotorista = await AsyncStorage.getItem('idMotorista');
             const idEscola = id;
 
             const response = await fetch(`${config.IP_SERVER}/api/escolas/motorista`, {
@@ -57,7 +57,7 @@ export default function Escola() {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    idUsuario: idUsuario,
+                    idMotorista: idMotorista,
                     idEscola: idEscola,
                 }),
             });

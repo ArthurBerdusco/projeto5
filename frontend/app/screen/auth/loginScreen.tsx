@@ -8,7 +8,7 @@ import config from "@/app/config";
 
 export default function loginScreen() {
 
-    const [email, setEmail] = useState("mika@email.com.br");
+    const [email, setEmail] = useState("ryu@email.com.br");
     const [senha, setSenha] = useState("1234");
 
     const router = useRouter();  // Adicione isso para usar o roteamento
@@ -34,14 +34,9 @@ export default function loginScreen() {
                 Alert.alert("Success", "Login feito com sucesso!");
 
                 const resultado = await response.json();
-                try { //GRAVANDO ID DO USUARIO PARA USAR DENTRO DO APP
-                    await AsyncStorage.setItem('idUsuario', resultado.id.toString());
-                } catch (e) {
 
-                }
-
-
-                if (resultado.role === "MOTORISTA") {
+                if (resultado.usuario.role === "MOTORISTA") {
+                    await AsyncStorage.setItem('idMotorista', resultado.id.toString());
                     if (resultado.status === "DESATIVADO") {
                         router.push('/screen/motorista/cadastro');
                     } else {
@@ -49,7 +44,9 @@ export default function loginScreen() {
                     }
                 }
 
-                if (resultado.role === "RESPONSAVEL") {
+                if (resultado.usuario.role === "RESPONSAVEL") {
+                    alert("CAI AQUI")
+                    await AsyncStorage.setItem('idResponsavel', resultado.id.toString());
                     if (resultado.status === "DESATIVADO") {
                         router.push('/screen/responsavel/cadastro');
                     } else {

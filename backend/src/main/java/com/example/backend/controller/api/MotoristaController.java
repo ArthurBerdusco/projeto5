@@ -3,6 +3,7 @@ package com.example.backend.controller.api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,9 +37,9 @@ public class MotoristaController {
     }
 
     @PostMapping("/cadastro-van/{idUsuario}")
-    public ResponseEntity<?> cadastrar(@PathVariable Long idUsuario, @RequestBody Van van) {
+    public ResponseEntity<?> cadastrar(@PathVariable Long idMotorista, @RequestBody Van van) {
         try {
-            Motorista motorista = motoristaRepository.findByUsuarioId(idUsuario)
+            Motorista motorista = motoristaRepository.findById(idMotorista)
                     .orElseThrow(() -> new Exception("Motorista não encontrado"));
 
             Van vanEntity = new Van();
@@ -66,6 +67,11 @@ public class MotoristaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro ao cadastrar a van: " + e.getMessage());
         }
+    }
+
+    @GetMapping("/{id}")
+    public Motorista getMotorista(@PathVariable Long id) {
+        return motoristaRepository.findById(id).get();
     }
 
 }

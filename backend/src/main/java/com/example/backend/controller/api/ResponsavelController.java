@@ -1,7 +1,5 @@
 package com.example.backend.controller.api;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -9,13 +7,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.model.Endereco;
 import com.example.backend.model.Responsavel;
 import com.example.backend.repository.EnderecoRepository;
-import com.example.backend.repository.ResponsaveisRepository;
+import com.example.backend.repository.ResponsavelRepository;
 import com.example.backend.security.Usuario;
 import com.example.backend.security.UsuarioRepository;
 
@@ -24,7 +21,7 @@ import com.example.backend.security.UsuarioRepository;
 public class ResponsavelController {
 
     @Autowired
-    ResponsaveisRepository responsavelRepository;
+    ResponsavelRepository responsavelRepository;
 
     @Autowired
     EnderecoRepository enderecoRepository;

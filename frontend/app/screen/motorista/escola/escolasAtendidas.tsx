@@ -10,13 +10,13 @@ export default function EscolasAtendidas() {
 
     const fetchAtendidas = async () => {
         try {
-            const idUsuario = await AsyncStorage.getItem('idUsuario');
+            const idMotorista = await AsyncStorage.getItem('idMotorista');
             const atendidasResponse = await fetch(`${config.IP_SERVER}/api/escolas/atendidas`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ idUsuario }),
+                body: JSON.stringify({ idMotorista }),
             });
             const atendidasData = await atendidasResponse.json();
 

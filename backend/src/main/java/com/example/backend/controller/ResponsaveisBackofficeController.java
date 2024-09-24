@@ -10,14 +10,14 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.backend.model.Responsavel;
-import com.example.backend.repository.ResponsaveisRepository;
+import com.example.backend.repository.ResponsavelRepository;
 
 @Controller
 @RequestMapping("/responsaveis")
 public class ResponsaveisBackofficeController {
 
     @Autowired
-    private ResponsaveisRepository responsaveisRepository;
+    private ResponsavelRepository responsaveisRepository;
 
     @GetMapping
     public String responsaveisPage(Model model) {

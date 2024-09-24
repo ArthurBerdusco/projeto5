@@ -1,17 +1,24 @@
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { ScrollView, View, StyleSheet, Text, Image, TextInput, Pressable, Alert } from "react-native";
 import { useState } from "react";
 import config from '@/app/config';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function Index( route: any) {
-    const { escolaId, responsavelId } = route.params; // Recebe os IDs da escola e do responsável
+export default function Cadastro() {
 
+
+    const router = useRouter();
+    
     const [nome, setNome] = useState('');
     const [idade, setIdade] = useState('');
 
     const handleSubmit = async () => {
+
         try {
-            const response = await fetch(`${config.IP_SERVER}/cadastro-crianca/${escolaId}/${responsavelId}`, {
+            const idResponsavel = await AsyncStorage.getItem('idResponsavel');
+
+            alert("ID KKKKK: " + idResponsavel)
+            const response = await fetch(`${config.IP_SERVER}/crianca`, {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",
@@ -19,15 +26,13 @@ export default function Index( route: any) {
                 body: JSON.stringify({
                     nome,
                     idade,
+                    idResponsavel,
                 }),
             });
 
-            Alert.alert(await response.text());
-
             if (response.ok) {
                 Alert.alert("Success", "Criança cadastrada com sucesso!");
-                setNome(''); // Limpa os campos após o cadastro
-                setIdade('');
+                router.push('/screen/responsavel');
             } else {
                 Alert.alert("Error", "Não foi possível realizar o cadastro.");
             }
@@ -40,7 +45,7 @@ export default function Index( route: any) {
         <ScrollView style={{ backgroundColor: "white" }}>
             <View style={styles.container}>
                 <View style={styles.cardDados}>
-                    <Image source={require('../assets/icons/icone6.png')} style={{ resizeMode: "contain", height: 90, width: 90 }} />
+                    <Image source={require('../../assets/icons/icone6.png')} style={{ resizeMode: "contain", height: 90, width: 90 }} />
                     <View>
                         <Text style={styles.textoDados}>Nome: Samuel Braga</Text>
                         <Text style={styles.textoDados}>Idade: 21 Anos</Text>
@@ -71,14 +76,12 @@ export default function Index( route: any) {
 
                 <Text style={{ fontSize: 20, marginLeft: 20 }}>Crianças</Text>
                 <View style={styles.containerCards}>
-                    <Link style={styles.cardsMotoristas} href={"/screen/motorista/escola/escolasAtendidas"}>
-                        <Text style={styles.buttonText}>Ver escolas</Text>
-                    </Link>
+
                     {/* Outros cards de crianças podem ser adicionados aqui */}
                 </View>
 
                 <View style={styles.botaoProcura}>
-                    <Image source={require('../assets/icons/search.png')} style={{ height: 80, width: 80 }} />
+                    <Image source={require('../../assets/icons/search.png')} style={{ height: 80, width: 80 }} />
                 </View>
             </View>
         </ScrollView>
