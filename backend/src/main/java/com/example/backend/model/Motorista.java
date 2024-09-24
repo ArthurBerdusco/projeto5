@@ -12,24 +12,18 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToOne;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 
 @Entity
-@Data
-@Getter
-@Setter
 public class Motorista {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
+    
     private String nome;
     private String email;
-    private String senha;
-    private String idade;
+    private Integer idade;
     private String cpf;
     private String telefone;
     private String status;
@@ -43,5 +37,85 @@ public class Motorista {
             inverseJoinColumns = @JoinColumn(name = "escola_id") // Coluna para a escola
     )
     private List<Escola> escolas;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Integer getIdade() {
+        return idade;
+    }
+
+    public void setIdade(Integer idade) {
+        this.idade = idade;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public void setTelefone(String telefone) {
+        this.telefone = telefone;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
+
+    public List<Escola> getEscolas() {
+        return escolas;
+    }
+
+    public void setEscolas(List<Escola> escolas) {
+        this.escolas = escolas;
+    }
+
+    @Override
+    public String toString() {
+        return "Motorista [id=" + id + ", nome=" + nome + ", email=" + email + ", idade=" + idade + ", cpf=" + cpf
+                + ", telefone=" + telefone + ", status=" + status + "]";
+    }
+
+    
 
 }

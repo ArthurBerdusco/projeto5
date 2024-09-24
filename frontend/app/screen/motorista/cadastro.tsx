@@ -30,9 +30,9 @@ export default function CadastroResponsavel() {
 
     const handleSubmit = async () => {
         try {
-            const idUsuario = await AsyncStorage.getItem('idUsuario');
+            const idMotorista = await AsyncStorage.getItem('idMotorista');
 
-            if (!idUsuario) {
+            if (!idMotorista) {
                 Alert.alert("Error", "ID do motorista não encontrado.");
                 return;
             }
@@ -51,13 +51,13 @@ export default function CadastroResponsavel() {
                 camera: isEnabledCameras,
                 acessibilidade: isEnabledAcessibilidade,
                 motorista: {
-                    id: idUsuario,
+                    id: idMotorista,
                 }
             };
 
             console.log("Dados a serem enviados:", data);
 
-            const response = await fetch(`${config.IP_SERVER}/motorista/cadastro-van/${idUsuario}`, {
+            const response = await fetch(`${config.IP_SERVER}/motorista/cadastro-van/${idMotorista}`, {
                 method: "POST",
                 headers: {
                     "Content-type": "application/json",

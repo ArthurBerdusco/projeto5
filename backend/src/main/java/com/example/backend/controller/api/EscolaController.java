@@ -46,7 +46,7 @@ public class EscolaController {
     @PostMapping("escolas/atendidas")
     public List<Escola> getEscolasAtendidas(@RequestBody MotoristaEscolaDTO motoristaDTO) {
         // Buscar o motorista pelo ID do usuário
-        Motorista motorista = motoristaRepository.findByUsuarioId(motoristaDTO.getIdUsuario())
+        Motorista motorista = motoristaRepository.findById(motoristaDTO.getIdMotorista())
                 .orElseThrow(() -> new RuntimeException("Motorista não encontrado"));
 
         // Buscar as associações MotoristaEscola (que contém os IDs das escolas
@@ -78,7 +78,7 @@ public class EscolaController {
             MotoristaEscola motoristaEscola = new MotoristaEscola();
             motoristaEscola.setEscola(escolaRepository.findById(request.getIdEscola())
                     .orElseThrow(() -> new RuntimeException("Escola não encontrada")));
-            motoristaEscola.setMotorista(motoristaRepository.findByUsuarioId(request.getIdUsuario())
+            motoristaEscola.setMotorista(motoristaRepository.findById(request.getIdMotorista())
                     .orElseThrow(() -> new RuntimeException("Motorista não encontrado")));
 
             motoristaEscolaRepository.save(motoristaEscola);
@@ -93,7 +93,7 @@ public class EscolaController {
     @DeleteMapping("escolas/motorista")
     public void pararDeAtender(@RequestBody MotoristaEscolaDTO request) {
 
-        Motorista motorista = motoristaRepository.findByUsuarioId(request.getIdUsuario())
+        Motorista motorista = motoristaRepository.findById(request.getIdMotorista())
                 .orElseThrow(() -> new RuntimeException("Motorista não encontrado"));
         System.out.println(
                 "\n\n\nMOTORISTA ID: " + motorista.getId() + ", ESCOLA ID: " + request.getIdEscola() + "\n\n\n");
@@ -102,11 +102,11 @@ public class EscolaController {
 
     }
 
-    @GetMapping("escolas/motorista/atende/{idUsuario}/{idEscola}")
-    public ResponseEntity<Boolean> verificaAtendimento(@PathVariable Long idUsuario, @PathVariable Long idEscola) {
+    @GetMapping("escolas/motorista/atende/{idMotorista}/{idEscola}")
+    public ResponseEntity<Boolean> verificaAtendimento(@PathVariable Long idMotorista, @PathVariable Long idEscola) {
 
         try {
-            Motorista motorista = motoristaRepository.findByUsuarioId(idUsuario)
+            Motorista motorista = motoristaRepository.findById(idMotorista)
                     .orElseThrow(() -> new RuntimeException("Motorista não encontrado"));
             List<MotoristaEscola> motoristaEscola = motoristaEscolaRepository
                     .findByMotoristaIdAndEscolaId(motorista.getId(), idEscola);
@@ -117,5 +117,27 @@ public class EscolaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
+
+    @GetMapping("/motoristas/escola/{id}")
+    public List<Motorista> getMotoristasEscola(@PathVariable Long id) {
+
+        
+        // Buscar todas as associações MotoristaEscola para a escola com o ID fornecido
+        List<MotoristaEscola> motoristasEscola = motoristaEscolaRepository.findByEscolaId(id);
+    
+        // Criar uma lista para armazenar os motoristas
+        List<Motorista> motoristas = new ArrayList<>();
+    
+        // Iterar sobre as associações e adicionar os motoristas na lista
+        for (MotoristaEscola motoristaEscola : motoristasEscola) {
+            motoristas.add(motoristaEscola.getMotorista());
+        }
+    
+
+        System.out.println("\n\n\n CHEGUEI AQUI: " + motoristas +  "\n\n\n");
+        // Retornar a lista de motoristas
+        return motoristas;
+    }
+    
 
 }

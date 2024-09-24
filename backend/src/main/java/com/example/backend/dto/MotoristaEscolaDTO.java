@@ -4,12 +4,12 @@ import lombok.Data;
 
 @Data
 public class MotoristaEscolaDTO {
-    private Long idUsuario;
+    private Long idMotorista;
     private Long idEscola;
     public MotoristaEscolaDTO() {
     }
-    public MotoristaEscolaDTO(Long idUsuario, Long idEscola) {
-        this.idUsuario = idUsuario;
+    public MotoristaEscolaDTO(Long idMotorista, Long idEscola) {
+        this.idMotorista = idMotorista;
         this.idEscola = idEscola;
     }
 

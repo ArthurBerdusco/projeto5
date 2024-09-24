@@ -14,9 +14,9 @@ import com.example.backend.model.Responsavel;
 import com.example.backend.repository.EscolaRepository;
 import com.example.backend.repository.MotoristaRepository;
 import com.example.backend.repository.OperadorRepository;
-import com.example.backend.repository.ResponsaveisRepository;
+import com.example.backend.repository.ResponsavelRepository;
+import com.example.backend.security.Role;
 import com.example.backend.security.Usuario;
-import com.example.backend.security.Usuario.Role;
 import com.example.backend.security.UsuarioRepository;
 
 @SpringBootApplication
@@ -32,7 +32,7 @@ public class ServerApplication {
     private MotoristaRepository motoristaRepository;
 
     @Autowired
-    private ResponsaveisRepository responsaveisRepository;
+    private ResponsavelRepository responsaveisRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -61,6 +61,12 @@ public class ServerApplication {
             operadorRepository.save(o);
 
             Motorista m = new Motorista();
+            m.setEmail("myka@email.com.br");
+            m.setNome("Mika Souza");
+            m.setTelefone("(11) 92830-9903");
+            m.setIdade(34);
+            m.setCpf("35829012247");
+            m.setStatus("ATIVO");
             u = new Usuario();
             u.setEmail("mika@email.com.br");
             u.setSenha(passwordEncoder.encode("1234"));
@@ -70,6 +76,12 @@ public class ServerApplication {
             motoristaRepository.save(m);
 
             Responsavel r = new Responsavel();
+            r.setEmail("ryu@email.com.br");
+            r.setNome("Ryu Silva");
+            r.setTelefone("(11) 97893-0443");
+            r.setIdade(39);
+            r.setCpf("93102981213");
+            r.setStatus("ATIVO");
             u = new Usuario();
             u.setEmail("ryu@email.com.br");
             u.setSenha(passwordEncoder.encode("1234"));
@@ -155,5 +167,6 @@ public class ServerApplication {
             escolaRepository.save(e); // Salva a escola no banco de dados
         }
     }
+
 
 }

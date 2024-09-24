@@ -1,29 +1,30 @@
 package com.example.backend.controller.api;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.backend.dto.CriancaDTO;
 import com.example.backend.model.Crianca;
-import com.example.backend.model.Endereco;
 import com.example.backend.model.Escola;
 import com.example.backend.model.Responsavel;
 import com.example.backend.repository.CriancaRepository;
 import com.example.backend.repository.EscolaRepository;
-import com.example.backend.repository.ResponsaveisRepository;
+import com.example.backend.repository.ResponsavelRepository;
 
 @RestController
 public class CriancaController {
 
     @Autowired
-    ResponsaveisRepository responsavelRepository;
+    ResponsavelRepository responsavelRepository;
 
     @Autowired
     EscolaRepository escolaRepository;
@@ -35,6 +36,52 @@ public class CriancaController {
     public void salvar(@RequestBody Crianca crianca) {
         crianca.setStatus("Pendente ativação");
         criancaRepository.save(crianca);
+    }
+
+    // Exemplo de endpoint no Spring Boot
+    @GetMapping("/crianca/responsavel/{id}")
+    public ResponseEntity<List<Crianca>> getCriancasByResponsavel(@PathVariable Long id) {
+        List<Crianca> criancas = criancaRepository.findByResponsavelId(id);
+
+        if (criancas == null || criancas.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(java.util.Collections.emptyList());
+        }
+
+        return ResponseEntity.ok(criancas);
+    }
+
+    @GetMapping("/criancas/{id}")
+    public ResponseEntity<Crianca> getCrianca(@PathVariable Long id) {
+        System.out.println("\n\n\nCRIANÇA kkkk: " + id + "\n\n\n");
+    
+        // Usando Optional para verificar se a criança existe
+        Optional<Crianca> criancaOptional = criancaRepository.findById(id);
+    
+        if (!criancaOptional.isPresent()) {
+            // Retorna 404 se a criança não for encontrada
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    
+        // Se a criança existir, retorna o objeto encontrado
+        Crianca crianca = criancaOptional.get();
+        return ResponseEntity.ok(crianca);
+    }
+    
+
+    @PostMapping("/crianca")
+    public ResponseEntity<String> cadastroCrianca(@RequestBody CriancaDTO dto) {
+        try {
+            System.out.println("\n\n\n CRIANÇA: " + dto + "\n\n\n");
+            Crianca crianca = new Crianca();
+            crianca.setNome(dto.getNome());
+            crianca.setIdade(dto.getIdade());
+            crianca.setResponsavel(responsavelRepository.findById(dto.getIdResponsavel()).orElseThrow());
+
+            criancaRepository.save(crianca);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Crianca cadastrada com sucesso!");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar a criança.");
+        }
     }
 
     @PostMapping("/cadastro-crianca/{escolaId}/{responsavelId}")
@@ -53,7 +100,7 @@ public class CriancaController {
                 novaCrianca.setNome(crianca.getNome());
                 novaCrianca.setIdade(crianca.getIdade());
                 novaCrianca.setStatus("Ativo");
-                
+
                 // Associa o endereço ao responsável
                 crianca.setResponsavel(responsavel);
                 crianca.setEscola(escola);

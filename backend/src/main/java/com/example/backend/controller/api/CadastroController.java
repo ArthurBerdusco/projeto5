@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.backend.dto.UsuarioDTO;
 import com.example.backend.model.Motorista;
 import com.example.backend.model.Responsavel;
 import com.example.backend.repository.MotoristaRepository;
-import com.example.backend.repository.ResponsaveisRepository;
+import com.example.backend.repository.ResponsavelRepository;
+import com.example.backend.security.Role;
 import com.example.backend.security.Usuario;
 import com.example.backend.security.UsuarioRepository;
 
@@ -28,37 +30,38 @@ public class CadastroController {
     private MotoristaRepository motoristaRepository;
 
     @Autowired
-    private ResponsaveisRepository responsaveisRepository;
+    private ResponsavelRepository responsaveisRepository;
 
     @PostMapping("/cadastro")
-    public ResponseEntity<String> cadastrar(@RequestBody Usuario usuario) {
+    public ResponseEntity<String> cadastrar(@RequestBody UsuarioDTO dto) {
 
         try {
-            usuario.setSenha(passwordEncoder.encode(usuario.getSenha()));
-            usuario.setStatus("DESATIVADO");
+            Usuario usuario = new Usuario();
+            usuario.setEmail(dto.getEmail());
+            usuario.setSenha(passwordEncoder.encode(dto.getSenha()));
+            usuario.setStatus("ATIVO");
+            usuario.setRole(dto.getRole());
             usuarioRepository.save(usuario);
 
             // Verifica a role do usuário e cria a entidade correspondente
-            if (usuario.getRole() == Usuario.Role.MOTORISTA) {
+            if (dto.getRole() == Role.MOTORISTA) {
                 Motorista motorista = new Motorista();
-                motorista.setNome(usuario.getNome());
-                motorista.setEmail(usuario.getEmail());
-                motorista.setCpf(usuario.getCpf());
-                motorista.setTelefone(usuario.getTelefone());
-                motorista.setSenha(usuario.getSenha());
-                motorista.setIdade(usuario.getIdade());
+                motorista.setNome(dto.getNome());
+                motorista.setEmail(dto.getEmail());
+                motorista.setCpf(dto.getCpf());
+                motorista.setTelefone(dto.getTelefone());
+                motorista.setIdade(dto.getIdade());
                 motorista.setStatus("Pendente ativação");
                 motorista.setUsuario(usuario);
 
                 motoristaRepository.save(motorista);
-            } else if (usuario.getRole() == Usuario.Role.RESPONSAVEL) {
+            } else if (usuario.getRole() == Role.RESPONSAVEL) {
                 Responsavel responsavel = new Responsavel();
-                responsavel.setNome(usuario.getNome());
-                responsavel.setEmail(usuario.getEmail());
-                responsavel.setCpf(usuario.getCpf());
-                responsavel.setTelefone(usuario.getTelefone());
-                responsavel.setSenha(usuario.getSenha());
-                responsavel.setIdade(usuario.getIdade());
+                responsavel.setNome(dto.getNome());
+                responsavel.setEmail(dto.getEmail());
+                responsavel.setCpf(dto.getCpf());
+                responsavel.setTelefone(dto.getTelefone());
+                responsavel.setIdade(dto.getIdade());
                 responsavel.setStatus("Pendente ativação");
                 responsavel.setUsuario(usuario);
                 responsaveisRepository.save(responsavel);
