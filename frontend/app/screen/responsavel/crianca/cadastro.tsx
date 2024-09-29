@@ -8,7 +8,7 @@ export default function Cadastro() {
 
 
     const router = useRouter();
-    
+
     const [nome, setNome] = useState('');
     const [idade, setIdade] = useState('');
 
@@ -44,15 +44,6 @@ export default function Cadastro() {
     return (
         <ScrollView style={{ backgroundColor: "white" }}>
             <View style={styles.container}>
-                <View style={styles.cardDados}>
-                    <Image source={require('../../assets/icons/icone6.png')} style={{ resizeMode: "contain", height: 90, width: 90 }} />
-                    <View>
-                        <Text style={styles.textoDados}>Nome: Samuel Braga</Text>
-                        <Text style={styles.textoDados}>Idade: 21 Anos</Text>
-                        <Text style={styles.textoDados}>Telefone: (11)95323232</Text>
-                    </View>
-                </View>
-                
                 <Text style={{ fontSize: 20, marginLeft: 20 }}>Cadastrar Criança</Text>
                 <View style={styles.containerInputs}>
                     <TextInput
@@ -69,7 +60,7 @@ export default function Cadastro() {
                         keyboardType="numeric"
                     />
                 </View>
-                
+
                 <Pressable style={styles.buttonSubmit} onPress={handleSubmit}>
                     <Text style={styles.buttonText}>Cadastrar</Text>
                 </Pressable>

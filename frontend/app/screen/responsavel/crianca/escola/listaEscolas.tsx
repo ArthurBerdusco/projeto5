@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, FlatList, ActivityIndicator, StyleSheet, Alert } from 'react-native';
-import { Link } from "expo-router";
+import { Link, useLocalSearchParams } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '@/app/config';
 
 export default function ListaEscolas() {
     const [escolas, setEscolas] = useState([]);
     const [loading, setLoading] = useState(true);
+    const { crianca } = useLocalSearchParams();
+    const parsedCrianca = JSON.parse(crianca);
+    console.log("ID da Criança na Lista de Escolas:", parsedCrianca.id); // Agora você pode acessar o ID
+
+
 
     const fetchEscolas = async () => {
         try {
@@ -21,8 +26,30 @@ export default function ListaEscolas() {
         }
     };
 
+    const fetchCrianca = async () => {
+        try {
+            console.log(`Buscando dados da criança lista escolas: ${id}`);
+            const response = await fetch(`${config.IP_SERVER}/criancas/${id}`);
+            const data = await response.json();
+            setCrianca(data);
+
+        } catch (error) {
+            console.error('Erro ao buscar os detalhes da criança:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         fetchEscolas();
+    }, []);
+
+    useEffect(() => {
+        const carregarDados = async () => {
+            setLoading(true);
+            setLoading(false);
+        };
+        carregarDados();
     }, []);
 
     const renderItem = ({ item }) => {
@@ -32,7 +59,10 @@ export default function ListaEscolas() {
                 <Link
                     href={{
                         pathname: `/screen/responsavel/crianca/escola/[id]`,
-                        params: { id: item.id },
+                        params: {
+                            id: item.id,
+                            crianca, // Agora passando o objeto crianca correto
+                        },
                     }}
                     style={styles.buttonEscola}
                 >
@@ -45,6 +75,7 @@ export default function ListaEscolas() {
     return (
         <View style={styles.container}>
             <Text style={styles.title}>Selecione a escola</Text>
+
             {loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />
             ) : (

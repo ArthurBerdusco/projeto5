@@ -1,41 +1,85 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Button, ActivityIndicator, Alert, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, ActivityIndicator, Alert, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { useRouter, useLocalSearchParams } from "expo-router";
 import config from '@/app/config';
 
 export default function Motorista() {
-    const [motorista, setMotorista] = useState(null); // Iniciar com 'null'
+    const [motorista, setMotorista] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [mensagem, setMensagem] = useState("");
+    const { id, escolaId, crianca: criancaString, responsavelId } = useLocalSearchParams();
+    const crianca = JSON.parse(criancaString); // Fazendo o parse corretamente
+    console.log("Dados da Criança na envia oferta:", JSON.stringify(crianca)); // Log do objeto completo
+    console.log("ID da Criança na envia oferta:", crianca?.id); // Acessando o ID diretamente
 
-    const router = useRouter();
-    const { id } = useLocalSearchParams();
+
+    console.log("ID do Responsável:", responsavelId); // Agora você pode ver o ID do responsável
+
 
     // Função para buscar as informações do motorista
-    const fetchMotorista = async () => {
+    const buscarMotorista = async () => {
         try {
             const response = await fetch(`${config.IP_SERVER}/motorista/${id}`);
             const data = await response.json();
-            setMotorista(data); // Armazenar os dados corretamente
+            setMotorista(data);
+            setLoading(false);
         } catch (error) {
-            Alert.alert('Erro', 'Não foi possível carregar as informações do motorista.');
+            console.error('Erro ao buscar motorista:', error);
+            setLoading(false);
         }
     };
 
     useEffect(() => {
-        (async () => {
-            setLoading(true);
-            await fetchMotorista();
-            setLoading(false);
-        })();
+        buscarMotorista(); // Chama a função para buscar dados do motorista
     }, [id]);
 
+    // Função para enviar a oferta
+    const enviarOferta = async () => {
+        try {
+            const response = await fetch(`${config.IP_SERVER}/oferta/enviar`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    motoristaId: id,
+                    escolaId: escolaId,
+                    criancaId: crianca?.id, // Adicionando ID da criança no corpo da requisição
+                    mensagem,
+                    responsavelId: responsavelId
+
+                }),
+            });
+
+            const data = await response.json();
+            if (response.ok) {
+                Alert.alert('Oferta enviada com sucesso');
+            } else {
+                Alert.alert('Erro ao enviar a oferta');
+                console.log(response);
+            }
+        } catch (error) {
+            console.error('Erro ao enviar a oferta:', error);
+            console.log("la")
+
+        }
+    };
+
     if (loading) {
-        return <ActivityIndicator size="large" />;
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#4CAF50" />
+                <Text>Carregando...</Text>
+            </View>
+        );
     }
 
-    // Verificar se o motorista foi carregado antes de renderizar as informações
     if (!motorista) {
-        return <Text>Motorista não encontrado.</Text>;
+        return (
+            <View style={styles.loadingContainer}>
+                <Text>Motorista não encontrado</Text>
+            </View>
+        );
     }
 
     return (
@@ -48,9 +92,17 @@ export default function Motorista() {
             <Text style={styles.info}>Telefone: {motorista.telefone}</Text>
             <Text style={styles.status}>Status: {motorista.status}</Text>
 
+            {/* Campo para a mensagem */}
+            <TextInput
+                style={styles.input}
+                placeholder="Digite sua mensagem..."
+                value={mensagem}
+                onChangeText={setMensagem}
+            />
+
             {/* Botão para solicitar valor */}
-            <TouchableOpacity style={styles.button} onPress={() => Alert.alert('Solicitação enviada!', 'Você solicitou o valor que o motorista cobrará.')}>
-                <Text style={styles.buttonText}>Solicitar valor</Text>
+            <TouchableOpacity style={styles.button} onPress={enviarOferta}>
+                <Text style={styles.buttonText}>Enviar Oferta</Text>
             </TouchableOpacity>
         </View>
     );
@@ -77,7 +129,7 @@ const styles = StyleSheet.create({
     status: {
         fontSize: 18,
         marginVertical: 5,
-        color: 'green', // Exibir o status corretamente
+        color: 'green',
     },
     button: {
         marginTop: 30,
@@ -90,5 +142,18 @@ const styles = StyleSheet.create({
         color: 'white',
         fontSize: 18,
         fontWeight: 'bold',
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#ccc',
+        borderRadius: 5,
+        padding: 10,
+        marginTop: 20,
+        marginBottom: 20,
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
     },
 });

@@ -63,19 +63,21 @@ export default function Index() {
                 {criancas.length > 0 ? (
                     <View style={styles.containerCards}>
                         {criancas.map(crianca => (
-
                             <Link
                                 href={{
                                     pathname: `/screen/responsavel/crianca/[id]`,
                                     params: { id: crianca.id },
                                 }}
                                 style={styles.cardsCriancas}
+                                key={crianca.id}
+                                onPress={() => console.log(`ID da criança: ${crianca.id}`)}
+
                             >
                                 <Text style={styles.cardText}>{crianca.id}</Text>
                                 <Text style={styles.cardText}>{crianca.nome}</Text>
                                 <Text style={styles.cardText}>{crianca.idade} anos</Text>
-                            </Link>
 
+                            </Link>
                         ))}
                     </View>
                 ) : (
