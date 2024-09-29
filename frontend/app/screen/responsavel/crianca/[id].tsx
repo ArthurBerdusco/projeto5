@@ -13,7 +13,7 @@ export default function CadastroCrianca() {
 
     const fetchCrianca = async () => {
         try {
-            alert(id)
+            console.log(`Buscando dados para a criança com ID: ${id}`);
             const response = await fetch(`${config.IP_SERVER}/criancas/${id}`);
             const data = await response.json();
             setCrianca(data);
@@ -34,36 +34,6 @@ export default function CadastroCrianca() {
         carregarDados();
     }, []);
 
-    const handleSubmit = async () => {
-        // try {
-        //     const response = await fetch(`${config.IP_SERVER}/cadastro-crianca/${escolaId}/${responsavelId}`, {
-        //         method: "POST",
-        //         headers: {
-        //             "Content-type": "application/json",
-        //         },
-        //         body: JSON.stringify({
-        //             nome,
-        //             idade,
-        //         }),
-        //     });
-
-        //     const message = await response.text();
-        //     Alert.alert(message);
-
-        //     if (response.ok) {
-        //         Alert.alert("Sucesso", "Criança cadastrada com sucesso!");
-        //         router.push("/screen/crianca"); // Navega para a tela de crianças
-        //     } else {
-        //         Alert.alert("Erro", "Não foi possível realizar o cadastro.");
-        //     }
-        // } catch (error) {
-        //     Alert.alert("Erro", "Erro de conexão com o backend.");
-        // }
-    };
-
-    if (loading) {
-        return <ActivityIndicator size="large" color="#0000ff" />;
-    }
 
     return (
         <SafeAreaView style={styles.total}>
@@ -72,6 +42,8 @@ export default function CadastroCrianca() {
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
                 <Text style={{ fontWeight: '800', textAlign: 'center', fontSize: 20 }}>Cadastrar Criança</Text>
                 <View style={styles.containerInputs}>
+                    <Text style={styles.name}>{crianca.nome}</Text>
+
                     <TextInput
                         placeholder="Nome da criança"
                         style={styles.textInputs}
@@ -87,8 +59,12 @@ export default function CadastroCrianca() {
                     />
                 </View>
                 <View style={styles.containerButton}>
-                    <Link href={"/screen/responsavel/crianca/escola/listaEscolas"}>
-                        <Text style={styles.buttonText}>Procurar perueiro</Text>
+                    <Link
+                        href={{
+                            pathname: `/screen/responsavel/crianca/escola/listaEscolas`,
+                            params: { crianca: JSON.stringify(crianca) }, // Passa a criança para a próxima tela
+                        }}
+                    >                        <Text style={styles.buttonText}>Procurar perueiro</Text>
                     </Link>
                 </View>
             </KeyboardAvoidingView>

@@ -7,11 +7,16 @@ export default function Escola() {
     const [escola, setEscola] = useState(null);
     const [motoristas, setMotoristas] = useState([]);
     const [loading, setLoading] = useState(true);
-
     const router = useRouter();
-    const { id } = useLocalSearchParams(); // ID da escola
 
-    // Função para buscar as informações da escola
+    const { id, crianca: criancaString } = useLocalSearchParams();
+    const crianca = JSON.parse(criancaString); // Parseando a string para objeto
+    console.log("ID da criança na lisa de motorista", crianca?.id); // Usando optional chaining
+
+    const responsavelId = crianca.responsavel.id;
+    console.log("ID da criança:", crianca?.id);
+    console.log("ID do responsável:", responsavelId); // Exibindo o ID do responsável
+
     const fetchEscola = async () => {
         try {
             const response = await fetch(`${config.IP_SERVER}/api/escolas/${id}`);
@@ -65,12 +70,16 @@ export default function Escola() {
                     <View style={{ marginVertical: 10 }}>
                         <Text>{item.nome}</Text>
                         <Text>{item.telefone}</Text>
-                        
-                        {/* Usar Link para navegar até a página do motorista */}
+
                         <Link
                             href={{
                                 pathname: `/screen/responsavel/crianca/escola/motorista/[id]`,
-                                params: { id: item.id.toString() }, // ID do motorista
+                                params: {
+                                    id: item.id,
+                                    crianca: JSON.stringify(crianca), // Passando o objeto 'crianca'
+                                    escolaId: id, // Passa também o ID da escola
+                                    responsavelId: responsavelId,
+                                },
                             }}
                         >
                             <Text style={{ color: 'blue', fontSize: 25 }}>{item.nome}</Text>
