@@ -8,6 +8,8 @@ export default function CadastroCrianca() {
 
     const [crianca, setCrianca] = useState({ nome: '', idade: 0 });
     const [loading, setLoading] = useState(false);
+    const [ofertas, setOfertas] = useState([]);
+
     const { id } = useLocalSearchParams();
 
 
@@ -25,10 +27,26 @@ export default function CadastroCrianca() {
         }
     };
 
+
+    const fetchOfertas = async () => {
+        try {
+            const response = await fetch(`${config.IP_SERVER}/oferta/crianca/${id}`);
+            const data = await response.json();
+            setOfertas(data);
+            console.log(`ID OFERTA${id}`)
+        } catch (error) {
+            console.error('Erro ao buscar as ofertas:', error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         const carregarDados = async () => {
             setLoading(true);
             await fetchCrianca();
+            await fetchOfertas();
+
             setLoading(false);
         };
         carregarDados();
@@ -58,13 +76,28 @@ export default function CadastroCrianca() {
                         keyboardType="numeric"
                     />
                 </View>
+
+
+
                 <View style={styles.containerButton}>
+
                     <Link
                         href={{
                             pathname: `/screen/responsavel/crianca/escola/listaEscolas`,
                             params: { crianca: JSON.stringify(crianca) }, // Passa a criança para a próxima tela
                         }}
-                    >                        <Text style={styles.buttonText}>Procurar perueiro</Text>
+                    >
+                        <Text style={styles.buttonText}>Procurar perueiro</Text>
+
+                    </Link>
+
+                    <Link
+                        href={{
+                            pathname: `/screen/responsavel/crianca/ofertas/aceitaOferta`,
+                            params: { crianca: JSON.stringify(crianca) },
+                        }}
+                    >
+                        <Text style={styles.buttonText}>Procurar ofertas</Text>
                     </Link>
                 </View>
             </KeyboardAvoidingView>

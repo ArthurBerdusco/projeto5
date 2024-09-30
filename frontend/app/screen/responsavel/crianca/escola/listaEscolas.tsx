@@ -26,19 +26,7 @@ export default function ListaEscolas() {
         }
     };
 
-    const fetchCrianca = async () => {
-        try {
-            console.log(`Buscando dados da criança lista escolas: ${id}`);
-            const response = await fetch(`${config.IP_SERVER}/criancas/${id}`);
-            const data = await response.json();
-            setCrianca(data);
 
-        } catch (error) {
-            console.error('Erro ao buscar os detalhes da criança:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
 
     useEffect(() => {
         fetchEscolas();
