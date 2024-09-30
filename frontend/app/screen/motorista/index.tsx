@@ -1,7 +1,9 @@
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { ScrollView, View, StyleSheet, Text, Image, Pressable } from "react-native";
 
 export default function Index() {
+
+    const router = useRouter();
 
     return (
         <ScrollView style={{ backgroundColor: "white" }}>
@@ -35,18 +37,34 @@ export default function Index() {
                 </View>
 
 
-                <View style={styles.botaoProcura}>
-                    <Image source={require('../assets/icons/search.png')} style={{ height: 80, width: 80 }} />
+                <View style={{ justifyContent: "space-around", alignItems: "center", flexDirection: "row", marginTop: 70 }}>
+                    <Pressable
+                        style={styles.botaoOferta}
+                        onPress={() => router.push("/screen/motorista/ofertas/verOfertas")}
+                    >
+                        <Image source={require('../assets/icons/ofertas.png')} style={styles.image} />
+                    </Pressable>
+                    <View style={styles.botaoProcura}>
+                        <Image source={require('../assets/icons/search.png')} style={{ height: 80, width: 80 }} />
+                    </View>
+                    <Pressable
+                        style={styles.botaoOferta}
+                        onPress={() => router.push("/screen/motorista/escola/escolasAtendidas")}
+                    >
+                        <Image source={require('../assets/icons/editar.png')} style={styles.image} />
+                    </Pressable>
                 </View>
             </View>
-        </ScrollView >
+        </ScrollView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "#ffffff"
+        backgroundColor: "#ffffff",
+
+
     }
     ,
 
@@ -82,11 +100,24 @@ const styles = StyleSheet.create({
 
     botaoProcura: {
         alignSelf: "center",
-        marginTop: 20
     },
     buttonText: {
         color: "black",
         fontWeight: "700",
+    },
+
+    botaoOferta: {
+        display: 'flex',
+        justifyContent: 'center', // Centraliza verticalmente
+        alignItems: 'center', // Centraliza horizontalmente
+        height: 80, // Ajuste a altura conforme necessário
+        width: 80,  // Ajuste a largura conforme necessário
+        borderRadius: 10, // Arredonda o botão se necessário
+    },
+    image: {
+        width: 80, // Ajuste o tamanho da imagem
+        height: 80, // Ajuste o tamanho da imagem
+        resizeMode: 'contain', // Garante que a imagem não será cortada
     },
 
 

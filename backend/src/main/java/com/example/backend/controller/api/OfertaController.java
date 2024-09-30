@@ -1,12 +1,15 @@
 package com.example.backend.controller.api;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -44,6 +47,28 @@ public class OfertaController {
     @Autowired
     private EscolaRepository escolaRepository;
 
+    @GetMapping("/motorista/{motoristaId}")
+    public ResponseEntity<List<OfertaDTO>> getOfertasPorMotorista(@PathVariable Long motoristaId) {
+        List<Oferta> ofertas = ofertaRepository.findByMotoristaId(motoristaId);
+
+        // Converte a lista de Ofertas para OfertaDTO
+        List<OfertaDTO> ofertasDTO = ofertas.stream().map(oferta -> {
+            OfertaDTO dto = new OfertaDTO();
+            dto.setMotoristaId(oferta.getMotorista().getId());
+            dto.setEscolaId(oferta.getEscola().getId());
+            dto.setEscolaNome(oferta.getEscola().getNome());
+            dto.setCriancaId(oferta.getCrianca().getId());
+            dto.setCriancaNome(oferta.getCrianca().getNome());
+            dto.setResponsavelId(oferta.getResponsavel().getId());
+            dto.setResponsavelNome(oferta.getResponsavel().getNome());
+            dto.setMensagem(oferta.getMensagem());
+            dto.setId(oferta.getId());
+            return dto;
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(ofertasDTO);
+    }
+
     @PostMapping("/enviar")
     public ResponseEntity<Map<String, String>> enviarOferta(@RequestBody OfertaDTO ofertaDTO) {
         try {
@@ -66,6 +91,7 @@ public class OfertaController {
             oferta.setCrianca(crianca);
             oferta.setResponsavel(responsavel);
             oferta.setMensagem(ofertaDTO.getMensagem());
+            oferta.setStatus("Pendente");
 
             // Salvar a oferta no repositório
             ofertaRepository.save(oferta);
@@ -88,8 +114,35 @@ public class OfertaController {
         }
     }
 
+    @GetMapping("/crianca/{criancaId}")
+    public ResponseEntity<List<OfertaDTO>> getOfertasPorCrianca(@PathVariable Long criancaId) {
+        List<Oferta> ofertas = ofertaRepository.findByCriancaId(criancaId); // Método que você deve implementar no
+                                                                            // repositório
+
+        // Converte a lista de Ofertas para OfertaDTO
+        List<OfertaDTO> ofertasDTO = ofertas.stream().map(oferta -> {
+            OfertaDTO dto = new OfertaDTO();
+            dto.setMotoristaId(oferta.getMotorista().getId());
+            dto.setEscolaId(oferta.getEscola().getId());
+            dto.setEscolaNome(oferta.getEscola().getNome());
+            dto.setCriancaId(oferta.getCrianca().getId());
+            dto.setCriancaNome(oferta.getCrianca().getNome());
+            dto.setResponsavelId(oferta.getResponsavel().getId());
+            dto.setResponsavelNome(oferta.getResponsavel().getNome());
+            dto.setMensagem(oferta.getMensagem());
+            dto.setId(oferta.getId());
+            return dto;
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(ofertasDTO);
+    }
+
     @PostMapping("/responder/{id}")
     public ResponseEntity<String> responderOferta(@PathVariable Long id, @RequestBody Double valor) {
+        if (id == null) {
+            return ResponseEntity.badRequest().body("ID não pode ser nulo");
+        }
+
         Optional<Oferta> ofertaOptional = ofertaRepository.findById(id);
         if (ofertaOptional.isPresent()) {
             Oferta oferta = ofertaOptional.get();
