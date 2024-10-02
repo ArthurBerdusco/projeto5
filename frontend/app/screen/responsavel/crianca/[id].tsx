@@ -94,11 +94,12 @@ export default function CadastroCrianca() {
                     <Link
                         href={{
                             pathname: `/screen/responsavel/crianca/ofertas/aceitaOferta`,
-                            params: { crianca: JSON.stringify(crianca) },
+                            params: { ofertaId: id }, // Passa a ID da oferta, não a ID da criança
                         }}
                     >
                         <Text style={styles.buttonText}>Procurar ofertas</Text>
                     </Link>
+
                 </View>
             </KeyboardAvoidingView>
         </SafeAreaView>

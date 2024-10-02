@@ -47,6 +47,31 @@ public class OfertaController {
     @Autowired
     private EscolaRepository escolaRepository;
 
+    @GetMapping("/{id}")
+    public ResponseEntity<OfertaDTO> getOfertaPorId(@PathVariable Long id) {
+        Optional<Oferta> ofertaOptional = ofertaRepository.findById(id);
+        if (ofertaOptional.isPresent()) {
+            Oferta oferta = ofertaOptional.get();
+            OfertaDTO dto = new OfertaDTO();
+            dto.setMotoristaId(oferta.getMotorista().getId());
+            dto.setEscolaId(oferta.getEscola().getId());
+            dto.setEscolaNome(oferta.getEscola().getNome());
+            dto.setCriancaId(oferta.getCrianca().getId());
+            dto.setCriancaNome(oferta.getCrianca().getNome());
+            dto.setResponsavelId(oferta.getResponsavel().getId());
+            dto.setResponsavelNome(oferta.getResponsavel().getNome());
+            dto.setMensagem(oferta.getMensagem());
+            dto.setMotoristaNome(oferta.getMotorista().getNome());
+            dto.setEscolaNome(oferta.getEscola().getNome());
+
+            dto.setValor(oferta.getValor());
+            ;
+            dto.setId(oferta.getId());
+            return ResponseEntity.ok(dto);
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+    }
+
     @GetMapping("/motorista/{motoristaId}")
     public ResponseEntity<List<OfertaDTO>> getOfertasPorMotorista(@PathVariable Long motoristaId) {
         List<Oferta> ofertas = ofertaRepository.findByMotoristaId(motoristaId);
