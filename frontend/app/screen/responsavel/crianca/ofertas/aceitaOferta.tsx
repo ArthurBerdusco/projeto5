@@ -68,6 +68,8 @@ export default function AceitarOferta() {
                     <Text>Motorista: {oferta.motoristaNome}</Text>
                     <Text>Valor: R$ {oferta.valor}</Text>
                     <Text>Mensagem: {oferta.mensagem}</Text>
+                    <Text>Escola: {oferta.escolaNome}</Text>
+
                     <Button title="Aceitar Oferta" onPress={aceitarOferta} />
                 </>
             )}

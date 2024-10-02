@@ -61,6 +61,9 @@ public class OfertaController {
             dto.setResponsavelId(oferta.getResponsavel().getId());
             dto.setResponsavelNome(oferta.getResponsavel().getNome());
             dto.setMensagem(oferta.getMensagem());
+            dto.setMotoristaNome(oferta.getMotorista().getNome());
+            dto.setEscolaNome(oferta.getEscola().getNome());
+
             dto.setValor(oferta.getValor());
             ;
             dto.setId(oferta.getId());
