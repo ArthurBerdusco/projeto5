@@ -4,6 +4,7 @@ public class OfertaDTO {
 
     private Long id;
     private Long motoristaId;
+    private String motoristaNome;
     private Long escolaId;
     private String escolaNome;
     private Long criancaId;
@@ -11,6 +12,23 @@ public class OfertaDTO {
     private Long responsavelId;
     private String responsavelNome;
     private String mensagem;
+    private Double valor;
+
+    public String getMotoristaNome() {
+        return motoristaNome;
+    }
+
+    public void setMotoristaNome(String motoristaNome) {
+        this.motoristaNome = motoristaNome;
+    }
+
+    public Double getValor() {
+        return valor;
+    }
+
+    public void setValor(Double valor) {
+        this.valor = valor;
+    }
 
     public String getEscolaNome() {
         return escolaNome;
