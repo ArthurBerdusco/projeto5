@@ -1,38 +1,62 @@
 import { Link, useRouter } from "expo-router";
-import { ScrollView, View, StyleSheet, Text, Image, ActivityIndicator, TouchableOpacity } from "react-native";
+import { ScrollView, View, StyleSheet, Text, Image, ActivityIndicator, TouchableOpacity, Alert } from "react-native";
 import { useState, useEffect } from "react";
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Index() {
+    const [responsavel, setResponsavel] = useState({ nome: '', email: '', telefone: '', idade: null })
     const [criancas, setCriancas] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const router = useRouter();
 
+
+    const fetchResponsavel = async () => {
+        try {
+            const responsavel = await AsyncStorage.getItem('idResponsavel');
+
+            const response = await fetch(`${config.IP_SERVER}/responsavel/${responsavel}`);
+
+
+            const data = await response.json();
+           
+            setResponsavel(data)
+        } catch (err) {
+            setError('Erro ao carregar o responsavel');
+            console.error(err)
+        }
+
+
+    }
+
+    const fetchCriancas = async () => {
+        try {
+
+            const responsavel = await AsyncStorage.getItem('idResponsavel');
+            
+
+            const response = await fetch(`${config.IP_SERVER}/crianca/responsavel/${responsavel}`);
+
+
+            const data = await response.json();
+
+            setCriancas(data);
+        } catch (err) {
+            setError('Erro ao carregar as crianças.');
+            console.error(err);
+        }
+
+    };
+
     useEffect(() => {
-        const fetchCriancas = async () => {
-            try {
 
-                const responsavel = await AsyncStorage.getItem('idResponsavel');
-
-                // Fazendo a requisição com `fetch`
-                const response = await fetch(`${config.IP_SERVER}/crianca/responsavel/${responsavel}`);
-
-
-                // Convertendo a resposta para JSON
-                const data = await response.json();
-
-                setCriancas(data);
-            } catch (err) {
-                setError('Erro ao carregar as crianças.');
-                console.error(err);
-            } finally {
-                setLoading(false);
-            }
-        };
-
+        setLoading(true);
+        fetchResponsavel();
         fetchCriancas();
+
+        setLoading(false);
+
     }, []);
 
 
@@ -47,14 +71,14 @@ export default function Index() {
     return (
         <ScrollView style={styles.scrollView}>
             <View style={styles.container}>
-                <View style={styles.cardDados}>
+                <Link href={'/screen/responsavel/perfil'} style={styles.cardDados}>
                     <Image source={require('../assets/icons/icone6.png')} style={styles.iconDados} />
                     <View>
-                        <Text style={styles.textoDados}>Nome: Samuel Braga</Text>
-                        <Text style={styles.textoDados}>Idade: 21 Anos</Text>
-                        <Text style={styles.textoDados}>Telefone: (11) 95323-2323</Text>
+                        <Text style={styles.textoDados}>Nome: {responsavel.nome}</Text>
+                        <Text style={styles.textoDados}>Idade: {responsavel.idade}</Text>
+                        <Text style={styles.textoDados}>Telefone: {responsavel.telefone}</Text>
                     </View>
-                </View>
+                </Link>
 
                 <Text style={styles.title}>Crianças</Text>
 

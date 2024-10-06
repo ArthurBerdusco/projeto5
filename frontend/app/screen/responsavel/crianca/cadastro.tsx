@@ -6,7 +6,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Cadastro() {
 
-
     const router = useRouter();
 
     const [nome, setNome] = useState('');
