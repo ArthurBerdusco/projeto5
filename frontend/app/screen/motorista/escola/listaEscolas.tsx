@@ -34,10 +34,12 @@ export default function ListaEscolas() {
                         pathname: `/screen/motorista/escola/[id]`,
                         params: { id: item.id },
                     }}
-                    style={styles.buttonEscola}
-                >
-                    <Text style={styles.textButton}>{item.nome}</Text>
+                    style={styles.buttonEscola}>
                 </Link>
+                <Text style={styles.textNome}>{item.nome}</Text>
+                <Text style={styles.textRua}>{item.rua}</Text>
+
+
             </View>
         );
     };
@@ -65,9 +67,13 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     title: {
-        fontSize: 24,
+        fontSize: 25,
         fontWeight: 'bold',
-        marginBottom: 16,
+        marginBottom: 20,
+        alignSelf: 'center',
+        color: "#FEA407"
+
+
     },
     itemContainer: {
         flexDirection: 'row',
@@ -83,7 +89,7 @@ const styles = StyleSheet.create({
     },
     escolaAtendida: {
         marginTop: 10,
-        borderColor: 'black'
+        borderColor: 'black',
     },
     buttonEscola: {
         alignItems: 'center',
@@ -91,15 +97,27 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingVertical: 12,
         paddingHorizontal: 32,
-        borderRadius: 4,
+        borderRadius: 15,
         elevation: 3,
-        backgroundColor: '#0d99ff',
+        backgroundColor: '#2b2b2b',
+        height: 120,
+
     },
-    textButton: {
-        fontSize: 16,
+    textNome: {
+        fontSize: 18,
+        lineHeight: 26,
+        fontWeight: 'bold',
+        letterSpacing: 0.25,
+        color: '#000000',
+
+    },
+
+    textRua: {
+        fontSize: 14,
         lineHeight: 21,
         fontWeight: 'bold',
         letterSpacing: 0.25,
-        color: 'white',
+        color: '#6D6D6D',
+
     },
 });

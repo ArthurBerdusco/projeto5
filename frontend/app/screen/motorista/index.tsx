@@ -1,72 +1,74 @@
 import { Link, useRouter } from "expo-router";
-import { ScrollView, View, StyleSheet, Text, Image, Pressable } from "react-native";
+import { ScrollView, View, StyleSheet, Text, Image, Pressable, SafeAreaView } from "react-native";
 
 export default function Index() {
 
     const router = useRouter();
 
     return (
-        <ScrollView style={{ backgroundColor: "white" }}>
-            <View style={styles.container}>
-                {/* <Text style={{ fontSize: 20, marginLeft: 20, marginTop: 20 }}>
-                    Meus dados
-                </Text> */}
-                <View style={styles.cardDados}>
-                    <Image source={require('../assets/icons/icone6.png')} style={{ resizeMode: "contain", height: 90, width: 90 }} />
-                    <View>
-                        <Text style={styles.textoDados}>Nome: Samuel Braga</Text>
-                        <Text style={styles.textoDados}>Idade: 21 Anos</Text>
-                        <Text style={styles.textoDados}>Telefone: (11)95323232</Text>
-                    </View>
-                </View>
-                <Text style={{ fontSize: 20, marginLeft: 20 }}>Crianças</Text>
-                <View style={styles.containerCards}>
-
-                    <Link style={styles.cardsMotoristas} href={"/screen/motorista/escola/escolasAtendidas"}>
-                        <Text style={styles.buttonText}>Ver escolas</Text>
-                    </Link>
-                    <View style={styles.cardsMotoristas}>
-
-                    </View>
-                    <View style={styles.cardsMotoristas}>
-
-                    </View>
-                    <View style={styles.cardsMotoristas}>
-
-                    </View>
-                </View>
-
-
-                <View style={{ justifyContent: "space-around", alignItems: "center", flexDirection: "row", marginTop: 70 }}>
-                    <Pressable
-                        style={styles.botaoOferta}
-                        onPress={() => router.push("/screen/motorista/ofertas/verOfertas")}
-                    >
-                        <Image source={require('../assets/icons/ofertas.png')} style={styles.image} />
-                    </Pressable>
-                    <View style={styles.botaoProcura}>
-                        <Image source={require('../assets/icons/search.png')} style={{ height: 80, width: 80 }} />
-                    </View>
-                    <Pressable
-                        style={styles.botaoOferta}
-                        onPress={() => router.push("/screen/motorista/escola/escolasAtendidas")}
-                    >
-                        <Image source={require('../assets/icons/editar.png')} style={styles.image} />
-                    </Pressable>
+        <SafeAreaView style={{
+            flex: 1,
+            justifyContent: "space-around"
+        }}>
+            <View style={styles.cardDados}>
+                <Image source={require('../assets/icons/icone6.png')} style={{ resizeMode: "contain", height: 90, width: 90 }} />
+                <View>
+                    <Text style={styles.textoDados}>Nome: Samuel Braga</Text>
+                    <Text style={styles.textoDados}>Idade: 21 Anos</Text>
+                    <Text style={styles.textoDados}>Telefone: (11)95323232</Text>
                 </View>
             </View>
-        </ScrollView>
+            <Text style={{ fontSize: 20, marginLeft: 20 }}>Crianças</Text>
+            <View style={styles.containerCards}>
+
+                <Link style={styles.cardsMotoristas} href={"/screen/motorista/escola/escolasAtendidas"}>
+                    <Text style={styles.buttonText}>Ver escolas</Text>
+                </Link>
+                <View style={styles.cardsMotoristas}>
+
+                </View>
+                <View style={styles.cardsMotoristas}>
+
+                </View>
+                <View style={styles.cardsMotoristas}>
+
+                </View>
+            </View>
+
+
+            <View style={{ justifyContent: "space-around", alignItems: "center", flexDirection: "row", marginTop: 70 }}>
+                <Pressable
+                    style={styles.botaoOferta}
+                    onPress={() => router.push("/screen/motorista/ofertas/verOfertas")}
+                >
+                    <Image source={require('../assets/icons/ofertas.png')} style={styles.image} />
+                </Pressable>
+                <View style={styles.botaoProcura}>
+                    <Image source={require('../assets/icons/search.png')} style={{ height: 80, width: 80 }} />
+                </View>
+                <Pressable
+                    style={styles.botaoOferta}
+                    onPress={() => router.push("/screen/motorista/escola/escolasAtendidas")}
+                >
+                    <Image source={require('../assets/icons/editar.png')} style={styles.image} />
+                </Pressable>
+            </View>
+        </SafeAreaView>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: "#ffffff",
+        display: "flex",
+        gap: 20,
+        alignItems: "center",
+        alignContent: "center",
+        marginTop: 'auto', // Centraliza verticalmente
+        marginBottom: 'auto',
+        backgroundColor: "#0d99ff"
 
 
-    }
-    ,
+    },
 
     cardDados: {
         backgroundColor: "#ffbf00",
