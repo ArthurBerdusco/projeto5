@@ -1,8 +1,11 @@
 package com.example.backend.controller.api;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -64,6 +67,44 @@ public class ResponsavelController {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro ao cadastrar o endereço: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("{id}")
+    public ResponseEntity<?> getResponsavelById(@PathVariable Long id) {
+        try {
+            Optional<Responsavel> responsavel = responsavelRepository.findById(id);
+            if (responsavel.isPresent()) {
+                System.out.println("\n\n\n" + responsavel + "\n\n\n");
+                return ResponseEntity.ok(responsavel.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Responsável não encontrado.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno do servidor.");
+        }
+    }
+
+    @PostMapping("/atualizar/{id}")
+    public ResponseEntity<Responsavel> atualizarResponsavel(@PathVariable Long id, @RequestBody Responsavel responsavelAtualizado) {
+        Optional<Responsavel> responsavelExistente = responsavelRepository.findById(id);
+
+        if (responsavelExistente.isPresent()) {
+            Responsavel responsavel = responsavelExistente.get();
+            
+            // Atualizar os campos do responsável
+            responsavel.setNome(responsavelAtualizado.getNome());
+            responsavel.setEmail(responsavelAtualizado.getEmail());
+            responsavel.setCpf(responsavelAtualizado.getCpf());
+            responsavel.setTelefone(responsavelAtualizado.getTelefone());
+            responsavel.setEndereco(responsavelAtualizado.getEndereco());
+            // Aqui você pode atualizar também o endereço se necessário
+            System.out.println("\n\n\n" + responsavelAtualizado.getEndereco() +" \n\n\n");
+
+            Responsavel responsavelSalvo = responsavelRepository.save(responsavel);
+            return ResponseEntity.ok(responsavelSalvo);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 

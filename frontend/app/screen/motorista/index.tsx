@@ -1,9 +1,49 @@
+import config from "@/app/config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Link, useRouter } from "expo-router";
-import { ScrollView, View, StyleSheet, Text, Image, Pressable, SafeAreaView } from "react-native";
+import { useEffect, useState } from "react";
+import { ScrollView, View, StyleSheet, Text, Image, Pressable, ActivityIndicator } from "react-native";
 
 export default function Index() {
 
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
+
+    const [motorista, setMotorista] = useState({ nome: '', email: '', telefone: '', idade: null })
+
+    const fetchMotorista = async () => {
+        try {
+            const idMotorista = await AsyncStorage.getItem('idMotorista');
+
+            const response = await fetch(`${config.IP_SERVER}/motorista/${idMotorista}`);
+
+
+            const data = await response.json();
+            alert(data.nome)
+            setMotorista(data)
+        } catch (err) {
+            setError('Erro ao carregar o responsavel');
+            console.error(err)
+        }
+
+
+    }
+
+    useEffect(() => {
+        setLoading(true);
+
+        fetchMotorista();
+
+        setLoading(false);
+    }, []);
+
+    if (loading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#0d99ff" />
+            </View>
+        );
+    }
 
     return (
         <SafeAreaView style={{
@@ -120,7 +160,11 @@ const styles = StyleSheet.create({
         width: 80, // Ajuste o tamanho da imagem
         height: 80, // Ajuste o tamanho da imagem
         resizeMode: 'contain', // Garante que a imagem não será cortada
+    }, loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: "#ffffff",
     },
-
 
 })

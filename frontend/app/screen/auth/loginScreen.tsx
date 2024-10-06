@@ -31,11 +31,10 @@ export default function loginScreen() {
 
             if (response.ok) {
 
-                Alert.alert("Success", "Login feito com sucesso!");
-
                 const resultado = await response.json();
 
                 if (resultado.usuario.role === "MOTORISTA") {
+                    await AsyncStorage.setItem('motorista', resultado.toString());
                     await AsyncStorage.setItem('idMotorista', resultado.id.toString());
                     if (resultado.status === "DESATIVADO") {
                         router.push('/screen/motorista/cadastro');
@@ -45,7 +44,7 @@ export default function loginScreen() {
                 }
 
                 if (resultado.usuario.role === "RESPONSAVEL") {
-                    alert("CAI AQUI")
+                    await AsyncStorage.setItem('responsavel', resultado.toString());
                     await AsyncStorage.setItem('idResponsavel', resultado.id.toString());
                     if (resultado.status === "DESATIVADO") {
                         router.push('/screen/responsavel/cadastro');

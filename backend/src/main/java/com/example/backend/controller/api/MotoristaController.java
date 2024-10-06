@@ -1,5 +1,7 @@
 package com.example.backend.controller.api;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -69,9 +71,42 @@ public class MotoristaController {
         }
     }
 
-    @GetMapping("/{id}")
-    public Motorista getMotorista(@PathVariable Long id) {
-        return motoristaRepository.findById(id).get();
+    @GetMapping("{id}")
+    public ResponseEntity<?> getMotoristaById(@PathVariable Long id) {
+        try {
+            Optional<Motorista> motorista = motoristaRepository.findById(id);
+            if (motorista.isPresent()) {
+                System.out.println("\n\n\n" + motorista + "\n\n\n");
+                return ResponseEntity.ok(motorista.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Motorista não encontrado.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno do servidor.");
+        }
+    }
+
+    @PostMapping("/atualizar/{id}")
+    public ResponseEntity<Motorista> atualizarmotorista(@PathVariable Long id, @RequestBody Motorista motoristaAtualizado) {
+        Optional<Motorista> motoristaExistente = motoristaRepository.findById(id);
+
+        if (motoristaExistente.isPresent()) {
+            Motorista motorista = motoristaExistente.get();
+            
+            // Atualizar os campos do responsável
+            motorista.setNome(motoristaAtualizado.getNome());
+            motorista.setEmail(motoristaAtualizado.getEmail());
+            motorista.setCpf(motoristaAtualizado.getCpf());
+            motorista.setTelefone(motoristaAtualizado.getTelefone());
+            motorista.setEndereco(motoristaAtualizado.getEndereco());
+            // Aqui você pode atualizar também o endereço se necessário
+            System.out.println("\n\n\n" + motoristaAtualizado.getEndereco() +" \n\n\n");
+
+            Motorista motoristaSalvo = motoristaRepository.save(motorista);
+            return ResponseEntity.ok(motoristaSalvo);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
     }
 
 }
