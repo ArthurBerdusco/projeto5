@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.example.backend.security.Usuario;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,6 +31,10 @@ public class Motorista {
 
     @OneToOne
     private Usuario usuario;
+
+    @OneToOne(cascade= CascadeType.ALL)
+    @JoinColumn(name = "endereco_id")
+    private Endereco endereco;
 
     @ManyToMany
     @JoinTable(name = "motorista_escolas", // Nome da tabela de junção
@@ -110,12 +115,18 @@ public class Motorista {
         this.escolas = escolas;
     }
 
+    public Endereco getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(Endereco endereco) {
+        this.endereco = endereco;
+    }
+
     @Override
     public String toString() {
         return "Motorista [id=" + id + ", nome=" + nome + ", email=" + email + ", idade=" + idade + ", cpf=" + cpf
                 + ", telefone=" + telefone + ", status=" + status + "]";
     }
-
-    
 
 }

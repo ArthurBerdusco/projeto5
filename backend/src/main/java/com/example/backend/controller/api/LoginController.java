@@ -37,7 +37,7 @@ public class LoginController {
     public ResponseEntity<?> login(@RequestBody Login login) {
 
         // Verifica se o usuário existe
-        Optional<Usuario> usuarioOptional = usuarioRepository.findByEmail(login.getEmail());
+        Optional<Usuario> usuarioOptional = usuarioRepository.findByEmailIgnoreCase(login.getEmail());
 
         if (usuarioOptional.isEmpty()) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não encontrado");

@@ -17,8 +17,7 @@ public class UsuarioService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<Usuario> user = usuarioRepository.findByEmail(email);
-        System.out.println("\n\n\n CHEGUEI AQUI DEBUG " + email + "\n\n\n");
+        Optional<Usuario> user = usuarioRepository.findByEmailIgnoreCase(email);
         if (user.isPresent()) {
             var usuario = user.get();
             System.out.println("Senha encriptada do banco: " + usuario.getSenha());

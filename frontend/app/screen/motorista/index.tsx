@@ -1,9 +1,49 @@
+import config from "@/app/config";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Link, useRouter } from "expo-router";
-import { ScrollView, View, StyleSheet, Text, Image, Pressable } from "react-native";
+import { useEffect, useState } from "react";
+import { ScrollView, View, StyleSheet, Text, Image, Pressable, ActivityIndicator } from "react-native";
 
 export default function Index() {
 
     const router = useRouter();
+    const [loading, setLoading] = useState(false);
+
+    const [motorista, setMotorista] = useState({ nome: '', email: '', telefone: '', idade: null })
+
+    const fetchMotorista = async () => {
+        try {
+            const idMotorista = await AsyncStorage.getItem('idMotorista');
+
+            const response = await fetch(`${config.IP_SERVER}/motorista/${idMotorista}`);
+
+
+            const data = await response.json();
+            alert(data.nome)
+            setMotorista(data)
+        } catch (err) {
+            setError('Erro ao carregar o responsavel');
+            console.error(err)
+        }
+
+
+    }
+
+    useEffect(() => {
+        setLoading(true);
+      
+        fetchMotorista();
+      
+        setLoading(false);
+    }, []);
+
+    if (loading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#0d99ff" />
+            </View>
+        );
+    }
 
     return (
         <ScrollView style={{ backgroundColor: "white" }}>
@@ -11,14 +51,16 @@ export default function Index() {
                 {/* <Text style={{ fontSize: 20, marginLeft: 20, marginTop: 20 }}>
                     Meus dados
                 </Text> */}
-                <View style={styles.cardDados}>
+                <Link href={'/screen/motorista/perfil'} style={styles.cardDados}>
                     <Image source={require('../assets/icons/icone6.png')} style={{ resizeMode: "contain", height: 90, width: 90 }} />
                     <View>
-                        <Text style={styles.textoDados}>Nome: Samuel Braga</Text>
-                        <Text style={styles.textoDados}>Idade: 21 Anos</Text>
-                        <Text style={styles.textoDados}>Telefone: (11)95323232</Text>
+                    <View>
+                        <Text style={styles.textoDados}>Nome: {motorista.nome}</Text>
+                        <Text style={styles.textoDados}>Idade: {motorista.idade}</Text>
+                        <Text style={styles.textoDados}>Telefone: {motorista.telefone}</Text>
                     </View>
-                </View>
+                    </View>
+                </Link>
                 <Text style={{ fontSize: 20, marginLeft: 20 }}>Crianças</Text>
                 <View style={styles.containerCards}>
 
@@ -118,7 +160,11 @@ const styles = StyleSheet.create({
         width: 80, // Ajuste o tamanho da imagem
         height: 80, // Ajuste o tamanho da imagem
         resizeMode: 'contain', // Garante que a imagem não será cortada
+    },loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: "#ffffff",
     },
-
 
 })

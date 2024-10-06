@@ -7,10 +7,12 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.example.backend.model.Endereco;
 import com.example.backend.model.Escola;
 import com.example.backend.model.Motorista;
 import com.example.backend.model.Operador;
 import com.example.backend.model.Responsavel;
+import com.example.backend.repository.EnderecoRepository;
 import com.example.backend.repository.EscolaRepository;
 import com.example.backend.repository.MotoristaRepository;
 import com.example.backend.repository.OperadorRepository;
@@ -40,17 +42,20 @@ public class ServerApplication {
     @Autowired
     private EscolaRepository escolaRepository;
 
+    @Autowired
+    private EnderecoRepository enderecoRepository;
+
     public static void main(String[] args) {
         SpringApplication.run(ServerApplication.class, args);
     }
 
-    @EventListener
-    public void handleContextRefreshdEvent(ContextRefreshedEvent context) {
+   @EventListener
+    public void handleContextRefreshEvent(ContextRefreshedEvent context) {
 
         if (usuarioRepository.count() == 0) {
 
+            // Criando Operador
             Usuario u = new Usuario();
-
             Operador o = new Operador();
             u = new Usuario();
             u.setEmail("bryan@email.com.br");
@@ -60,6 +65,7 @@ public class ServerApplication {
             usuarioRepository.save(u);
             operadorRepository.save(o);
 
+            // Criando Motorista (Mika) com Endereço
             Motorista m = new Motorista();
             m.setEmail("myka@email.com.br");
             m.setNome("Mika Souza");
@@ -67,6 +73,7 @@ public class ServerApplication {
             m.setIdade(34);
             m.setCpf("35829012247");
             m.setStatus("ATIVO");
+
             u = new Usuario();
             u.setEmail("mika@email.com.br");
             u.setSenha(passwordEncoder.encode("1234"));
@@ -75,6 +82,20 @@ public class ServerApplication {
             usuarioRepository.save(u);
             motoristaRepository.save(m);
 
+            Endereco enderecoMika = new Endereco();
+            enderecoMika.setRua("Av. Paulista");
+            enderecoMika.setNumero("1000");
+            enderecoMika.setBairro("Bela Vista");
+            enderecoMika.setCidade("São Paulo");
+            enderecoMika.setCep("01311-200");
+            enderecoMika.setEstado("SP");
+            enderecoMika.setComplemento("Apto 101");
+            enderecoRepository.save(enderecoMika);
+
+            m.setEndereco(enderecoMika);
+            motoristaRepository.save(m);
+
+            // Criando Responsavel (Ryu) com Endereço
             Responsavel r = new Responsavel();
             r.setEmail("ryu@email.com.br");
             r.setNome("Ryu Silva");
@@ -82,6 +103,7 @@ public class ServerApplication {
             r.setIdade(39);
             r.setCpf("93102981213");
             r.setStatus("ATIVO");
+
             u = new Usuario();
             u.setEmail("ryu@email.com.br");
             u.setSenha(passwordEncoder.encode("1234"));
@@ -90,6 +112,18 @@ public class ServerApplication {
             usuarioRepository.save(u);
             responsaveisRepository.save(r);
 
+            Endereco enderecoRyu = new Endereco();
+            enderecoRyu.setRua("Rua da Consolação");
+            enderecoRyu.setNumero("200");
+            enderecoRyu.setBairro("Consolação");
+            enderecoRyu.setCidade("São Paulo");
+            enderecoRyu.setCep("01302-000");
+            enderecoRyu.setEstado("SP");
+            enderecoRyu.setComplemento("Casa");
+            enderecoRepository.save(enderecoRyu);
+
+            r.setEndereco(enderecoRyu);
+            responsaveisRepository.save(r);
         }
 
         if (escolaRepository.count() == 0) {
