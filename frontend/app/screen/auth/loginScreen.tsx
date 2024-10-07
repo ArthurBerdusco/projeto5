@@ -74,51 +74,50 @@ export default function loginScreen() {
                     headerTitleAlign: 'center'
                 }}
             />
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                style={{ flex: 1 }}
-            >
-                <View style={styles.containerInputs}>
-                    <View style={styles.logo}>
-                        <Image source={require('../assets/logo/logovan.png')} />
-                    </View>
-                    <View>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Digite seu email"
-                            placeholderTextColor={"gray"}
-                            value={email}
-                            onChangeText={setEmail}
-                        />
-                    </View>
-                    <View>
-                        <TextInput
-                            style={styles.input}
-                            placeholder="Senha"
-                            placeholderTextColor={"gray"}
-                            value={senha}
-                            onChangeText={setSenha}
-                            secureTextEntry
-                        />
-                    </View>
-                </View>
 
-                <View style={styles.containerPressables}>
+            <View style={styles.logo}>
+                <Image source={require('../assets/logo/logovan.png')} />
+            </View>
 
-                    <Pressable style={styles.botaoLogin} onPress={handleSubmit}>
-                        <Text style={{ color: "black", fontWeight: "700" }}>
-                            Entrar
-                        </Text>
-                    </Pressable>
+            <View style={styles.containerInputs}>
 
+                <TextInput
+                    style={styles.textInputs}
+                    placeholder="Digite seu email"
+                    placeholderTextColor={"gray"}
+                    value={email}
+                    onChangeText={setEmail}
+                />
 
-                    <Link style={styles.botaoCadastro} href={"/screen/auth/registerScreen"}>
-                        Cadastre-se
-                    </Link>
+                <TextInput
+                    style={styles.textInputs}
+                    placeholder="Senha"
+                    placeholderTextColor={"gray"}
+                    value={senha}
+                    onChangeText={setSenha}
+                    secureTextEntry
+                />
 
+                <Pressable style={styles.botaoLogin} onPress={handleSubmit}>
+                    <Text style={{ color: "white", fontWeight: "700" }}>
+                        Entrar
+                    </Text>
+                </Pressable>
 
-                </View>
-            </KeyboardAvoidingView>
+            </View>
+
+            <View style={styles.containerPressables}>
+
+                <Text style={{ color: "gray", fontWeight: "600" }}>
+                    Não possui cadastro?
+                </Text>
+                <Link style={styles.botaoCadastro} href={"/screen/auth/registerScreen"}>
+                <Text style={{ color: "white", fontWeight: "600" }}>
+                    Cadastre-se
+                </Text>
+                </Link>
+
+            </View>
         </SafeAreaView>
     )
 }
@@ -129,35 +128,31 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between',
         backgroundColor: "#ffffff",
+        paddingLeft: 10,
+        paddingRight: 10
     },
     logo: {
         display: "flex",
         alignSelf: "center",
         justifyContent: "center",
-    }
-    ,
-
-    input: {
-        display: "flex",
-        backgroundColor: "none",
-        borderColor: "#2B2B2B",
-        width: 350,
-        height: 50,
-        borderRadius: 20,
-        textAlign: "center",
-        color: "#ff0000",
-        borderWidth: 2
+        marginVertical: 20
     },
-
+    textInputs: {
+        backgroundColor: "#f9f9f9",
+        borderColor: "#ddd",
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 15,
+        fontSize: 16,
+        color: "#333",
+    },
     containerPressables: {
         display: "flex",
         gap: 15,
         margin: 20,
         alignItems: "center",
         justifyContent: "center",
-
-
-
     },
 
     botaoCadastro: {
@@ -166,7 +161,7 @@ const styles = StyleSheet.create({
         width: 350,
         alignItems: "center",
         textAlign: "center",
-        borderRadius: 20,
+        borderRadius: 10,
         fontWeight: "700"
     },
 
@@ -175,9 +170,9 @@ const styles = StyleSheet.create({
     botaoLogin: {
         backgroundColor: "#ffbf00",
         display: "flex",
-        width: 350,
+
         height: 50,
-        borderRadius: 20,
+        borderRadius: 10,
         alignItems: "center",
         justifyContent: "center",
         textAlign: "center"
@@ -185,11 +180,14 @@ const styles = StyleSheet.create({
     },
 
     containerInputs: {
-        display: "flex",
-        gap: 20,
-        alignItems: "center",
-        alignContent: "center",
-        marginTop: 'auto', // Centraliza verticalmente
-        marginBottom: 'auto',
-    }
+        marginBottom: 20,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 15,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
+        elevation: 3,
+    },
 })

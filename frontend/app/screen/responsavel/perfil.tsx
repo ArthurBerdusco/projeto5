@@ -112,7 +112,7 @@ export default function Perfil() {
 
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={styles.total}>
             <Stack.Screen
                 options={{
                     headerTitle: 'Perfil',
@@ -124,8 +124,8 @@ export default function Perfil() {
                     headerTitleAlign: 'center'
                 }}
             />
-            <ScrollView>
-                <View style={styles.janela}>
+            <ScrollView contentContainerStyle={styles.scrollView}>
+                <View style={styles.containerInputs}>
                     <Text style={styles.textTitle}>Dados Pessoais: </Text>
                     <View>
                         <Text style={styles.text}>Nome de preferência</Text>
@@ -160,7 +160,7 @@ export default function Perfil() {
                         />
                     </View>
                 </View>
-                <View style={styles.janela}>
+                <View style={styles.containerInputs}>
                     <Text style={styles.textTitle}>Endereço: </Text>
                     <View>
                         <Text style={styles.text}>CEP</Text>
@@ -203,8 +203,8 @@ export default function Perfil() {
                         />
                     </View>
                 </View>
-                <Pressable style={styles.button} onPress={handleSubmit}>
-                    <Text style={styles.textButton}>Salvar</Text>
+                <Pressable style={styles.buttonSubmit} onPress={handleSubmit}>
+                    <Text style={styles.buttonText}>Salvar</Text>
                 </Pressable>
             </ScrollView>
 
@@ -214,59 +214,72 @@ export default function Perfil() {
 
 const styles = StyleSheet.create({
 
-    container: {
-        flex: 1,
-        justifyContent: 'space-between',
-        backgroundColor: '#fff',
-        padding: 10,
-        margin: 10,
-    },
-    janela: {
-        flex: 0.3,
-        backgroundColor: 'beige',
-        borderWidth: 5,
-        padding: 10
-    },
-    textTitle: {
-        lineHeight: 21,
-        fontSize: 16,
-        fontWeight: 'bold',
-        letterSpacing: 0.25,
+    total: {
         marginTop: 10,
-        marginBottom: 5,
+        flex: 1,
+        backgroundColor: "#f5f5f5",
+    },
+    scrollView: {
+        paddingHorizontal: 20,
+        paddingBottom: 50,
+    },
+    header: {
+        alignItems: 'center',
+        marginVertical: 20,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+    containerInputs: {
+        marginBottom: 20,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 15,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
+        elevation: 3,
     },
     textInputs: {
-        backgroundColor: 'white',
-        height: 50,
-        borderRadius: 10,
-        borderColor: "gray",
+        backgroundColor: "#f9f9f9",
+        borderColor: "#ddd",
         borderWidth: 1,
-        paddingLeft: 10
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 15,
+        fontSize: 16,
+        color: "#333",
+    },
+    textTitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        marginBottom: 10,
+        color: "#333",
     },
     text: {
-        marginTop: 10,
+        fontSize: 14,
         marginBottom: 5,
+        color: "#666",
     },
-    button: {
-        marginVertical: 10,
+    containerButton: {
         alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 12,
-        paddingHorizontal: 32,
+        marginTop: 20,
+    },
+    buttonSubmit: {
+        backgroundColor: '#007bff',
+        paddingVertical: 15,
+        paddingHorizontal: 30,
         borderRadius: 10,
-        elevation: 3,
-        backgroundColor: 'black',
-    },
-    textButton: {
-        fontSize: 16,
-        lineHeight: 21,
-        fontWeight: 'bold',
-        letterSpacing: 0.25,
-        color: 'white',
-    }, loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: "#ffffff",
+        justifyContent: 'center',
+        width: '100%',
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
     },
 })
