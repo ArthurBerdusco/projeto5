@@ -17,9 +17,7 @@ export default function Index() {
 
             const response = await fetch(`${config.IP_SERVER}/motorista/${idMotorista}`);
 
-
             const data = await response.json();
-            alert(data.nome)
             setMotorista(data)
         } catch (err) {
             setError('Erro ao carregar o responsavel');
@@ -31,9 +29,9 @@ export default function Index() {
 
     useEffect(() => {
         setLoading(true);
-      
+
         fetchMotorista();
-      
+
         setLoading(false);
     }, []);
 
@@ -54,11 +52,11 @@ export default function Index() {
                 <Link href={'/screen/motorista/perfil'} style={styles.cardDados}>
                     <Image source={require('../assets/icons/icone6.png')} style={{ resizeMode: "contain", height: 90, width: 90 }} />
                     <View>
-                    <View>
-                        <Text style={styles.textoDados}>Nome: {motorista.nome}</Text>
-                        <Text style={styles.textoDados}>Idade: {motorista.idade}</Text>
-                        <Text style={styles.textoDados}>Telefone: {motorista.telefone}</Text>
-                    </View>
+                        <View>
+                            <Text style={styles.textoDados}>Nome: {motorista.nome}</Text>
+                            <Text style={styles.textoDados}>Idade: {motorista.idade}</Text>
+                            <Text style={styles.textoDados}>Telefone: {motorista.telefone}</Text>
+                        </View>
                     </View>
                 </Link>
                 <Text style={{ fontSize: 20, marginLeft: 20 }}>Crianças</Text>
@@ -67,9 +65,9 @@ export default function Index() {
                     <Link style={styles.cardsMotoristas} href={"/screen/motorista/escola/escolasAtendidas"}>
                         <Text style={styles.buttonText}>Ver escolas</Text>
                     </Link>
-                    <View style={styles.cardsMotoristas}>
-
-                    </View>
+                    <Link style={styles.cardsMotoristas} href={"/screen/motorista/veiculo"}>
+                        <Text style={styles.buttonText}>Meu veículo</Text>
+                    </Link>
                     <View style={styles.cardsMotoristas}>
 
                     </View>
@@ -160,7 +158,7 @@ const styles = StyleSheet.create({
         width: 80, // Ajuste o tamanho da imagem
         height: 80, // Ajuste o tamanho da imagem
         resizeMode: 'contain', // Garante que a imagem não será cortada
-    },loadingContainer: {
+    }, loadingContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',

@@ -8,4 +8,5 @@ import com.example.backend.model.Motorista;
 
 public interface MotoristaRepository extends JpaRepository<Motorista, Long> {
     Optional<Motorista> findByUsuarioId(Long usuarioId);
+    boolean existsByCpf(String cpf);
 }

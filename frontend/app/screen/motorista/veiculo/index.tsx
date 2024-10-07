@@ -1,11 +1,7 @@
-import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import { View, StyleSheet, Text, Pressable, TextInput, SafeAreaView, Switch } from "react-native";
-import DropDownPicker from 'react-native-dropdown-picker';
-
-import { useState } from "react";
-import { Link, useRouter } from 'expo-router';
 import config from '@/app/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, Switch, Button, Image, ScrollView, TouchableOpacity, SafeAreaView, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 
 interface Van {
     placa: string;
@@ -29,9 +25,10 @@ interface Van {
     fotosVeiculo: string[]; // Array para armazenar URLs ou paths das fotos do veículo
 }
 
-export default function CadastroResponsavel() {
 
-    const router = useRouter();
+export default function VehicleInfoScreen() {
+
+    const [loading, setLoading] = useState(false)
 
     const [van, setVan] = useState<Van>({
         placa: '',
@@ -55,6 +52,34 @@ export default function CadastroResponsavel() {
         fotosVeiculo: [] // Array para armazenar URLs ou paths das fotos do veículo
     });
 
+    const fetchVan = async () => {
+        setLoading(true);
+        try {
+            const motorista = await AsyncStorage.getItem('idMotorista')
+
+            const resultado = await fetch(`${config.IP_SERVER}/motorista/van/${motorista}`);
+            const dados = await resultado.json();
+            setVan(dados);
+
+        } catch (err) {
+            alert(err)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchVan();
+    }, []);
+
+    if (loading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#0d99ff" />
+            </View>
+        );
+    }
+
     const handleChange = (field: keyof Van, value: string | boolean) => {
         setVan((prev) => ({
             ...prev,
@@ -62,55 +87,34 @@ export default function CadastroResponsavel() {
         }));
     };
 
-    const handleSubmit = async () => {
+    const handleAlterar = async () => {
         try {
-            
-            const idMotorista = await AsyncStorage.getItem('idMotorista');
-
-            
-
-            if (!idMotorista) {
-                Alert.alert("Error", "ID do motorista não encontrado.");
-                return;
-            }
-
-            console.log("Iniciando envio de dados...");
-
-            console.log("Dados a serem enviados:", van);
-
-            const response = await fetch(`${config.IP_SERVER}/motorista/cadastro-van/${idMotorista}`, {
-                method: "POST",
+            const idMotorista = await AsyncStorage.getItem('idMotorista')
+            const response = await fetch(`${config.IP_SERVER}/motorista/van/atualizar/${idMotorista}`, {
+                method: 'POST',
                 headers: {
-                    "Content-type": "application/json",
+                    'Content-Type': 'application/json',
                 },
                 body: JSON.stringify(van),
             });
-
-            console.log("Resposta do servidor:", response);
-            
-            const responseBody = await response.text();
-            console.log("Corpo da resposta:", responseBody);
-
+    
             if (response.ok) {
-                router.push('/screen/motorista');
+                alert('Dados alterados com sucesso!');
             } else {
-                alert(responseBody)
-                Alert.alert("Error", "Não foi possível realizar o cadastro.");
+                alert('Erro ao atualizar dados.');
             }
         } catch (error) {
-            alert("error")
-            console.error("Erro de conexão com o backend:", error);
-            Alert.alert("Error", "Erro de conexão com o backend.");
+            console.error(error);
+            alert('Ocorreu um erro ao enviar os dados.');
         }
     };
 
-
-
     return (
-        <SafeAreaView style={styles.total}>
+        <SafeAreaView style={styles.container}>
             <ScrollView>
-                <Text style={{ fontWeight: '800', textAlign: 'center', fontSize: 20 }}>Cadastrar Perua escolar</Text>
-                <View style={styles.containerInputs}>
+                {/* Identificação do Veículo */}
+                <View style={styles.janela}>
+                    <Text style={styles.textTitle}>Identificação do Veículo</Text>
                     <TextInput
                         placeholder="Fabricante"
                         style={styles.textInputs}
@@ -129,7 +133,7 @@ export default function CadastroResponsavel() {
                         value={van.anoFabricacao}
                         onChangeText={(text) => handleChange('anoFabricacao', text)}
                     />
-
+                    
                     <TextInput
                         placeholder="Cor"
                         style={styles.textInputs}
@@ -150,8 +154,8 @@ export default function CadastroResponsavel() {
                     />
                 </View>
 
-                {/* {Capacidade e Conforto} */}
-                <View style={styles.containerInputs}>
+                {/* Capacidade e Conforto */}
+                <View style={styles.janela}>
                     <Text style={styles.textTitle}>Capacidade e Conforto</Text>
                     <TextInput
                         placeholder="Quantidade de Assentos"
@@ -190,7 +194,7 @@ export default function CadastroResponsavel() {
                 </View>
 
                 {/* Segurança */}
-                <View style={styles.containerInputs}>
+                <View style={styles.janela}>
                     <Text style={styles.textTitle}>Segurança</Text>
                     <View style={styles.switchContainer}>
                         <Text style={styles.text}>Câmeras de Segurança</Text>
@@ -228,7 +232,7 @@ export default function CadastroResponsavel() {
                 </View>
 
                 {/* Documentação do Motorista */}
-                <View style={styles.containerInputs}>
+                <View style={styles.janela}>
                     <Text style={styles.textTitle}>Documentação do Motorista</Text>
                     <TextInput
                         placeholder="CNH"
@@ -245,95 +249,71 @@ export default function CadastroResponsavel() {
                     </View>
                 </View>
 
-                <Pressable style={styles.buttonSubmit} onPress={handleSubmit}>
-                    <Text style={styles.buttonText}>Salvar</Text>
+                {/* Botão de Salvar */}
+                <Pressable style={styles.button} onPress={handleAlterar}>
+                    <Text style={styles.textButton}>Salvar</Text>
                 </Pressable>
             </ScrollView>
         </SafeAreaView>
     );
-}
+};
 
 const styles = StyleSheet.create({
-    total: {
+    container: {
         flex: 1,
-        backgroundColor: "#f5f5f5",
-    },
-    scrollView: {
-        paddingHorizontal: 20,
-        paddingBottom: 50,
-    },
-    header: {
-        alignItems: 'center',
-        marginVertical: 20,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#333',
-    },
-    containerInputs: {
-        marginBottom: 20,
+        justifyContent: 'space-between',
         backgroundColor: '#fff',
-        borderRadius: 10,
-        padding: 15,
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 4,
-        elevation: 3,
+        padding: 10,
+        margin: 10,
     },
-    textInputs: {
-        backgroundColor: "#f9f9f9",
-        borderColor: "#ddd",
-        borderWidth: 1,
-        borderRadius: 8,
-        padding: 12,
-        marginBottom: 15,
-        fontSize: 16,
-        color: "#333",
-    },
-    dropdownWrapper: {
-        marginBottom: 15,
-    },
-    picker: {
-        backgroundColor: '#f9f9f9',
-        borderColor: '#ddd',
-        borderWidth: 1,
-    },
-    dropdown: {
-        backgroundColor: '#fff',
-        borderColor: '#ddd',
-        borderRadius: 8,
-        position: 'static'
+    janela: {
+        flex: 0.3,
+        backgroundColor: 'beige',
+        borderWidth: 5,
+        padding: 10
     },
     textTitle: {
-        fontSize: 18,
-        fontWeight: "bold",
-        marginBottom: 10,
-        color: "#333",
+        lineHeight: 21,
+        fontWeight: 'bold',
+        letterSpacing: 0.25,
+        marginTop: 10,
+        marginBottom: 5,
+    },
+    textInputs: {
+        backgroundColor: 'white',
+        height: 50,
+        borderRadius: 10,
+        borderColor: "gray",
+        borderWidth: 1,
+        paddingLeft: 10,
+        marginBottom: 10
     },
     text: {
-        fontSize: 14,
+        marginTop: 10,
         marginBottom: 5,
-        color: "#666",
     },
-    containerButton: {
-        alignItems: 'center',
-        marginTop: 20,
-    },
-    buttonSubmit: {
-        backgroundColor: '#007bff',
-        paddingVertical: 15,
-        paddingHorizontal: 30,
-        borderRadius: 10,
+    button: {
+        marginVertical: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        width: '100%',
+        paddingVertical: 12,
+        paddingHorizontal: 32,
+        borderRadius: 10,
+        elevation: 3,
+        backgroundColor: 'black',
     },
-    buttonText: {
-        color: '#fff',
+    textButton: {
         fontSize: 16,
+        lineHeight: 21,
         fontWeight: 'bold',
+        letterSpacing: 0.25,
+        color: 'white',
+    },
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: "#ffffff",
     },
     switchContainer: {
         flexDirection: 'row',

@@ -1,5 +1,6 @@
 package com.example.backend.dto;
 
+import com.example.backend.model.Endereco;
 import com.example.backend.security.Role;
 
 import lombok.Data;
@@ -13,4 +14,5 @@ public class UsuarioDTO {
     private String cpf;
     private String telefone;
     private Role role;
+    private Endereco endereco;
 }

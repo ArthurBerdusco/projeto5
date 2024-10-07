@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.example.backend.model.Motorista;
 import com.example.backend.model.Van;
@@ -37,27 +38,41 @@ public class MotoristaController {
         motorista.setStatus("Pendente ativação");
         motoristaRepository.save(motorista);
     }
+    
+    @GetMapping("/van/{idMotorista}")
+    public ResponseEntity<?> obterVanMotoristaId(@PathVariable Long idMotorista) {
+        try {
+            // Busca a van pelo id do motorista
+            Van van = vanRepository.findByMotoristaId(idMotorista)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Van não encontrada para o motorista com ID: " + idMotorista));
 
-    @PostMapping("/cadastro-van/{idUsuario}")
+            // Retorna status OK (200) com a van encontrada
+            return ResponseEntity.ok(van);
+            
+        } catch (ResponseStatusException e) {
+            // Retorna status NOT_FOUND (404) quando a van não for encontrada
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+            
+        } catch (Exception e) {
+            // Loga a exceção no console e retorna um erro interno do servidor (500)
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao obter van: " + e.getMessage());
+        }
+    }
+    
+
+    @PostMapping("/cadastro-van/{idMotorista}")
     public ResponseEntity<?> cadastrar(@PathVariable Long idMotorista, @RequestBody Van van) {
+        System.out.println("\n\n\n ID: " + idMotorista + "\n\n\n");
         try {
             Motorista motorista = motoristaRepository.findById(idMotorista)
                     .orElseThrow(() -> new Exception("Motorista não encontrado"));
 
-            Van vanEntity = new Van();
-            vanEntity.setPlaca(van.getPlaca());
-            vanEntity.setRenavam(van.getRenavam());
-            vanEntity.setAnoVeiculo(van.getAnoVeiculo());
-            vanEntity.setCnh(van.getCnh());
-            vanEntity.setQuantidadeAcentos(van.getQuantidadeAcentos());
-            vanEntity.setArCondicionado(van.isArCondicionado());
-            vanEntity.setCortina(van.isCortina());
-            vanEntity.setTv(van.isTv());
-            vanEntity.setCamera(van.isCamera());
-            vanEntity.setAcessibilidade(van.isAcessibilidade());
-            vanEntity.setMotorista(motorista);
+            
+            van.setMotorista(motorista);
 
-            vanRepository.save(vanEntity);
+            vanRepository.save(van);
 
             Usuario usuario = motorista.getUsuario();
             usuario.setStatus("ATIVADO");
@@ -71,12 +86,51 @@ public class MotoristaController {
         }
     }
 
+    @PostMapping("/van/atualizar/{id}")
+public ResponseEntity<?> atualizarVan(@PathVariable Long id, @RequestBody Van vanAtualizada) {
+    try {
+        
+        // Verifica se a van com o ID fornecido existe
+        Van vanExistente = vanRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Van não encontrada com ID: " + id));
+
+        // Verifica se o ID no corpo da requisição corresponde ao ID na URL
+        if (!vanAtualizada.getId().equals(id)) {
+            
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID da van inconsistente com a URL");
+        }
+
+        // Atualiza os dados da van existente
+        vanExistente = vanAtualizada;
+       
+        // Atualize outros campos conforme necessário...
+
+        // Salva a van atualizada no banco de dados
+        vanRepository.save(vanExistente);
+
+        // Retorna status OK (200) com os dados da van atualizada
+        return ResponseEntity.ok(vanExistente);
+
+    } catch (ResponseStatusException e) {
+        // Retorna o status apropriado e a mensagem da exceção
+        return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+
+    } catch (Exception e) {
+        // Loga a exceção no console e retorna um erro interno do servidor (500)
+        e.printStackTrace();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Erro ao atualizar a van: " + e.getMessage());
+    }
+}
+
+
+
     @GetMapping("{id}")
     public ResponseEntity<?> getMotoristaById(@PathVariable Long id) {
         try {
             Optional<Motorista> motorista = motoristaRepository.findById(id);
             if (motorista.isPresent()) {
-                System.out.println("\n\n\n" + motorista + "\n\n\n");
+
                 return ResponseEntity.ok(motorista.get());
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Motorista não encontrado.");
@@ -99,8 +153,6 @@ public class MotoristaController {
             motorista.setCpf(motoristaAtualizado.getCpf());
             motorista.setTelefone(motoristaAtualizado.getTelefone());
             motorista.setEndereco(motoristaAtualizado.getEndereco());
-            // Aqui você pode atualizar também o endereço se necessário
-            System.out.println("\n\n\n" + motoristaAtualizado.getEndereco() +" \n\n\n");
 
             Motorista motoristaSalvo = motoristaRepository.save(motorista);
             return ResponseEntity.ok(motoristaSalvo);

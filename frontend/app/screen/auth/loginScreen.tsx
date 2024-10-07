@@ -8,7 +8,7 @@ import config from "@/app/config";
 
 export default function loginScreen() {
 
-    const [email, setEmail] = useState("ryu@email.com.br");
+    const [email, setEmail] = useState("mika@email.com.br");
     const [senha, setSenha] = useState("1234");
 
     const router = useRouter();  // Adicione isso para usar o roteamento
@@ -39,7 +39,7 @@ export default function loginScreen() {
                     if (resultado.status === "DESATIVADO") {
                         router.push('/screen/motorista/cadastro');
                     } else {
-                        router.push('/screen/motorista/');
+                        router.push('/screen/motorista');
                     }
                 }
 
@@ -49,7 +49,7 @@ export default function loginScreen() {
                     if (resultado.status === "DESATIVADO") {
                         router.push('/screen/responsavel/cadastro');
                     } else {
-                        router.push('/screen/responsavel/');
+                        router.push('/screen/responsavel');
                     }
                 }
 

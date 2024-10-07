@@ -33,9 +33,17 @@ public class CadastroController {
     private ResponsavelRepository responsaveisRepository;
 
     @PostMapping("/cadastro")
-    public ResponseEntity<String> cadastrar(@RequestBody UsuarioDTO dto) {
+    public ResponseEntity<?> cadastrar(@RequestBody UsuarioDTO dto) {
+        Motorista motorista = null; // Declaração fora do bloco
+        Responsavel responsavel = null; // Declaração fora do bloco
 
         try {
+            // Verifica se o email já está cadastrado
+            if (usuarioRepository.existsByEmailIgnoringCase(dto.getEmail())) {
+                return ResponseEntity.status(HttpStatus.CONFLICT)
+                        .body("Erro: O email já está cadastrado.");
+            }
+
             Usuario usuario = new Usuario();
             usuario.setEmail(dto.getEmail());
             usuario.setSenha(passwordEncoder.encode(dto.getSenha()));
@@ -45,34 +53,52 @@ public class CadastroController {
 
             // Verifica a role do usuário e cria a entidade correspondente
             if (dto.getRole() == Role.MOTORISTA) {
-                Motorista motorista = new Motorista();
+                if (motoristaRepository.existsByCpf(dto.getCpf())) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT)
+                            .body("Erro: O CPF já está cadastrado.");
+                }
+                motorista = new Motorista(); // Inicialização da variável
                 motorista.setNome(dto.getNome());
                 motorista.setEmail(dto.getEmail());
                 motorista.setCpf(dto.getCpf());
                 motorista.setTelefone(dto.getTelefone());
                 motorista.setIdade(dto.getIdade());
+                motorista.setEndereco(dto.getEndereco());
                 motorista.setStatus("Pendente ativação");
                 motorista.setUsuario(usuario);
-
                 motoristaRepository.save(motorista);
-            } else if (usuario.getRole() == Role.RESPONSAVEL) {
-                Responsavel responsavel = new Responsavel();
+            } else if (dto.getRole() == Role.RESPONSAVEL) {
+                if (responsaveisRepository.existsByCpf(dto.getCpf())) {
+                    return ResponseEntity.status(HttpStatus.CONFLICT)
+                            .body("Erro: O CPF já está cadastrado.");
+                }
+                responsavel = new Responsavel(); // Inicialização da variável
                 responsavel.setNome(dto.getNome());
                 responsavel.setEmail(dto.getEmail());
                 responsavel.setCpf(dto.getCpf());
                 responsavel.setTelefone(dto.getTelefone());
                 responsavel.setIdade(dto.getIdade());
+                responsavel.setEndereco(dto.getEndereco());
                 responsavel.setStatus("Pendente ativação");
                 responsavel.setUsuario(usuario);
                 responsaveisRepository.save(responsavel);
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Papel do usuário inválido");
             }
-            // Retorna um status 201 CREATED se o cadastro for bem-sucedido
-            return ResponseEntity.status(HttpStatus.CREATED).body("Cadastro realizado com sucesso!");
+
+            // Retorna a resposta com base no tipo de usuário criado
+            if (motorista != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(motorista);
+            } else if (responsavel != null) {
+                return ResponseEntity.status(HttpStatus.CREATED).body(responsavel);
+            }
 
         } catch (Exception e) {
             // Retorna um status 500 INTERNAL SERVER ERROR em caso de falha
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar o usuário.");
         }
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Usuário cadastrado com sucesso!");
     }
 
 }
