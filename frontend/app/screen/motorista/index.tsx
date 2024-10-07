@@ -82,32 +82,33 @@ export default function Index() {
                     <View style={styles.cardsMotoristas}></View>
                     <View style={styles.cardsMotoristas}></View>
                 </View>
-            </ScrollView>
 
-            {/* Parte fixa na parte inferior */}
-            <View style={styles.fixedFooter}>
-                <Pressable
-                    style={styles.botaoOferta}
-                    onPress={() => router.push("/screen/motorista/ofertas/verOfertas")}
-                >
-                    <Image source={require('../assets/icons/ofertas.png')} style={styles.image} />
-                </Pressable>
 
-                <Pressable
-                    style={styles.botaoProcura}
-                    onPress={() => router.push("/screen/motorista/escola/escolasAtendidas")}
-                >
-                    <Image source={require('../assets/icons/search.png')} style={{ height: 80, width: 80 }} />
-                </Pressable>
+                {/* Parte fixa na parte inferior */}
+                <View style={styles.fixedFooter}>
+                    <Pressable
+                        style={styles.botaoOferta}
+                        onPress={() => router.push("/screen/motorista/ofertas/verOfertas")}
+                    >
+                        <Image source={require('../assets/icons/ofertas.png')} style={styles.image} />
+                    </Pressable>
 
-                <Pressable
-                    style={styles.botaoOferta}
-                    onPress={() => router.push("/screen/motorista/perfil")}
-                >
-                    <Image source={require('../assets/icons/editar.png')} style={styles.image} />
-                </Pressable>
+                    <Pressable
+                        style={styles.botaoProcura}
+                        onPress={() => router.push("/screen/motorista/escola/escolasAtendidas")}
+                    >
+                        <Image source={require('../assets/icons/search.png')} style={{ height: 80, width: 80 }} />
+                    </Pressable>
+
+                    <Pressable
+                        style={styles.botaoOferta}
+                        onPress={() => router.push("/screen/motorista/perfil")}
+                    >
+                        <Image source={require('../assets/icons/editar.png')} style={styles.image} />
+                    </Pressable>
+                </View>
             </View>
-        </View>
+        </ScrollView>
     )
 }
 
