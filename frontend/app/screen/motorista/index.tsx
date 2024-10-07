@@ -17,9 +17,7 @@ export default function Index() {
 
             const response = await fetch(`${config.IP_SERVER}/motorista/${idMotorista}`);
 
-
             const data = await response.json();
-            alert(data.nome)
             setMotorista(data)
         } catch (err) {
             setError('Erro ao carregar o responsavel');
@@ -44,29 +42,37 @@ export default function Index() {
     }
 
     return (
-        <View style={{ flex: 1, backgroundColor: "white" }}>
-            <Stack.Screen
-                options={{
-                    headerTitle: 'Home',
-                    headerStyle: { backgroundColor: '#ffbf00' },
-                    headerTintColor: 'white',
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                    headerTitleAlign: 'center'
-                }}
-            />
-
-            {/* Parte que pode rolar */}
-            <ScrollView style={styles.container}>
-                <Pressable onPress={() => router.push('/screen/motorista/perfil')} style={styles.cardDados}>
-                    <Image source={require('../assets/icons/icone6.png')} style={{ resizeMode: "cover", height: 90, width: 90 }} />
+        <ScrollView style={{ backgroundColor: "white" }}>
+            <View style={styles.container}>
+                {/* <Text style={{ fontSize: 20, marginLeft: 20, marginTop: 20 }}>
+                    Meus dados
+                </Text> */}
+                <Link href={'/screen/motorista/perfil'} style={styles.cardDados}>
+                    <Image source={require('../assets/icons/icone6.png')} style={{ resizeMode: "contain", height: 90, width: 90 }} />
                     <View>
-                        <Text style={styles.textoDados}>Nome: {motorista.nome}</Text>
-                        <Text style={styles.textoDados}>Idade: {motorista.idade}</Text>
-                        <Text style={styles.textoDados}>Telefone: {motorista.telefone}</Text>
+                        <View>
+                            <Text style={styles.textoDados}>Nome: {motorista.nome}</Text>
+                            <Text style={styles.textoDados}>Idade: {motorista.idade}</Text>
+                            <Text style={styles.textoDados}>Telefone: {motorista.telefone}</Text>
+                        </View>
                     </View>
-                </Pressable>
+                </Link>
+                <Text style={{ fontSize: 20, marginLeft: 20 }}>Crianças</Text>
+                <View style={styles.containerCards}>
+
+                    <Link style={styles.cardsMotoristas} href={"/screen/motorista/escola/escolasAtendidas"}>
+                        <Text style={styles.buttonText}>Ver escolas</Text>
+                    </Link>
+                    <Link style={styles.cardsMotoristas} href={"/screen/motorista/veiculo"}>
+                        <Text style={styles.buttonText}>Meu veículo</Text>
+                    </Link>
+                    <View style={styles.cardsMotoristas}>
+
+                    </View>
+                    <View style={styles.cardsMotoristas}>
+
+                    </View>
+                </View>
 
                 <Text style={{ fontSize: 20, marginLeft: 20 }}>Crianças</Text>
 

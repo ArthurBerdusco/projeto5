@@ -20,11 +20,9 @@ interface Motorista {
     endereco: Endereco;
 }
 
-
 export default function Perfil() {
 
     const [loading, setLoading] = useState(false);
-
 
     const [motorista, setMotorista] = useState<Motorista>({
         nome: '',
@@ -224,6 +222,7 @@ const styles = StyleSheet.create({
     janela: {
         flex: 0.3,
         backgroundColor: 'beige',
+        height: 'auto',
         borderWidth: 5,
         padding: 10
     },

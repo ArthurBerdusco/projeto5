@@ -8,4 +8,5 @@ import com.example.backend.model.Responsavel;
 
 public interface ResponsavelRepository extends JpaRepository<Responsavel, Long>{
     Optional<Responsavel> findByUsuarioId(Long usuarioId);
+    boolean existsByCpf(String cpf);
 }

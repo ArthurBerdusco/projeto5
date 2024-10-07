@@ -1,128 +1,55 @@
 package com.example.backend.model;
+import java.util.Date;
+import java.util.List;
 
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import lombok.Data;
 
 @Entity
-@Data
+@Data // Gera automaticamente getters, setters, toString, equals e hashCode
 public class Van {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
+    private Long id;
+
     private String placa;
     private String renavam;
-    private String anoVeiculo;
-    private String cnh;
-    private int quantidadeAcentos;
-    private boolean arCondicionado;
-    private boolean cortina;
-    private boolean tv;
-    private boolean camera;
+    private String anoFabricacao;
+    private String modelo;
+    private String fabricante;
+    private String cor;
+    private int quantidadeAssentos;
     private boolean acessibilidade;
+    private boolean arCondicionado;
+    private boolean cortinas;
+    private boolean tvEntretenimento;
+    private boolean camerasSeguranca;
+    private boolean cintoSeguranca;
 
-    @OneToOne
-    @JoinColumn(name = "id_motorista")
+    @Temporal(TemporalType.DATE)
+    private Date manutencaoRegular; // Data da última manutenção
+
+    private boolean extintorIncendio;
+
+    @Temporal(TemporalType.DATE)
+    private Date certificacaoInspecao; // Data de validade da certificação
+
+    private String cnh;
+    private boolean antecedentesCriminais;
+
+    @ElementCollection
+    private List<String> fotosVeiculo; // URLs ou paths das fotos do veículo
+
+    @ManyToOne
+    @JoinColumn(name = "motorista_id", nullable = false)
     private Motorista motorista;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getPlaca() {
-        return placa;
-    }
-
-    public void setPlaca(String placa) {
-        this.placa = placa;
-    }
-
-    public int getQuantidadeAcentos() {
-        return quantidadeAcentos;
-    }
-
-    public void setQuantidadeAcentos(int quantidadeAcentos) {
-        this.quantidadeAcentos = quantidadeAcentos;
-    }
-
-    public String getRenavam() {
-        return renavam;
-    }
-
-    public void setRenavam(String renavam) {
-        this.renavam = renavam;
-    }
-
-    public String getAnoVeiculo() {
-        return anoVeiculo;
-    }
-
-    public void setAnoVeiculo(String anoVeiculo) {
-        this.anoVeiculo = anoVeiculo;
-    }
-
-    public String getCnh() {
-        return cnh;
-    }
-
-    public void setCnh(String cnh) {
-        this.cnh = cnh;
-    }
-
-    public boolean isArCondicionado() {
-        return arCondicionado;
-    }
-
-    public void setArCondicionado(boolean arCondicionado) {
-        this.arCondicionado = arCondicionado;
-    }
-
-    public boolean isCortina() {
-        return cortina;
-    }
-
-    public void setCortina(boolean cortina) {
-        this.cortina = cortina;
-    }
-
-    public boolean isTv() {
-        return tv;
-    }
-
-    public void setTv(boolean tv) {
-        this.tv = tv;
-    }
-
-    public boolean isCamera() {
-        return camera;
-    }
-
-    public void setCamera(boolean camera) {
-        this.camera = camera;
-    }
-
-    public boolean isAcessibilidade() {
-        return acessibilidade;
-    }
-
-    public void setAcessibilidade(boolean acessibilidade) {
-        this.acessibilidade = acessibilidade;
-    }
-
-    public Motorista getMotorista() {
-        return motorista;
-    }
-
-    public void setMotorista(Motorista motorista) {
-        this.motorista = motorista;
-    }
 }

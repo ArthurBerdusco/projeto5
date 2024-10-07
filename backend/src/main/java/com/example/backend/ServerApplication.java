@@ -12,11 +12,13 @@ import com.example.backend.model.Escola;
 import com.example.backend.model.Motorista;
 import com.example.backend.model.Operador;
 import com.example.backend.model.Responsavel;
+import com.example.backend.model.Van;
 import com.example.backend.repository.EnderecoRepository;
 import com.example.backend.repository.EscolaRepository;
 import com.example.backend.repository.MotoristaRepository;
 import com.example.backend.repository.OperadorRepository;
 import com.example.backend.repository.ResponsavelRepository;
+import com.example.backend.repository.VanRepository;
 import com.example.backend.security.Role;
 import com.example.backend.security.Usuario;
 import com.example.backend.security.UsuarioRepository;
@@ -44,6 +46,8 @@ public class ServerApplication {
 
     @Autowired
     private EnderecoRepository enderecoRepository;
+
+    @Autowired VanRepository vanRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(ServerApplication.class, args);
@@ -93,6 +97,12 @@ public class ServerApplication {
             enderecoRepository.save(enderecoMika);
 
             m.setEndereco(enderecoMika);
+
+            Van van = new Van();
+            van.setAnoFabricacao("2024");
+            van.setMotorista(m);
+            vanRepository.save(van);
+            
             motoristaRepository.save(m);
 
             // Criando Responsavel (Ryu) com Endereço
