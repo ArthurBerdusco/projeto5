@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, ActivityIndicator, Alert, TextInput, Button } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '@/app/config'; // Configuração do servidor
+import { Stack } from 'expo-router';
 
 export default function MostraOfertas() {
     const [ofertas, setOfertas] = useState([]);
@@ -76,6 +77,17 @@ export default function MostraOfertas() {
 
     return (
         <View style={{ padding: 20 }}>
+            <Stack.Screen
+                options={{
+                    headerTitle: 'Ofertas',
+                    headerStyle: { backgroundColor: '#ffbf00' },
+                    headerTintColor: 'white',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    headerTitleAlign: 'center'
+                }}
+            />
             <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Ofertas Recebidas</Text>
 
             <FlatList

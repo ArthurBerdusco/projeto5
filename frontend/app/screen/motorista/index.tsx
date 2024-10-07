@@ -1,6 +1,6 @@
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Link, useRouter } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, View, StyleSheet, Text, Image, Pressable, ActivityIndicator } from "react-native";
 
@@ -23,8 +23,6 @@ export default function Index() {
             setError('Erro ao carregar o responsavel');
             console.error(err)
         }
-
-
     }
 
     useEffect(() => {
@@ -76,26 +74,40 @@ export default function Index() {
                     </View>
                 </View>
 
+                <Text style={{ fontSize: 20, marginLeft: 20 }}>Crianças</Text>
 
-                <View style={{ justifyContent: "space-around", alignItems: "center", flexDirection: "row", marginTop: 70 }}>
-                    <Pressable
-                        style={styles.botaoOferta}
-                        onPress={() => router.push("/screen/motorista/ofertas/verOfertas")}
-                    >
-                        <Image source={require('../assets/icons/ofertas.png')} style={styles.image} />
-                    </Pressable>
-                    <View style={styles.botaoProcura}>
-                        <Image source={require('../assets/icons/search.png')} style={{ height: 80, width: 80 }} />
-                    </View>
-                    <Pressable
-                        style={styles.botaoOferta}
-                        onPress={() => router.push("/screen/motorista/escola/escolasAtendidas")}
-                    >
-                        <Image source={require('../assets/icons/editar.png')} style={styles.image} />
-                    </Pressable>
+                <View style={styles.containerCards}>
+                    <View style={styles.cardsMotoristas}></View>
+                    <View style={styles.cardsMotoristas}></View>
+                    <View style={styles.cardsMotoristas}></View>
+                    <View style={styles.cardsMotoristas}></View>
                 </View>
+            </ScrollView>
+
+            {/* Parte fixa na parte inferior */}
+            <View style={styles.fixedFooter}>
+                <Pressable
+                    style={styles.botaoOferta}
+                    onPress={() => router.push("/screen/motorista/ofertas/verOfertas")}
+                >
+                    <Image source={require('../assets/icons/ofertas.png')} style={styles.image} />
+                </Pressable>
+
+                <Pressable
+                    style={styles.botaoProcura}
+                    onPress={() => router.push("/screen/motorista/escola/escolasAtendidas")}
+                >
+                    <Image source={require('../assets/icons/search.png')} style={{ height: 80, width: 80 }} />
+                </Pressable>
+
+                <Pressable
+                    style={styles.botaoOferta}
+                    onPress={() => router.push("/screen/motorista/perfil")}
+                >
+                    <Image source={require('../assets/icons/editar.png')} style={styles.image} />
+                </Pressable>
             </View>
-        </ScrollView>
+        </View>
     )
 }
 
@@ -164,5 +176,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: "#ffffff",
     },
+
+
+    fixedFooter: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 100, // Altura desejada para a barra
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+    },
+
+    image: {
+        // Estilos para as imagens
+        height: 80,
+        width: 80,
+    }
 
 })

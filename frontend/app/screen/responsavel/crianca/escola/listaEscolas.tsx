@@ -52,10 +52,10 @@ export default function ListaEscolas() {
                             crianca, // Agora passando o objeto crianca correto
                         },
                     }}
-                    style={styles.buttonEscola}
-                >
-                    <Text style={styles.textButton}>{item.nome}</Text>
+                    style={styles.buttonEscola}>
                 </Link>
+                <Text style={styles.textNome}>{item.nome}</Text>
+                <Text style={styles.textRua}>{item.rua}</Text>
             </View>
         );
     };
@@ -110,9 +110,10 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingVertical: 12,
         paddingHorizontal: 32,
-        borderRadius: 4,
+        borderRadius: 15,
         elevation: 3,
-        backgroundColor: '#0d99ff',
+        backgroundColor: '#2b2b2b',
+        height: 120,
     },
     textButton: {
         fontSize: 16,
@@ -120,5 +121,22 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         letterSpacing: 0.25,
         color: 'white',
+    },
+    textNome: {
+        fontSize: 18,
+        lineHeight: 26,
+        fontWeight: 'bold',
+        letterSpacing: 0.25,
+        color: '#000000',
+
+    },
+
+    textRua: {
+        fontSize: 14,
+        lineHeight: 21,
+        fontWeight: 'bold',
+        letterSpacing: 0.25,
+        color: '#6D6D6D',
+
     },
 });

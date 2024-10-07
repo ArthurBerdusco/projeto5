@@ -1,5 +1,6 @@
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
@@ -36,7 +37,7 @@ export default function Perfil() {
             complemento: ''
         }
     });
-    
+
 
     const fetchmotorista = async () => {
         setLoading(true);
@@ -72,7 +73,7 @@ export default function Perfil() {
             [field]: value
         }));
     };
-    
+
     const handleEnderecoChange = (field: keyof Endereco, value: string) => {
         setMotorista(prevState => ({
             ...prevState,
@@ -93,7 +94,7 @@ export default function Perfil() {
                 },
                 body: JSON.stringify(motorista),
             });
-    
+
             if (response.ok) {
                 alert('Dados alterados com sucesso!');
             } else {
@@ -104,12 +105,23 @@ export default function Perfil() {
             alert('Ocorreu um erro ao enviar os dados.');
         }
     };
-    
-    
-    
+
+
+
 
     return (
         <SafeAreaView style={styles.container}>
+            <Stack.Screen
+                options={{
+                    headerTitle: 'Perfil',
+                    headerStyle: { backgroundColor: '#ffbf00' },
+                    headerTintColor: 'white',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    headerTitleAlign: 'center'
+                }}
+            />
             <ScrollView>
                 <View style={styles.janela}>
                     <Text style={styles.textTitle}>Dados Pessoais: </Text>

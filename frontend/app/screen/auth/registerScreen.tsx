@@ -6,6 +6,7 @@ import config from '@/app/config';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
 interface Endereco {
     cep: string;
     rua: string;
@@ -94,6 +95,7 @@ export default function CadastroScreen() {
                 <View style={styles.header}>
                     <Text style={styles.title}>Cadastro de Usuário</Text>
                 </View>
+
 
                 <View style={styles.containerInputs}>
                     <Text style={styles.textTitle}>Dados pessoais:</Text>

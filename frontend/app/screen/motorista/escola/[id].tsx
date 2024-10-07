@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, ActivityIndicator, Alert } from 'react-native';
-import { useRouter, useLocalSearchParams } from "expo-router";
+import { useRouter, useLocalSearchParams, Stack } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '@/app/config';
 
@@ -82,6 +82,17 @@ export default function Escola() {
 
     return (
         <View style={{ padding: 20 }}>
+            <Stack.Screen
+                options={{
+                    headerTitle: 'Escola',
+                    headerStyle: { backgroundColor: '#ffbf00' },
+                    headerTintColor: 'white',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    headerTitleAlign: 'center'
+                }}
+            />
             {escola ? (
                 <>
                     <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{escola.nome}</Text>

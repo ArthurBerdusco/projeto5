@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, FlatList, ActivityIndicator, StyleSheet, Alert } from 'react-native';
-import { Link } from "expo-router";
+import { Link, Stack } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '@/app/config';
 
@@ -34,17 +34,28 @@ export default function ListaEscolas() {
                         pathname: `/screen/motorista/escola/[id]`,
                         params: { id: item.id },
                     }}
-                    style={styles.buttonEscola}
-                >
-                    <Text style={styles.textButton}>{item.nome}</Text>
+                    style={styles.buttonEscola}>
                 </Link>
+                <Text style={styles.textNome}>{item.nome}</Text>
+                <Text style={styles.textRua}>{item.rua}</Text>
             </View>
         );
     };
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Lista de Escolas</Text>
+            <Stack.Screen
+                options={{
+                    headerTitle: 'Lista de Escolas',
+                    headerStyle: { backgroundColor: '#ffbf00' },
+                    headerTintColor: 'white',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    headerTitleAlign: 'center'
+                }}
+            />
+
             {loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />
             ) : (
@@ -65,9 +76,13 @@ const styles = StyleSheet.create({
         padding: 16,
     },
     title: {
-        fontSize: 24,
+        fontSize: 25,
         fontWeight: 'bold',
-        marginBottom: 16,
+        marginBottom: 20,
+        alignSelf: 'center',
+        color: "#FEA407"
+
+
     },
     itemContainer: {
         flexDirection: 'row',
@@ -83,7 +98,7 @@ const styles = StyleSheet.create({
     },
     escolaAtendida: {
         marginTop: 10,
-        borderColor: 'black'
+        borderColor: 'black',
     },
     buttonEscola: {
         alignItems: 'center',
@@ -91,15 +106,27 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         paddingVertical: 12,
         paddingHorizontal: 32,
-        borderRadius: 4,
+        borderRadius: 15,
         elevation: 3,
-        backgroundColor: '#0d99ff',
+        backgroundColor: '#2b2b2b',
+        height: 120,
+
     },
-    textButton: {
-        fontSize: 16,
+    textNome: {
+        fontSize: 18,
+        lineHeight: 26,
+        fontWeight: 'bold',
+        letterSpacing: 0.25,
+        color: '#000000',
+
+    },
+
+    textRua: {
+        fontSize: 14,
         lineHeight: 21,
         fontWeight: 'bold',
         letterSpacing: 0.25,
-        color: 'white',
+        color: '#6D6D6D',
+
     },
 });
