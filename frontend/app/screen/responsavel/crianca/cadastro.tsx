@@ -1,4 +1,4 @@
-import { Link, useRouter } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 import { ScrollView, View, StyleSheet, Text, Image, TextInput, Pressable, Alert } from "react-native";
 import { useState } from "react";
 import config from '@/app/config';
@@ -42,8 +42,18 @@ export default function Cadastro() {
 
     return (
         <ScrollView style={{ backgroundColor: "white" }}>
+            <Stack.Screen
+                options={{
+                    headerTitle: 'Cadastrar Criança',
+                    headerStyle: { backgroundColor: '#0d99ff' },
+                    headerTintColor: 'white',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    headerTitleAlign: 'center'
+                }}
+            />
             <View style={styles.container}>
-                <Text style={{ fontSize: 20, marginLeft: 20 }}>Cadastrar Criança</Text>
                 <View style={styles.containerInputs}>
                     <TextInput
                         placeholder="Nome da criança"
@@ -63,16 +73,6 @@ export default function Cadastro() {
                 <Pressable style={styles.buttonSubmit} onPress={handleSubmit}>
                     <Text style={styles.buttonText}>Cadastrar</Text>
                 </Pressable>
-
-                <Text style={{ fontSize: 20, marginLeft: 20 }}>Crianças</Text>
-                <View style={styles.containerCards}>
-
-                    {/* Outros cards de crianças podem ser adicionados aqui */}
-                </View>
-
-                <View style={styles.botaoProcura}>
-                    <Image source={require('../../assets/icons/search.png')} style={{ height: 80, width: 80 }} />
-                </View>
             </View>
         </ScrollView>
     );

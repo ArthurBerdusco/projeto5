@@ -3,6 +3,7 @@ import { View, StyleSheet, Text, Pressable, TextInput, SafeAreaView } from "reac
 import DropDownPicker from 'react-native-dropdown-picker';
 import { useState } from "react";
 import config from '@/app/config';
+import { Stack } from 'expo-router';
 
 
 export default function CadastroScreen() {
@@ -51,6 +52,17 @@ export default function CadastroScreen() {
 
     return (
         <SafeAreaView style={styles.total}>
+            <Stack.Screen
+                options={{
+                    headerTitle: 'Cadastro',
+                    headerStyle: { backgroundColor: '#0d99ff' },
+                    headerTintColor: 'white',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    headerTitleAlign: 'center'
+                }}
+            />
             <KeyboardAvoidingView
                 style={styles.container}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>

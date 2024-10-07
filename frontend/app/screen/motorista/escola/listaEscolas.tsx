@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, FlatList, ActivityIndicator, StyleSheet, Alert } from 'react-native';
-import { Link } from "expo-router";
+import { Link, Stack } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '@/app/config';
 
@@ -38,15 +38,24 @@ export default function ListaEscolas() {
                 </Link>
                 <Text style={styles.textNome}>{item.nome}</Text>
                 <Text style={styles.textRua}>{item.rua}</Text>
-
-
             </View>
         );
     };
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Lista de Escolas</Text>
+            <Stack.Screen
+                options={{
+                    headerTitle: 'Lista de Escolas',
+                    headerStyle: { backgroundColor: '#ffbf00' },
+                    headerTintColor: 'white',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    headerTitleAlign: 'center'
+                }}
+            />
+
             {loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />
             ) : (

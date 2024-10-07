@@ -1,5 +1,5 @@
-import { Link, useRouter } from "expo-router";
-import { ScrollView, View, StyleSheet, Text, Image, ActivityIndicator, TouchableOpacity, Alert } from "react-native";
+import { Link, Stack, useRouter } from "expo-router";
+import { ScrollView, View, StyleSheet, Text, Image, ActivityIndicator, TouchableOpacity, Alert, Pressable } from "react-native";
 import { useState, useEffect } from "react";
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -20,7 +20,7 @@ export default function Index() {
 
 
             const data = await response.json();
-           
+
             setResponsavel(data)
         } catch (err) {
             setError('Erro ao carregar o responsavel');
@@ -34,7 +34,7 @@ export default function Index() {
         try {
 
             const responsavel = await AsyncStorage.getItem('idResponsavel');
-            
+
 
             const response = await fetch(`${config.IP_SERVER}/crianca/responsavel/${responsavel}`);
 
@@ -70,15 +70,28 @@ export default function Index() {
 
     return (
         <ScrollView style={styles.scrollView}>
+            <Stack.Screen
+                options={{
+                    headerTitle: 'Home',
+                    headerStyle: { backgroundColor: '#0d99ff' },
+                    headerTintColor: 'white',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    headerTitleAlign: 'center'
+                }}
+            />
             <View style={styles.container}>
-                <Link href={'/screen/responsavel/perfil'} style={styles.cardDados}>
-                    <Image source={require('../assets/icons/icone6.png')} style={styles.iconDados} />
+                <Pressable onPress={() => router.push('/screen/responsavel/perfil')} style={styles.cardDados}>
+                    <Image source={require('../assets/icons/icone2.png')} style={{ resizeMode: "cover", height: 90, width: 90 }} />
                     <View>
-                        <Text style={styles.textoDados}>Nome: {responsavel.nome}</Text>
-                        <Text style={styles.textoDados}>Idade: {responsavel.idade}</Text>
-                        <Text style={styles.textoDados}>Telefone: {responsavel.telefone}</Text>
+                        <View>
+                            <Text style={styles.textoDados}>Nome: {responsavel.nome}</Text>
+                            <Text style={styles.textoDados}>Idade: {responsavel.idade}</Text>
+                            <Text style={styles.textoDados}>Telefone: {responsavel.telefone}</Text>
+                        </View>
                     </View>
-                </Link>
+                </Pressable>
 
                 <Text style={styles.title}>Crianças</Text>
 
@@ -87,21 +100,22 @@ export default function Index() {
                 {criancas.length > 0 ? (
                     <View style={styles.containerCards}>
                         {criancas.map(crianca => (
-                            <Link
-                                href={{
-                                    pathname: `/screen/responsavel/crianca/[id]`,
-                                    params: { id: crianca.id },
-                                }}
+                            <Pressable
+                                onPress={() =>
+                                    router.push({
+                                        pathname: `/screen/responsavel/crianca/[id]`,
+                                        params: { id: crianca.id }
+                                    })
+                                }
                                 style={styles.cardsCriancas}
                                 key={crianca.id}
-                                onPress={() => console.log(`ID da criança: ${crianca.id}`)}
-
                             >
-                                <Text style={styles.cardText}>{crianca.id}</Text>
-                                <Text style={styles.cardText}>{crianca.nome}</Text>
-                                <Text style={styles.cardText}>{crianca.idade} anos</Text>
+                                <View style={{}}>
+                                    <Text style={styles.cardText}>{crianca.nome}</Text>
+                                    <Text style={styles.cardText}>{crianca.idade} anos</Text>
+                                </View>
+                            </Pressable>
 
-                            </Link>
                         ))}
                     </View>
                 ) : (
@@ -119,9 +133,7 @@ export default function Index() {
                     </Link>
                 )}
 
-                <View style={styles.botaoProcura}>
-                    <Image source={require('../assets/icons/search.png')} style={styles.searchIcon} />
-                </View>
+
             </View>
         </ScrollView>
     );
@@ -171,7 +183,7 @@ const styles = StyleSheet.create({
     },
     cardsCriancas: {
         height: 150,
-        width: "48%", // Ajuste para responsividade
+        width: "48%",
         backgroundColor: "#0d99ff",
         borderRadius: 15,
         justifyContent: "center",
@@ -187,7 +199,7 @@ const styles = StyleSheet.create({
         color: "#ffffff",
         fontWeight: "700",
         fontSize: 16,
-        textAlign: "center",
+        textAlign: "center"
     },
     cadastrarTexto: {
         textAlign: "center",

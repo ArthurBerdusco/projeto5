@@ -1,6 +1,6 @@
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Link, useRouter } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, View, StyleSheet, Text, Image, Pressable, ActivityIndicator } from "react-native";
 
@@ -25,8 +25,6 @@ export default function Index() {
             setError('Erro ao carregar o responsavel');
             console.error(err)
         }
-
-
     }
 
     useEffect(() => {
@@ -46,69 +44,75 @@ export default function Index() {
     }
 
     return (
-        <SafeAreaView style={{
-            flex: 1,
-            justifyContent: "space-around"
-        }}>
-            <View style={styles.cardDados}>
-                <Image source={require('../assets/icons/icone6.png')} style={{ resizeMode: "contain", height: 90, width: 90 }} />
-                <View>
-                    <Text style={styles.textoDados}>Nome: Samuel Braga</Text>
-                    <Text style={styles.textoDados}>Idade: 21 Anos</Text>
-                    <Text style={styles.textoDados}>Telefone: (11)95323232</Text>
+        <View style={{ flex: 1, backgroundColor: "white" }}>
+            <Stack.Screen
+                options={{
+                    headerTitle: 'Home',
+                    headerStyle: { backgroundColor: '#ffbf00' },
+                    headerTintColor: 'white',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    headerTitleAlign: 'center'
+                }}
+            />
+
+            {/* Parte que pode rolar */}
+            <ScrollView style={styles.container}>
+                <Pressable onPress={() => router.push('/screen/motorista/perfil')} style={styles.cardDados}>
+                    <Image source={require('../assets/icons/icone6.png')} style={{ resizeMode: "cover", height: 90, width: 90 }} />
+                    <View>
+                        <Text style={styles.textoDados}>Nome: {motorista.nome}</Text>
+                        <Text style={styles.textoDados}>Idade: {motorista.idade}</Text>
+                        <Text style={styles.textoDados}>Telefone: {motorista.telefone}</Text>
+                    </View>
+                </Pressable>
+
+                <Text style={{ fontSize: 20, marginLeft: 20 }}>Crianças</Text>
+
+                <View style={styles.containerCards}>
+                    <View style={styles.cardsMotoristas}></View>
+                    <View style={styles.cardsMotoristas}></View>
+                    <View style={styles.cardsMotoristas}></View>
+                    <View style={styles.cardsMotoristas}></View>
                 </View>
-            </View>
-            <Text style={{ fontSize: 20, marginLeft: 20 }}>Crianças</Text>
-            <View style={styles.containerCards}>
+            </ScrollView>
 
-                <Link style={styles.cardsMotoristas} href={"/screen/motorista/escola/escolasAtendidas"}>
-                    <Text style={styles.buttonText}>Ver escolas</Text>
-                </Link>
-                <View style={styles.cardsMotoristas}>
-
-                </View>
-                <View style={styles.cardsMotoristas}>
-
-                </View>
-                <View style={styles.cardsMotoristas}>
-
-                </View>
-            </View>
-
-
-            <View style={{ justifyContent: "space-around", alignItems: "center", flexDirection: "row", marginTop: 70 }}>
+            {/* Parte fixa na parte inferior */}
+            <View style={styles.fixedFooter}>
                 <Pressable
                     style={styles.botaoOferta}
                     onPress={() => router.push("/screen/motorista/ofertas/verOfertas")}
                 >
                     <Image source={require('../assets/icons/ofertas.png')} style={styles.image} />
                 </Pressable>
-                <View style={styles.botaoProcura}>
+
+                <Pressable
+                    style={styles.botaoProcura}
+                    onPress={() => router.push("/screen/motorista/escola/escolasAtendidas")}
+                >
                     <Image source={require('../assets/icons/search.png')} style={{ height: 80, width: 80 }} />
-                </View>
+                </Pressable>
+
                 <Pressable
                     style={styles.botaoOferta}
-                    onPress={() => router.push("/screen/motorista/escola/escolasAtendidas")}
+                    onPress={() => router.push("/screen/motorista/perfil")}
                 >
                     <Image source={require('../assets/icons/editar.png')} style={styles.image} />
                 </Pressable>
             </View>
-        </SafeAreaView>
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        display: "flex",
-        gap: 20,
-        alignItems: "center",
-        alignContent: "center",
-        marginTop: 'auto', // Centraliza verticalmente
-        marginBottom: 'auto',
-        backgroundColor: "#0d99ff"
+        flex: 1,
+        backgroundColor: "#ffffff",
 
 
-    },
+    }
+    ,
 
     cardDados: {
         backgroundColor: "#ffbf00",
@@ -166,5 +170,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: "#ffffff",
     },
+
+
+    fixedFooter: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 100, // Altura desejada para a barra
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+    },
+
+    image: {
+        // Estilos para as imagens
+        height: 80,
+        width: 80,
+    }
 
 })
