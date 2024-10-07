@@ -2,11 +2,11 @@ import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, Pressable } f
 import { View, StyleSheet, Text, TextInput, SafeAreaView } from "react-native";
 import { useEffect, useState } from "react";
 import config from '@/app/config';
-import { Link, useLocalSearchParams } from 'expo-router';
+import { Link, router, Stack, useLocalSearchParams } from 'expo-router';
 
 export default function CadastroCrianca() {
 
-    const [crianca, setCrianca] = useState({ nome: '', idade: 0 });
+    const [crianca, setCrianca] = useState({ nome: '', idade: '' });
     const [loading, setLoading] = useState(false);
     const [ofertas, setOfertas] = useState([]);
 
@@ -55,12 +55,21 @@ export default function CadastroCrianca() {
 
     return (
         <SafeAreaView style={styles.total}>
+            <Stack.Screen
+                options={{
+                    headerTitle: 'Perfil Criança',
+                    headerStyle: { backgroundColor: '#0d99ff' },
+                    headerTintColor: 'white',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    headerTitleAlign: 'center'
+                }}
+            />
             <KeyboardAvoidingView
                 style={styles.container}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                <Text style={{ fontWeight: '800', textAlign: 'center', fontSize: 20 }}>Cadastrar Criança</Text>
                 <View style={styles.containerInputs}>
-                    <Text style={styles.name}>{crianca.nome}</Text>
 
                     <TextInput
                         placeholder="Nome da criança"
@@ -81,15 +90,18 @@ export default function CadastroCrianca() {
 
                 <View style={styles.containerButton}>
 
-                    <Link
-                        href={{
-                            pathname: `/screen/responsavel/crianca/escola/listaEscolas`,
-                            params: { crianca: JSON.stringify(crianca) }, // Passa a criança para a próxima tela
-                        }}
+                    <Pressable
+                        onPress={() =>
+                            router.push({
+                                pathname: `/screen/responsavel/crianca/escola/listaEscolas`,
+                                params: { crianca: JSON.stringify(crianca) },
+                            })}
                     >
                         <Text style={styles.buttonText}>Procurar perueiro</Text>
 
-                    </Link>
+                    </Pressable>
+
+
 
                     <Link
                         href={{
@@ -102,7 +114,7 @@ export default function CadastroCrianca() {
 
                 </View>
             </KeyboardAvoidingView>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }
 

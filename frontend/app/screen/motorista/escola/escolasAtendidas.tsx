@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, FlatList, ActivityIndicator, StyleSheet, Alert } from 'react-native';
-import { Link } from "expo-router";
+import { Text, View, FlatList, ActivityIndicator, StyleSheet, Alert, SafeAreaView } from 'react-native';
+import { Link, Stack } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '@/app/config';
 
@@ -53,14 +53,27 @@ export default function EscolasAtendidas() {
     };
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Gerenciar escolas </Text>
-            <Link style={styles.buttonVerEscolas} href={"/screen/motorista/escola/listaEscolas"}>
-                <Text style={styles.textButton}>Ver escolas</Text>
-            </Link>
-            {loading ? (
-                <ActivityIndicator size="large" color="#0000ff" />
-            ) : (<View>
+        <SafeAreaView>
+
+            <Stack.Screen
+                options={{
+                    headerTitle: 'Escolas',
+                    headerStyle: { backgroundColor: '#ffbf00' },
+                    headerTintColor: 'white',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    headerTitleAlign: 'center'
+                }}
+            />
+            <View style={styles.container}>
+                <Text style={styles.title}>Gerenciar escolas </Text>
+                <Link style={styles.buttonVerEscolas} href={"/screen/motorista/escola/listaEscolas"}>
+                    <Text style={styles.textButton}>Ver escolas</Text>
+                </Link>
+                {loading ? (
+                    <ActivityIndicator size="large" color="#0000ff" />
+                ) : (<View>
                     <Text style={styles.subtitle}>Escolas Atendidas </Text>
                     <FlatList
                         data={escolasAtendidas}
@@ -69,8 +82,10 @@ export default function EscolasAtendidas() {
                         ListEmptyComponent={<Text>Nenhuma escola atendida</Text>}
                     />
                 </View>
-            )}
-        </View>
+                )}
+            </View>
+        </SafeAreaView>
+
     );
 }
 
@@ -78,7 +93,6 @@ export default function EscolasAtendidas() {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         padding: 16,
     },
     title: {

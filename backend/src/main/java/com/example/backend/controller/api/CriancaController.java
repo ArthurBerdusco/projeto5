@@ -53,20 +53,19 @@ public class CriancaController {
     @GetMapping("/criancas/{id}")
     public ResponseEntity<Crianca> getCrianca(@PathVariable Long id) {
         System.out.println("\n\n\nCRIANÇA kkkk: " + id + "\n\n\n");
-    
+
         // Usando Optional para verificar se a criança existe
         Optional<Crianca> criancaOptional = criancaRepository.findById(id);
-    
+
         if (!criancaOptional.isPresent()) {
             // Retorna 404 se a criança não for encontrada
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-    
+
         // Se a criança existir, retorna o objeto encontrado
         Crianca crianca = criancaOptional.get();
         return ResponseEntity.ok(crianca);
     }
-    
 
     @PostMapping("/crianca")
     public ResponseEntity<String> cadastroCrianca(@RequestBody CriancaDTO dto) {
@@ -85,7 +84,8 @@ public class CriancaController {
     }
 
     @PostMapping("/cadastro-crianca/{escolaId}/{responsavelId}")
-    public ResponseEntity<String> cadastrarCrianca(@PathVariable Long escolaId, @PathVariable Long responsavelId, @RequestBody Crianca crianca) {
+    public ResponseEntity<String> cadastrarCrianca(@PathVariable Long escolaId, @PathVariable Long responsavelId,
+            @RequestBody Crianca crianca) {
         try {
             // Supondo que a crianca seja associado a um responsável
             Optional<Responsavel> optionalResponsavel = responsavelRepository.findById(responsavelId);

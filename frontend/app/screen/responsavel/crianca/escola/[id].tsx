@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, FlatList, Alert } from 'react-native';
-import { useRouter, useLocalSearchParams, Link } from "expo-router";
+import { View, Text, ActivityIndicator, FlatList, Alert, StyleSheet, Pressable, ScrollView, SafeAreaView } from 'react-native';
+import { useRouter, useLocalSearchParams, Link, Stack } from "expo-router";
 import config from '@/app/config';
 
 export default function Escola() {
@@ -53,40 +53,81 @@ export default function Escola() {
     }
 
     return (
-        <View style={{ padding: 20 }}>
-            {escola && (
-                <>
-                    <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{escola.nome}</Text>
-                    <Text>{escola.endereco}</Text>
-                </>
-            )}
-
-            <Text style={{ marginTop: 20, fontSize: 20 }}>Motoristas que atendem esta escola:</Text>
-
-            <FlatList
-                data={motoristas}
-                keyExtractor={(item) => item.id.toString()}
-                renderItem={({ item }) => (
-                    <View style={{ marginVertical: 10 }}>
-                        <Text>{item.nome}</Text>
-                        <Text>{item.telefone}</Text>
-
-                        <Link
-                            href={{
-                                pathname: `/screen/responsavel/crianca/escola/motorista/[id]`,
-                                params: {
-                                    id: item.id,
-                                    crianca: JSON.stringify(crianca), // Passando o objeto 'crianca'
-                                    escolaId: id, // Passa também o ID da escola
-                                    responsavelId: responsavelId,
-                                },
-                            }}
-                        >
-                            <Text style={{ color: 'blue', fontSize: 25 }}>{item.nome}</Text>
-                        </Link>
-                    </View>
-                )}
+        <SafeAreaView>
+            <Stack.Screen
+                options={{
+                    headerTitle: 'Encontrar Motoristas',
+                    headerStyle: { backgroundColor: '#0d99ff' },
+                    headerTintColor: 'white',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    headerTitleAlign: 'center'
+                }}
             />
-        </View>
+
+
+            <View style={{ padding: 20 }}>
+
+                {escola && (
+                    <>
+                        <Text style={{ fontSize: 22, fontWeight: 'bold', textAlign: 'center', textTransform: 'uppercase', color: "#FEA407" }}>{escola.nome}</Text>
+                        <Text>{escola.endereco}</Text>
+                    </>
+                )}
+
+                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Motoristas nesta escola:</Text>
+
+                <FlatList
+                    data={motoristas}
+                    keyExtractor={(item) => item.id.toString()}
+                    renderItem={({ item }) => (
+                        <View style={{ marginVertical: 10 }}>
+
+
+                            <Pressable
+                                onPress={() =>
+                                    router.push({
+                                        pathname: `/screen/responsavel/crianca/escola/motorista/${item.id}`,
+                                        params: {
+                                            crianca: JSON.stringify(crianca),
+                                            escolaId: id,
+                                            responsavelId: responsavelId,
+                                        }
+                                    })
+                                }
+                                style={styles.buttonMotorista}
+                            >
+                                <Text style={styles.textNome}>{item.nome}</Text>
+                                <Text>{item.telefone}</Text>
+                            </Pressable>
+
+                        </View>
+                    )}
+                />
+            </View>
+        </SafeAreaView>
     );
 }
+
+
+const styles = StyleSheet.create({
+
+    buttonMotorista: {
+        display: 'flex',
+        flex: 1,
+        justifyContent: 'space-between',
+        paddingVertical: 12,
+        paddingHorizontal: 32,
+        borderRadius: 15,
+        elevation: 3,
+        backgroundColor: '#0d99ff',
+        height: 80,
+        flexDirection: 'column'
+
+    },
+    textNome: {
+        fontWeight: '900',
+        fontSize: 20
+    }
+})

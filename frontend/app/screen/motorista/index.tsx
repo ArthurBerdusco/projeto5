@@ -1,6 +1,6 @@
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Link, useRouter } from "expo-router";
+import { Link, Stack, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ScrollView, View, StyleSheet, Text, Image, Pressable, ActivityIndicator } from "react-native";
 
@@ -25,15 +25,13 @@ export default function Index() {
             setError('Erro ao carregar o responsavel');
             console.error(err)
         }
-
-
     }
 
     useEffect(() => {
         setLoading(true);
-      
+
         fetchMotorista();
-      
+
         setLoading(false);
     }, []);
 
@@ -46,58 +44,64 @@ export default function Index() {
     }
 
     return (
-        <ScrollView style={{ backgroundColor: "white" }}>
-            <View style={styles.container}>
-                {/* <Text style={{ fontSize: 20, marginLeft: 20, marginTop: 20 }}>
-                    Meus dados
-                </Text> */}
-                <Link href={'/screen/motorista/perfil'} style={styles.cardDados}>
-                    <Image source={require('../assets/icons/icone6.png')} style={{ resizeMode: "contain", height: 90, width: 90 }} />
-                    <View>
+        <View style={{ flex: 1, backgroundColor: "white" }}>
+            <Stack.Screen
+                options={{
+                    headerTitle: 'Home',
+                    headerStyle: { backgroundColor: '#ffbf00' },
+                    headerTintColor: 'white',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    headerTitleAlign: 'center'
+                }}
+            />
+
+            {/* Parte que pode rolar */}
+            <ScrollView style={styles.container}>
+                <Pressable onPress={() => router.push('/screen/motorista/perfil')} style={styles.cardDados}>
+                    <Image source={require('../assets/icons/icone6.png')} style={{ resizeMode: "cover", height: 90, width: 90 }} />
                     <View>
                         <Text style={styles.textoDados}>Nome: {motorista.nome}</Text>
                         <Text style={styles.textoDados}>Idade: {motorista.idade}</Text>
                         <Text style={styles.textoDados}>Telefone: {motorista.telefone}</Text>
                     </View>
-                    </View>
-                </Link>
+                </Pressable>
+
                 <Text style={{ fontSize: 20, marginLeft: 20 }}>Crianças</Text>
+
                 <View style={styles.containerCards}>
-
-                    <Link style={styles.cardsMotoristas} href={"/screen/motorista/escola/escolasAtendidas"}>
-                        <Text style={styles.buttonText}>Ver escolas</Text>
-                    </Link>
-                    <View style={styles.cardsMotoristas}>
-
-                    </View>
-                    <View style={styles.cardsMotoristas}>
-
-                    </View>
-                    <View style={styles.cardsMotoristas}>
-
-                    </View>
+                    <View style={styles.cardsMotoristas}></View>
+                    <View style={styles.cardsMotoristas}></View>
+                    <View style={styles.cardsMotoristas}></View>
+                    <View style={styles.cardsMotoristas}></View>
                 </View>
+            </ScrollView>
 
+            {/* Parte fixa na parte inferior */}
+            <View style={styles.fixedFooter}>
+                <Pressable
+                    style={styles.botaoOferta}
+                    onPress={() => router.push("/screen/motorista/ofertas/verOfertas")}
+                >
+                    <Image source={require('../assets/icons/ofertas.png')} style={styles.image} />
+                </Pressable>
 
-                <View style={{ justifyContent: "space-around", alignItems: "center", flexDirection: "row", marginTop: 70 }}>
-                    <Pressable
-                        style={styles.botaoOferta}
-                        onPress={() => router.push("/screen/motorista/ofertas/verOfertas")}
-                    >
-                        <Image source={require('../assets/icons/ofertas.png')} style={styles.image} />
-                    </Pressable>
-                    <View style={styles.botaoProcura}>
-                        <Image source={require('../assets/icons/search.png')} style={{ height: 80, width: 80 }} />
-                    </View>
-                    <Pressable
-                        style={styles.botaoOferta}
-                        onPress={() => router.push("/screen/motorista/escola/escolasAtendidas")}
-                    >
-                        <Image source={require('../assets/icons/editar.png')} style={styles.image} />
-                    </Pressable>
-                </View>
+                <Pressable
+                    style={styles.botaoProcura}
+                    onPress={() => router.push("/screen/motorista/escola/escolasAtendidas")}
+                >
+                    <Image source={require('../assets/icons/search.png')} style={{ height: 80, width: 80 }} />
+                </Pressable>
+
+                <Pressable
+                    style={styles.botaoOferta}
+                    onPress={() => router.push("/screen/motorista/perfil")}
+                >
+                    <Image source={require('../assets/icons/editar.png')} style={styles.image} />
+                </Pressable>
             </View>
-        </ScrollView>
+        </View>
     )
 }
 
@@ -160,11 +164,29 @@ const styles = StyleSheet.create({
         width: 80, // Ajuste o tamanho da imagem
         height: 80, // Ajuste o tamanho da imagem
         resizeMode: 'contain', // Garante que a imagem não será cortada
-    },loadingContainer: {
+    }, loadingContainer: {
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: "#ffffff",
     },
+
+
+    fixedFooter: {
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        height: 100, // Altura desejada para a barra
+        flexDirection: "row",
+        justifyContent: "space-around",
+        alignItems: "center",
+    },
+
+    image: {
+        // Estilos para as imagens
+        height: 80,
+        width: 80,
+    }
 
 })
