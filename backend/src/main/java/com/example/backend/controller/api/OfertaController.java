@@ -184,9 +184,18 @@ public class OfertaController {
         Optional<Oferta> ofertaOptional = ofertaRepository.findById(id);
         if (ofertaOptional.isPresent()) {
             Oferta oferta = ofertaOptional.get();
+
+            // Atualiza a criança com o ID do motorista e da escola da oferta aceita
+            Crianca crianca = oferta.getCrianca();
+            crianca.setMotorista(oferta.getMotorista()); // Vincula o motorista à criança
+            crianca.setEscola(oferta.getEscola()); // Vincula a escola à criança
+            criancaRepository.save(crianca); // Salva as alterações na tabela de criança
+
+            // Atualiza o status da oferta
             oferta.setStatus("Aceita");
             ofertaRepository.save(oferta);
-            return ResponseEntity.ok("Oferta Aceita");
+
+            return ResponseEntity.ok("Oferta Aceita e criança atualizada com motorista e escola");
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Oferta não encontrada");
     }
