@@ -128,14 +128,14 @@ export default function Index() {
                 )}
 
                 {criancas.length > 0 && (
-                    <Link href={`/screen/responsavel/crianca/cadastro`}>
+                    <Pressable onPress={() => router.push(`/screen/responsavel/crianca/cadastro`)}>
                         <Text style={styles.cadastrarTexto}>Cadastrar Criança</Text>
-                    </Link>
+                    </Pressable>
                 )}
 
 
             </View>
-        </ScrollView>
+        </ScrollView >
     );
 }
 
@@ -145,8 +145,8 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
-        backgroundColor: "#ffffff",
         padding: 20,
+
     },
     cardDados: {
         backgroundColor: "#ffbf00",

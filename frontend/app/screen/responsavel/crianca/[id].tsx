@@ -77,20 +77,20 @@ export default function CadastroCrianca() {
                         value={crianca.nome}
                         onChangeText={(text) => setCrianca({ ...crianca, nome: text })} // Atualiza apenas o nome
                     />
-                    <TextInput
+                    {/* <TextInput
                         placeholder="Idade da criança"
                         style={styles.textInputs}
                         value={crianca.idade}
                         onChangeText={(text) => setCrianca({ ...crianca, idade: text })} // Atualiza apenas a idade
                         keyboardType="numeric"
-                    />
+                    /> */}
                 </View>
 
 
 
                 <View style={styles.containerButton}>
 
-                    <Pressable
+                    <Pressable style={styles.button2}
                         onPress={() =>
                             router.push({
                                 pathname: `/screen/responsavel/crianca/escola/listaEscolas`,
@@ -103,7 +103,7 @@ export default function CadastroCrianca() {
 
 
 
-                    <Link
+                    <Link style={styles.button}
                         href={{
                             pathname: `/screen/responsavel/crianca/ofertas/aceitaOferta`,
                             params: { ofertaId: id }, // Passa a ID da oferta, não a ID da criança
@@ -157,5 +157,24 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "flex-end",
         paddingBottom: 20,
-    }
+        gap: 20
+    },
+    button: {
+        padding: 15,
+        backgroundColor: "#ffbf00",
+        width: 350,
+        alignItems: "center",
+        textAlign: "center",
+        borderRadius: 10,
+        fontWeight: "700"
+    },
+    button2: {
+        padding: 15,
+        backgroundColor: "#0d99ff",
+        width: 350,
+        alignItems: "center",
+        textAlign: "center",
+        borderRadius: 10,
+        fontWeight: "700"
+    },
 });

@@ -1,5 +1,6 @@
 import config from '@/app/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Stack } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Switch, Button, Image, ScrollView, TouchableOpacity, SafeAreaView, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 
@@ -97,7 +98,7 @@ export default function VehicleInfoScreen() {
                 },
                 body: JSON.stringify(van),
             });
-    
+
             if (response.ok) {
                 alert('Dados alterados com sucesso!');
             } else {
@@ -111,6 +112,17 @@ export default function VehicleInfoScreen() {
 
     return (
         <SafeAreaView style={styles.container}>
+            <Stack.Screen
+                options={{
+                    headerTitle: 'Veiculo Escolar',
+                    headerStyle: { backgroundColor: '#ffbf00' },
+                    headerTintColor: 'white',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    headerTitleAlign: 'center'
+                }}
+            />
             <ScrollView>
                 {/* Identificação do Veículo */}
                 <View style={styles.janela}>
@@ -133,7 +145,7 @@ export default function VehicleInfoScreen() {
                         value={van.anoFabricacao}
                         onChangeText={(text) => handleChange('anoFabricacao', text)}
                     />
-                    
+
                     <TextInput
                         placeholder="Cor"
                         style={styles.textInputs}
@@ -300,7 +312,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 32,
         borderRadius: 10,
         elevation: 3,
-        backgroundColor: 'black',
+        backgroundColor: '#ffbf00',
     },
     textButton: {
         fontSize: 16,

@@ -112,9 +112,9 @@ export default function loginScreen() {
                     Não possui cadastro?
                 </Text>
                 <Link style={styles.botaoCadastro} href={"/screen/auth/registerScreen"}>
-                <Text style={{ color: "white", fontWeight: "600" }}>
-                    Cadastre-se
-                </Text>
+                    <Text style={{ color: "white", fontWeight: "600" }}>
+                        Cadastre-se
+                    </Text>
                 </Link>
 
             </View>
