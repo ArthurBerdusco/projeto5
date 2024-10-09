@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, Alert, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
-import { useRouter, useLocalSearchParams } from "expo-router";
+import { useRouter, useLocalSearchParams, Stack } from "expo-router";
 import config from '@/app/config';
 
 export default function Motorista() {
@@ -84,6 +84,17 @@ export default function Motorista() {
 
     return (
         <View style={styles.container}>
+            <Stack.Screen
+                options={{
+                    headerTitle: 'Detalhes do Motorista',
+                    headerStyle: { backgroundColor: '#0d99ff' },
+                    headerTintColor: 'white',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    headerTitleAlign: 'center'
+                }}
+            />
             {/* Informações do motorista */}
             <Text style={styles.name}>{motorista.nome}</Text>
             <Text style={styles.info}>Idade: {motorista.idade} anos</Text>
@@ -133,7 +144,7 @@ const styles = StyleSheet.create({
     },
     button: {
         marginTop: 30,
-        backgroundColor: '#4CAF50',
+        backgroundColor: '#0d99ff',
         padding: 15,
         borderRadius: 10,
         alignItems: 'center',
