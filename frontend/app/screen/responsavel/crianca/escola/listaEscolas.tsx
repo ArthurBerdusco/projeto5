@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, FlatList, ActivityIndicator, StyleSheet, Alert } from 'react-native';
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, Stack, useLocalSearchParams } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '@/app/config';
 
@@ -62,6 +62,17 @@ export default function ListaEscolas() {
 
     return (
         <View style={styles.container}>
+            <Stack.Screen
+                options={{
+                    headerTitle: '',
+                    headerStyle: { backgroundColor: '#0d99ff' },
+                    headerTintColor: 'white',
+                    headerTitleStyle: {
+                        fontWeight: 'bold',
+                    },
+                    headerTitleAlign: 'center'
+                }}
+            />
             <Text style={styles.title}>Selecione a escola</Text>
 
             {loading ? (

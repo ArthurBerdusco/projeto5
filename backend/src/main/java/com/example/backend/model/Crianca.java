@@ -31,7 +31,7 @@ public class Crianca {
     @JoinColumn(name = "id_reponsavel")
     private Responsavel responsavel;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "id_motorista")
     private Motorista motorista;
 
