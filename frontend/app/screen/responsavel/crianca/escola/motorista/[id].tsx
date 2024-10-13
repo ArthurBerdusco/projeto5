@@ -86,7 +86,7 @@ export default function Motorista() {
         <View style={styles.container}>
             <Stack.Screen
                 options={{
-                    headerTitle: 'Detalhes do Motorista',
+                    headerTitle: 'Detalhes do Perueiro',
                     headerStyle: { backgroundColor: '#0d99ff' },
                     headerTintColor: 'white',
                     headerTitleStyle: {
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
     },
     button: {
         marginTop: 30,
-        backgroundColor: '#0d99ff',
+        backgroundColor: '#ffbf00',
         padding: 15,
         borderRadius: 10,
         alignItems: 'center',

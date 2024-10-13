@@ -56,7 +56,7 @@ export default function Escola() {
         <SafeAreaView>
             <Stack.Screen
                 options={{
-                    headerTitle: 'Encontrar Motoristas',
+                    headerTitle: 'Encontrar Perueiros',
                     headerStyle: { backgroundColor: '#0d99ff' },
                     headerTintColor: 'white',
                     headerTitleStyle: {
@@ -76,7 +76,7 @@ export default function Escola() {
                     </>
                 )}
 
-                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Motoristas nesta escola:</Text>
+                <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Perueiros nesta escola:</Text>
 
                 <FlatList
                     data={motoristas}
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 32,
         borderRadius: 15,
         elevation: 3,
-        backgroundColor: '#0d99ff',
+        backgroundColor: '#ffbf00',
         height: 80,
         flexDirection: 'column'
 

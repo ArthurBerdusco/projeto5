@@ -1,43 +1,47 @@
-import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import {
-  ScrollView,
-  View,
-  StyleSheet,
-  Text,
-  ActivityIndicator,
-} from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, StyleSheet } from "react-native";
+import { Stack, useLocalSearchParams, useRouter, } from "expo-router";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import config from "@/app/config";
 
 export default function DetalhesEscola() {
   const router = useRouter();
-  const [loading, setLoading] = useState(false);
+  const { escolaId } = useLocalSearchParams();
   const [criancas, setCriancas] = useState([]);
-  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Função para buscar as crianças associadas a uma escola
   const fetchCriancas = async () => {
     try {
-      const idEscola = router.query.idEscola; // Pegando o ID da escola pela URL
-
-      const response = await fetch(`${config.IP_SERVER}/api/criancas/escola/${idEscola}`);
-      
-      if (!response.ok) {
-        throw new Error('Erro ao buscar crianças');
+      const idMotorista = await AsyncStorage.getItem("idMotorista");
+      if (!idMotorista) {
+        console.error("ID do motorista não encontrado");
+        return;
       }
-      
+
+      const response = await fetch(
+        `${config.IP_SERVER}/api/escolas/${escolaId}/motorista/${idMotorista}/criancas`
+      );
+
+      if (!response.ok) {
+        console.error(`Erro: ${response.status} - ${response.statusText}`);
+        setCriancas([]);
+        return;
+      }
+
       const data = await response.json();
       setCriancas(data);
     } catch (err) {
-      setError('Erro ao carregar as crianças');
       console.error("Erro ao carregar as crianças", err);
+      setCriancas([]);
     } finally {
       setLoading(false);
     }
   };
 
+
+
   useEffect(() => {
-    setLoading(true);
     fetchCriancas();
   }, []);
 
@@ -49,28 +53,28 @@ export default function DetalhesEscola() {
     );
   }
 
-  if (error) {
-    return (
-      <View style={styles.errorContainer}>
-        <Text style={styles.errorText}>{error}</Text>
-      </View>
-    );
-  }
-
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.titulo}>Crianças associadas a esta escola:</Text>
+      <Stack.Screen
+        options={{
+          headerTitle: 'Detalhes',
+          headerStyle: { backgroundColor: '#ffbf00' },
+          headerTintColor: 'white',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          headerTitleAlign: 'center'
+        }}
+      />
+      <Text style={styles.title}>Crianças na Escola</Text>
       {criancas.length === 0 ? (
-        <Text>Nenhuma criança vinculada a esta escola</Text>
+        <Text>Nenhuma criança encontrada</Text>
       ) : (
-        <View style={styles.containerCards}>
-          {criancas.map((crianca) => (
-            <View key={crianca.id} style={styles.cardsCriancas}>
-              <Text>Nome: {crianca.nome}</Text>
-              <Text>Idade: {crianca.idade} anos</Text>
-            </View>
-          ))}
-        </View>
+        criancas.map((crianca) => (
+          <View key={crianca.id} style={styles.criancaCard}>
+            <Text>Criança: {crianca.nome}</Text>
+          </View>
+        ))
       )}
     </ScrollView>
   );
@@ -79,40 +83,23 @@ export default function DetalhesEscola() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#ffffff",
-  },
-  containerCards: {
-    marginTop: 20,
-    flexDirection: "row",
-    justifyContent: "center",
-    flexWrap: "wrap",
-    gap: 10,
-  },
-  cardsCriancas: {
-    height: 100,
-    width: 150,
-    backgroundColor: "#a5a5a5",
-    borderRadius: 10,
-    padding: 10,
-  },
-  titulo: {
-    fontSize: 20,
-    marginLeft: 20,
-    marginTop: 10,
+    backgroundColor: "white",
+    padding: 20,
   },
   loadingContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#ffffff",
   },
-  errorContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  title: {
+    fontSize: 22,
+    fontWeight: "bold",
+    marginBottom: 10,
   },
-  errorText: {
-    color: 'red',
-    fontSize: 16,
+  criancaCard: {
+    backgroundColor: "#00a2ff",
+    padding: 15,
+    borderRadius: 10,
+    marginVertical: 10,
   },
 });

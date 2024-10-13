@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,9 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.dto.MotoristaEscolaDTO;
+import com.example.backend.model.Crianca;
 import com.example.backend.model.Escola;
 import com.example.backend.model.Motorista;
 import com.example.backend.model.MotoristaEscola;
+import com.example.backend.repository.CriancaRepository;
 import com.example.backend.repository.EscolaRepository;
 import com.example.backend.repository.MotoristaEscolaRepository;
 import com.example.backend.repository.MotoristaRepository;
@@ -36,6 +39,9 @@ public class EscolaController {
 
     @Autowired
     MotoristaEscolaRepository motoristaEscolaRepository;
+
+    @Autowired
+    CriancaRepository criancaRepository;
 
     @GetMapping("escolas")
     public List<Escola> getAllEscolas() {
@@ -121,23 +127,39 @@ public class EscolaController {
     @GetMapping("/motoristas/escola/{id}")
     public List<Motorista> getMotoristasEscola(@PathVariable Long id) {
 
-        
         // Buscar todas as associações MotoristaEscola para a escola com o ID fornecido
         List<MotoristaEscola> motoristasEscola = motoristaEscolaRepository.findByEscolaId(id);
-    
+
         // Criar uma lista para armazenar os motoristas
         List<Motorista> motoristas = new ArrayList<>();
-    
+
         // Iterar sobre as associações e adicionar os motoristas na lista
         for (MotoristaEscola motoristaEscola : motoristasEscola) {
             motoristas.add(motoristaEscola.getMotorista());
         }
-    
 
-        System.out.println("\n\n\n CHEGUEI AQUI: " + motoristas +  "\n\n\n");
+        System.out.println("\n\n\n CHEGUEI AQUI: " + motoristas + "\n\n\n");
         // Retornar a lista de motoristas
         return motoristas;
     }
-    
 
+    @GetMapping("/escolas/{idEscola}/motorista/{idMotorista}/criancas")
+    public ResponseEntity<List<Crianca>> getCriancaMotoristaEscola(@PathVariable Long idEscola,
+            @PathVariable Long idMotorista) {
+        try {
+            List<MotoristaEscola> atendimentos = motoristaEscolaRepository.findByMotoristaIdAndEscolaId(idMotorista,
+                    idEscola);
+
+            if (atendimentos.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(new ArrayList<>());
+
+            }
+            List<Crianca> criancas = criancaRepository.findByMotoristaIdAndEscolaId(idMotorista, idEscola);
+            return ResponseEntity.ok(criancas);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ArrayList<>());
+        }
+    }
 }
