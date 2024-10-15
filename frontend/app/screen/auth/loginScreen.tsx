@@ -36,7 +36,7 @@ export default function loginScreen() {
                 if (resultado.usuario.role === "MOTORISTA") {
                     await AsyncStorage.setItem('motorista', resultado.toString());
                     await AsyncStorage.setItem('idMotorista', resultado.id.toString());
-                    if (resultado.status === "DESATIVADO") {
+                    if (resultado.status === "Pendente ativação") {
                         router.push('/screen/motorista/cadastro');
                     } else {
                         router.push('/screen/motorista');
