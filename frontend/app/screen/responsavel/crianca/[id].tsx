@@ -6,9 +6,12 @@ import { Link, router, Stack, useLocalSearchParams } from 'expo-router';
 
 export default function CadastroCrianca() {
 
-    const [crianca, setCrianca] = useState({ nome: '', idade: '' });
+    const [crianca, setCrianca] = useState({ nome: '', idade: '', status: '' });
     const [loading, setLoading] = useState(false);
     const [ofertas, setOfertas] = useState([]);
+    const [motorista, setMotorista] = useState(null);
+
+
 
     const { id } = useLocalSearchParams();
 
@@ -41,12 +44,28 @@ export default function CadastroCrianca() {
         }
     };
 
+
+    const fetchMotorista = async () => {
+        try {
+            const response = await fetch(`${config.IP_SERVER}/crianca/${id}/motorista`);
+            if (response.ok) {
+                const data = await response.json();
+                setMotorista(data);
+            } else {
+                console.error("Motorista não encontrado");
+                setMotorista(null);
+            }
+        } catch (error) {
+            console.error('Erro ao buscar motorista:', error);
+        }
+    };
+
     useEffect(() => {
         const carregarDados = async () => {
             setLoading(true);
             await fetchCrianca();
             await fetchOfertas();
-
+            await fetchMotorista();
             setLoading(false);
         };
         carregarDados();
@@ -77,42 +96,52 @@ export default function CadastroCrianca() {
                         value={crianca.nome}
                         onChangeText={(text) => setCrianca({ ...crianca, nome: text })} // Atualiza apenas o nome
                     />
-                    {/* <TextInput
+                    <TextInput
                         placeholder="Idade da criança"
                         style={styles.textInputs}
-                        value={crianca.idade}
-                        onChangeText={(text) => setCrianca({ ...crianca, idade: text })} // Atualiza apenas a idade
+                        value={crianca.idade ? crianca.idade.toString() : ''} // Converte para string
+                        onChangeText={(text) => setCrianca({ ...crianca, idade: parseInt(text) || '' })} // Converte para número
                         keyboardType="numeric"
-                    /> */}
+                    />
+                    <TextInput
+                        placeholder="Nome da criança"
+                        style={styles.textInputs}
+                        value={crianca.status}
+                        onChangeText={(text) => setCrianca({ ...crianca, status: text })} // Atualiza apenas o nome
+                    />
                 </View>
 
 
 
-                <View style={styles.containerButton}>
+                {crianca.status !== 'ATIVO' && (
+                    <View style={styles.containerButton}>
+                        <Pressable style={styles.button2}
+                            onPress={() =>
+                                router.push({
+                                    pathname: `/screen/responsavel/crianca/escola/listaEscolas`,
+                                    params: { crianca: JSON.stringify(crianca) },
+                                })}
+                        >
+                            <Text style={styles.buttonText}>Procurar perueiro</Text>
+                        </Pressable>
 
-                    <Pressable style={styles.button2}
-                        onPress={() =>
-                            router.push({
-                                pathname: `/screen/responsavel/crianca/escola/listaEscolas`,
-                                params: { crianca: JSON.stringify(crianca) },
-                            })}
-                    >
-                        <Text style={styles.buttonText}>Procurar perueiro</Text>
+                        <Link style={styles.button}
+                            href={{
+                                pathname: `/screen/responsavel/crianca/ofertas/aceitaOferta`,
+                                params: { ofertaId: id }, // Passa a ID da oferta, não a ID da criança
+                            }}
+                        >
+                            <Text style={styles.buttonText}>Procurar ofertas</Text>
+                        </Link>
+                    </View>
+                )}
 
-                    </Pressable>
-
-
-
-                    <Link style={styles.button}
-                        href={{
-                            pathname: `/screen/responsavel/crianca/ofertas/aceitaOferta`,
-                            params: { ofertaId: id }, // Passa a ID da oferta, não a ID da criança
-                        }}
-                    >
-                        <Text style={styles.buttonText}>Procurar ofertas</Text>
-                    </Link>
-
-                </View>
+                {motorista && (
+                    <View style={styles.motoristaInfo}>
+                        <Text>Nome do Motorista: {motorista.nome}</Text>
+                        <Text>Telefone: {motorista.telefone}</Text>
+                    </View>
+                )}
             </KeyboardAvoidingView>
         </SafeAreaView >
     );

@@ -38,21 +38,22 @@ public class MotoristaController {
         motorista.setStatus("Pendente ativação");
         motoristaRepository.save(motorista);
     }
-    
+
     @GetMapping("/van/{idMotorista}")
     public ResponseEntity<?> obterVanMotoristaId(@PathVariable Long idMotorista) {
         try {
             // Busca a van pelo id do motorista
             Van van = vanRepository.findByMotoristaId(idMotorista)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Van não encontrada para o motorista com ID: " + idMotorista));
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "Van não encontrada para o motorista com ID: " + idMotorista));
 
             // Retorna status OK (200) com a van encontrada
             return ResponseEntity.ok(van);
-            
+
         } catch (ResponseStatusException e) {
             // Retorna status NOT_FOUND (404) quando a van não for encontrada
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-            
+
         } catch (Exception e) {
             // Loga a exceção no console e retorna um erro interno do servidor (500)
             e.printStackTrace();
@@ -60,7 +61,6 @@ public class MotoristaController {
                     .body("Erro ao obter van: " + e.getMessage());
         }
     }
-    
 
     @PostMapping("/cadastro-van/{idMotorista}")
     public ResponseEntity<?> cadastrar(@PathVariable Long idMotorista, @RequestBody Van van) {
@@ -69,13 +69,14 @@ public class MotoristaController {
             Motorista motorista = motoristaRepository.findById(idMotorista)
                     .orElseThrow(() -> new Exception("Motorista não encontrado"));
 
-            
             van.setMotorista(motorista);
 
             vanRepository.save(van);
 
             Usuario usuario = motorista.getUsuario();
             usuario.setStatus("ATIVADO");
+            motorista.setStatus("ATIVADO");
+
             usuarioRepository.save(usuario);
 
             return ResponseEntity.status(HttpStatus.CREATED).body("Cadastro realizado com sucesso!");
@@ -87,43 +88,42 @@ public class MotoristaController {
     }
 
     @PostMapping("/van/atualizar/{id}")
-public ResponseEntity<?> atualizarVan(@PathVariable Long id, @RequestBody Van vanAtualizada) {
-    try {
-        
-        // Verifica se a van com o ID fornecido existe
-        Van vanExistente = vanRepository.findById(id)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Van não encontrada com ID: " + id));
+    public ResponseEntity<?> atualizarVan(@PathVariable Long id, @RequestBody Van vanAtualizada) {
+        try {
 
-        // Verifica se o ID no corpo da requisição corresponde ao ID na URL
-        if (!vanAtualizada.getId().equals(id)) {
-            
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID da van inconsistente com a URL");
+            // Verifica se a van com o ID fornecido existe
+            Van vanExistente = vanRepository.findById(id)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                            "Van não encontrada com ID: " + id));
+
+            // Verifica se o ID no corpo da requisição corresponde ao ID na URL
+            if (!vanAtualizada.getId().equals(id)) {
+
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID da van inconsistente com a URL");
+            }
+
+            // Atualiza os dados da van existente
+            vanExistente = vanAtualizada;
+
+            // Atualize outros campos conforme necessário...
+
+            // Salva a van atualizada no banco de dados
+            vanRepository.save(vanExistente);
+
+            // Retorna status OK (200) com os dados da van atualizada
+            return ResponseEntity.ok(vanExistente);
+
+        } catch (ResponseStatusException e) {
+            // Retorna o status apropriado e a mensagem da exceção
+            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
+
+        } catch (Exception e) {
+            // Loga a exceção no console e retorna um erro interno do servidor (500)
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao atualizar a van: " + e.getMessage());
         }
-
-        // Atualiza os dados da van existente
-        vanExistente = vanAtualizada;
-       
-        // Atualize outros campos conforme necessário...
-
-        // Salva a van atualizada no banco de dados
-        vanRepository.save(vanExistente);
-
-        // Retorna status OK (200) com os dados da van atualizada
-        return ResponseEntity.ok(vanExistente);
-
-    } catch (ResponseStatusException e) {
-        // Retorna o status apropriado e a mensagem da exceção
-        return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
-
-    } catch (Exception e) {
-        // Loga a exceção no console e retorna um erro interno do servidor (500)
-        e.printStackTrace();
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body("Erro ao atualizar a van: " + e.getMessage());
     }
-}
-
-
 
     @GetMapping("{id}")
     public ResponseEntity<?> getMotoristaById(@PathVariable Long id) {
@@ -141,12 +141,13 @@ public ResponseEntity<?> atualizarVan(@PathVariable Long id, @RequestBody Van va
     }
 
     @PostMapping("/atualizar/{id}")
-    public ResponseEntity<Motorista> atualizarmotorista(@PathVariable Long id, @RequestBody Motorista motoristaAtualizado) {
+    public ResponseEntity<Motorista> atualizarmotorista(@PathVariable Long id,
+            @RequestBody Motorista motoristaAtualizado) {
         Optional<Motorista> motoristaExistente = motoristaRepository.findById(id);
 
         if (motoristaExistente.isPresent()) {
             Motorista motorista = motoristaExistente.get();
-            
+
             // Atualizar os campos do responsável
             motorista.setNome(motoristaAtualizado.getNome());
             motorista.setEmail(motoristaAtualizado.getEmail());

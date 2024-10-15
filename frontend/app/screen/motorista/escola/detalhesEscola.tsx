@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { View, Text, ScrollView, ActivityIndicator, StyleSheet } from "react-native";
+import { View, Text, ScrollView, ActivityIndicator, StyleSheet, Linking, Alert, Button } from "react-native";
 import { Stack, useLocalSearchParams, useRouter, } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -53,6 +53,26 @@ export default function DetalhesEscola() {
     );
   }
 
+  const ligarParaResponsavel = (telefone) => {
+    if (!telefone) {
+      Alert.alert("Erro", "Número de telefone do responsável não disponível.");
+      return;
+    }
+
+    const url = `tel:${telefone}`;
+    Linking.openURL(url).catch((err) =>
+      Alert.alert("Erro", "Não foi possível fazer a chamada.")
+    );
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.loadingContainer}>
+        <ActivityIndicator size="large" color="#0d99ff" />
+      </View>
+    );
+  }
+
   return (
     <ScrollView style={styles.container}>
       <Stack.Screen
@@ -73,6 +93,15 @@ export default function DetalhesEscola() {
         criancas.map((crianca) => (
           <View key={crianca.id} style={styles.criancaCard}>
             <Text>Criança: {crianca.nome}</Text>
+            <Text>Idade: {crianca.idade}</Text>
+            <Text>Responsável: {crianca.responsavel?.nome || "N/A"}</Text>
+            <Text>Telefone do Responsável: {crianca.responsavel?.telefone || "N/A"}</Text>
+            <Button
+              title="Ligar para Responsável"
+              onPress={() => ligarParaResponsavel(crianca.responsavel?.telefone)}
+              disabled={!crianca.responsavel?.telefone}
+              color={"#ffbf00"}
+            ></Button>
           </View>
         ))
       )}
@@ -97,7 +126,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   criancaCard: {
-    backgroundColor: "#00a2ff",
+    backgroundColor: "#a3a3a355",
     padding: 15,
     borderRadius: 10,
     marginVertical: 10,

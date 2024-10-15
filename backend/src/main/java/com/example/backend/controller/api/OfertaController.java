@@ -189,6 +189,7 @@ public class OfertaController {
             Crianca crianca = oferta.getCrianca();
             crianca.setMotorista(oferta.getMotorista()); // Vincula o motorista à criança
             crianca.setEscola(oferta.getEscola()); // Vincula a escola à criança
+            crianca.setStatus("ATIVO");
             criancaRepository.save(crianca); // Salva as alterações na tabela de criança
 
             // Atualiza o status da oferta

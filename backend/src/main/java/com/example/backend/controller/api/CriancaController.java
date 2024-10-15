@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.backend.dto.CriancaDTO;
 import com.example.backend.model.Crianca;
 import com.example.backend.model.Escola;
+import com.example.backend.model.Motorista;
 import com.example.backend.model.Responsavel;
 import com.example.backend.repository.CriancaRepository;
 import com.example.backend.repository.EscolaRepository;
@@ -114,5 +115,23 @@ public class CriancaController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar a criança.");
         }
+    }
+
+    @GetMapping("/crianca/{id}/motorista")
+    public ResponseEntity<Motorista> getMotoristaCriancaId(@PathVariable Long id) {
+        Optional<Crianca> criancaOptional = criancaRepository.findById(id);
+
+        if (!criancaOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+        Crianca crianca = criancaOptional.get();
+
+        if (crianca.getMotorista() == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        Motorista motorista = crianca.getMotorista();
+
+        return ResponseEntity.ok(motorista);
     }
 }
