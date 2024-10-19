@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, Alert, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { View, Text, ActivityIndicator, Alert, StyleSheet, TouchableOpacity, TextInput, Image } from 'react-native';
 import { useRouter, useLocalSearchParams, Stack } from "expo-router";
 import config from '@/app/config';
 
@@ -95,15 +95,13 @@ export default function Motorista() {
                     headerTitleAlign: 'center'
                 }}
             />
-            {/* Informações do motorista */}
-            <Text style={styles.name}>{motorista.nome}</Text>
+            {/* <Text style={styles.name}>{motorista.nome}</Text>
             <Text style={styles.info}>Idade: {motorista.idade} anos</Text>
             <Text style={styles.info}>Email: {motorista.email}</Text>
             <Text style={styles.info}>CPF: {motorista.cpf}</Text>
             <Text style={styles.info}>Telefone: {motorista.telefone}</Text>
             <Text style={styles.status}>Status: {motorista.status}</Text>
 
-            {/* Campo para a mensagem */}
             <TextInput
                 style={styles.input}
                 placeholder="Digite sua mensagem..."
@@ -111,10 +109,59 @@ export default function Motorista() {
                 onChangeText={setMensagem}
             />
 
-            {/* Botão para solicitar valor */}
             <TouchableOpacity style={styles.button} onPress={enviarOferta}>
                 <Text style={styles.buttonText}>Enviar Oferta</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
+            <View style={styles.parteSuperiorPerfil}>
+                <Image source={require('@/app/screen/assets/icons/motorista.png')} style={{ width: 120, height: 120 }} />
+                <View style={styles.containerInformacoes}>
+                    <Text style={styles.name}>{motorista.nome}</Text>
+                    <Text style={styles.info}>Idade: {motorista.idade} anos</Text>
+                    <Text style={styles.info}>Email: {motorista.email}</Text>
+                    <Text style={styles.info}>Telefone: {motorista.telefone}</Text>
+                    <Text style={styles.info}>Nota:  4.5</Text>
+                </View>
+            </View>
+            <View style={styles.barraSeletor}>
+                <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+                    <Text style={styles.seletorTexto}>Perfil</Text>
+                    <Text style={styles.seletorTexto}>Avaliações</Text>
+                    <Text style={styles.seletorTexto}>Fotos</Text>
+                </View>
+                <View style={styles.linha} />
+            </View>
+
+            <View style={styles.informacoes}>
+                <View>
+                    <Text style={styles.titulo}>Experiência</Text>
+                    <Text style={styles.descricao}>Atua em 5 escolas no aplicativo</Text>
+                </View>
+
+                <View>
+                    <Text style={styles.titulo}>Van Escolar</Text>
+                    <View style={styles.list}>
+                        <Text style={styles.listItem}>• 24 lugares</Text>
+                        <Text style={styles.listItem}>• S/ acessibilidade</Text>
+                        <Text style={styles.listItem}>• C/ Ar-condicionado</Text>
+                    </View>
+
+
+                </View>
+
+                <View>
+                    <Text style={styles.titulo}>Sobre mim</Text>
+                    <Text style={styles.descricao}>Olá! Sou um motorista de perua apaixonado pelo que faço. Com mais de 5 anos de experiência nas estradas, conheço cada atalho e sempre busco o caminho mais seguro e rápido para levar você ao seu destino.
+
+                        Sou uma pessoa tranquila, que adora ouvir músicas durante o trajeto e criar um ambiente amigável para os passageiros. Minha prioridade é garantir que você chegue bem e feliz! Além disso, sou flexível e estou sempre disposto a ajudar no que for preciso.
+                        Vamos juntos nessa viagem! 🚐✨</Text>
+                </View>
+            </View>
+
+            <View>
+                <TouchableOpacity style={styles.button} onPress={enviarOferta}>
+                    <Text style={styles.buttonText}>Fazer orçamento</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }
@@ -125,15 +172,16 @@ const styles = StyleSheet.create({
         padding: 20,
         backgroundColor: '#f2f2f2',
         flex: 1,
+        justifyContent: 'space-around'
     },
     name: {
-        fontSize: 28,
+        fontSize: 20,
         fontWeight: 'bold',
-        color: '#333',
-        marginBottom: 10,
+        color: 'black',
+
     },
     info: {
-        fontSize: 18,
+        fontSize: 15,
         marginVertical: 5,
         color: '#555',
     },
@@ -145,13 +193,13 @@ const styles = StyleSheet.create({
     button: {
         marginTop: 30,
         backgroundColor: '#ffbf00',
-        padding: 15,
-        borderRadius: 10,
+        padding: 10,
+        borderRadius: 55,
         alignItems: 'center',
     },
     buttonText: {
-        color: 'white',
-        fontSize: 18,
+        color: 'black',
+        fontSize: 17,
         fontWeight: 'bold',
     },
     input: {
@@ -167,4 +215,56 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    parteSuperiorPerfil: {
+        // backgroundColor: "#a3a3a3",
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: 10
+
+    },
+    containerInformacoes: {
+        justifyContent: 'center',
+        alignContent: 'center'
+    },
+    barraSeletor: {
+        marginTop: 10,
+        marginBottom: 10
+    },
+    seletorTexto: {
+        fontWeight: 'bold',
+        color: "black",
+        fontSize: 17
+    },
+    linha: {
+        width: '100%',
+        height: 4,
+        backgroundColor: '#0d99ff',
+        marginVertical: 5,
+
+    },
+    informacoes: {
+        justifyContent: 'space-evenly',
+        flex: 1,
+        gap: 20
+
+    },
+    titulo: {
+        fontSize: 17,
+        fontWeight: 'bold'
+    },
+    descricao: {
+        fontWeight: '500',
+        color: "#434343"
+    },
+
+    list: {
+        marginLeft: 10, // Espaçamento para parecer com lista indentada
+    },
+    listItem: {
+        fontSize: 16,
+        marginBottom: 5,
+    },
+
+
+
 });
