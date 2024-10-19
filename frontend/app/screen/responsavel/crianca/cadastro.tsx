@@ -16,7 +16,7 @@ export default function Cadastro() {
         try {
             const idResponsavel = await AsyncStorage.getItem('idResponsavel');
 
-            alert("ID KKKKK: " + idResponsavel)
+            alert("ID: " + idResponsavel)
             const response = await fetch(`${config.IP_SERVER}/crianca`, {
                 method: "POST",
                 headers: {

@@ -88,27 +88,13 @@ export default function CadastroCrianca() {
             <KeyboardAvoidingView
                 style={styles.container}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                <View style={styles.containerInputs}>
+                <View style={styles.cardDados}>
 
-                    <TextInput
-                        placeholder="Nome da criança"
-                        style={styles.textInputs}
-                        value={crianca.nome}
-                        onChangeText={(text) => setCrianca({ ...crianca, nome: text })} // Atualiza apenas o nome
-                    />
-                    <TextInput
-                        placeholder="Idade da criança"
-                        style={styles.textInputs}
-                        value={crianca.idade ? crianca.idade.toString() : ''} // Converte para string
-                        onChangeText={(text) => setCrianca({ ...crianca, idade: parseInt(text) || '' })} // Converte para número
-                        keyboardType="numeric"
-                    />
-                    <TextInput
-                        placeholder="Nome da criança"
-                        style={styles.textInputs}
-                        value={crianca.status}
-                        onChangeText={(text) => setCrianca({ ...crianca, status: text })} // Atualiza apenas o nome
-                    />
+                
+                    <Text style={styles.textoDados}> Nome: {crianca.nome}</Text>
+                    <Text style={styles.textoDados}> Idade: {crianca.idade}</Text>
+                    <Text style={styles.textoDados}> Status: {crianca.status}</Text>
+
                 </View>
 
 
@@ -137,7 +123,7 @@ export default function CadastroCrianca() {
                 )}
 
                 {motorista && (
-                    <View style={styles.motoristaInfo}>
+                    <View style={styles.cardMotorista}>
                         <Text>Nome do Motorista: {motorista.nome}</Text>
                         <Text>Telefone: {motorista.telefone}</Text>
                     </View>
@@ -156,6 +142,41 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between'
     },
+
+    cardMotorista: {
+        backgroundColor: "#ffbf00",
+        padding: 20,
+        marginBottom: 20,
+        borderRadius: 20,
+        height: 120,
+        justifyContent: "center",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 20,
+    },
+    cardDados: {
+        backgroundColor: "#0d99ff",
+        padding: 20,
+        marginBottom: 20,
+        borderRadius: 20,
+        height: 120,
+        justifyContent: "center",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 20,
+    },
+    containerCards: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "space-between",
+        gap: 10,
+    },
+    textoDados: {
+        fontSize: 15,
+        fontWeight: "600",
+        color: "#333",
+    },
+
     containerInputs: {
         flex: 1,
         justifyContent: 'center',
