@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, ActivityIndicator, Alert, TextInput, Button } from 'react-native';
+import { View, Text, FlatList, ActivityIndicator, Alert, TextInput, Button, SafeAreaView, ScrollView, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '@/app/config'; // Configuração do servidor
 import { Stack } from 'expo-router';
@@ -76,7 +76,9 @@ export default function MostraOfertas() {
     }
 
     return (
-        <View style={{ padding: 20 }}>
+
+        <SafeAreaView>
+
             <Stack.Screen
                 options={{
                     headerTitle: 'Ofertas',
@@ -88,34 +90,92 @@ export default function MostraOfertas() {
                     headerTitleAlign: 'center'
                 }}
             />
-            <Text style={{ fontSize: 24, fontWeight: 'bold' }}>Ofertas Recebidas</Text>
+
 
             <FlatList
+                style={styles.flatList}
                 data={ofertas}
                 keyExtractor={(item) => item.criancaId.toString()}
                 renderItem={({ item }) => (
-                    <View style={{ marginVertical: 10 }}>
-                        <Text>Escola: {item.escolaNome}</Text>
-                        <Text>Criança: {item.criancaNome}</Text>
-                        <Text>Responsável: {item.responsavelNome}</Text>
-                        <Text>Mensagem: {item.mensagem}</Text>
+                    <View style={styles.containerInputs}>
 
-                        <View>
-                            <TextInput
-                                style={{ borderColor: 'gray', borderWidth: 1, marginVertical: 5 }}
-                                placeholder="Digite o valor que deseja enviar"
-                                keyboardType="numeric"
-                                onChangeText={(text) => setValor({ ...valor, [item.id]: parseFloat(text) })}
-                            />
-                            <Button title="Responder" onPress={() => {
-                                console.log('ID do item:', item.id);
-                                responderOferta(parseInt(item.id, 10)); // id para número
-                            }} />
+                        <View style={{ marginVertical: 10 }}>
+                            <Text>Nome da criança: {item.criancaNome}</Text>
+                            <Text>Escola: {item.escolaNome}</Text>
+                            <Text>Responsável: {item.responsavelNome}</Text>
+                            <Text>Endereço: {item.endereco}</Text>
+                            <Text>Mensagem: {item.mensagem}</Text>
+                            <Text>Status: {item.status}</Text>
+
+                            <View>
+                                {/* Verificação corrigida */}
+                                {(item.status !== "Aceita" && item.status !== "Valor enviado" && item.status !== "Recusado") && (
+                                    <>
+                                        <TextInput
+                                            style={styles.textInputs}
+                                            placeholder="Digite o valor que deseja enviar"
+                                            keyboardType="numeric"
+                                            onChangeText={(text) => setValor({ ...valor, [item.id]: parseFloat(text) })}
+                                        />
+                                        <Button title="Responder" onPress={() => {
+                                            console.log('ID do item:', item.id);
+                                            responderOferta(parseInt(item.id, 10)); // id convertido para número
+                                        }} />
+                                    </>
+                                )}
+                            </View>
                         </View>
-
                     </View>
                 )}
             />
-        </View>
+
+        </SafeAreaView>
     );
 }
+
+const styles = StyleSheet.create({
+    total: {
+        flex: 1,
+        backgroundColor: "#f5f5f5",
+    },
+    flatList: {
+        marginTop: 10,
+        paddingHorizontal: 20,
+        paddingBottom: 50,
+    },
+    header: {
+        alignItems: 'center',
+        marginVertical: 20,
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#333',
+    },
+    containerInputs: {
+        marginBottom: 20,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 15,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
+        elevation: 3,
+    },
+    text: {
+        fontSize: 14,
+        marginBottom: 5,
+        color: "#666",
+    },
+    textInputs: {
+        backgroundColor: "#f9f9f9",
+        borderColor: "#ddd",
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 15,
+        fontSize: 16,
+        color: "#333",
+    },
+});

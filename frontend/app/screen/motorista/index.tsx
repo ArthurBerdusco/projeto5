@@ -33,7 +33,7 @@ export default function Index() {
       );
 
       const data = await response.json();
-      alert(data.nome);
+  
       setMotorista(data);
 
       // Requisição para buscar as escolas atendidas pelo motorista

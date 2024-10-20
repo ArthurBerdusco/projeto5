@@ -147,6 +147,7 @@ export default function Perfil() {
                             style={styles.textInputs}
                             value={motorista.email}
                             onChangeText={(text) => handleDadosPessoaisChange('email', text)}
+                            editable={false}
                         />
                     </View>
                     <View>

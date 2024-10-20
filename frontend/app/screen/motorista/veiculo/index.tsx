@@ -18,9 +18,7 @@ interface Van {
     tvEntretenimento: boolean;
     camerasSeguranca: boolean;
     cintoSeguranca: boolean;
-    manutencaoRegular: string; // Data da última manutenção
     extintorIncendio: boolean;
-    certificacaoInspecao: string; // Data de validade da certificação
     cnh: string;
     antecedentesCriminais: boolean;
     fotosVeiculo: string[]; // Array para armazenar URLs ou paths das fotos do veículo
@@ -45,9 +43,7 @@ export default function VehicleInfoScreen() {
         tvEntretenimento: false,
         camerasSeguranca: false,
         cintoSeguranca: false,
-        manutencaoRegular: '', // Data da última manutenção
         extintorIncendio: false,
-        certificacaoInspecao: '', // Data de validade da certificação
         cnh: '',
         antecedentesCriminais: false,
         fotosVeiculo: [] // Array para armazenar URLs ou paths das fotos do veículo
@@ -222,12 +218,7 @@ export default function VehicleInfoScreen() {
                             onValueChange={(value) => handleChange('cintoSeguranca', value)}
                         />
                     </View>
-                    <TextInput
-                        placeholder="Data de Manutenção Regular"
-                        style={styles.textInputs}
-                        value={van.manutencaoRegular}
-                        onChangeText={(text) => handleChange('manutencaoRegular', text)}
-                    />
+
                     <View style={styles.switchContainer}>
                         <Text style={styles.text}>Extintor de Incêndio</Text>
                         <Switch
@@ -235,12 +226,7 @@ export default function VehicleInfoScreen() {
                             onValueChange={(value) => handleChange('extintorIncendio', value)}
                         />
                     </View>
-                    <TextInput
-                        placeholder="Certificação de Inspeção"
-                        style={styles.textInputs}
-                        value={van.certificacaoInspecao}
-                        onChangeText={(text) => handleChange('certificacaoInspecao', text)}
-                    />
+
                 </View>
 
                 {/* Documentação do Motorista */}

@@ -12,6 +12,25 @@ public class OfertaDTO {
     private Long responsavelId;
     private String responsavelNome;
     private String mensagem;
+    private String status;
+    private String endereco;
+
+    public String getEndereco() {
+        return endereco;
+    }
+
+    public void setEndereco(String endereco) {
+        this.endereco = endereco;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     private Double valor;
 
     public String getMotoristaNome() {

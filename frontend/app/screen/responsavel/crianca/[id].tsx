@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, Pressable } from 'react-native';
+import { ActivityIndicator, Alert, KeyboardAvoidingView, Platform, Pressable, ScrollView } from 'react-native';
 import { View, StyleSheet, Text, TextInput, SafeAreaView } from "react-native";
 import { useEffect, useState } from "react";
 import config from '@/app/config';
@@ -11,14 +11,11 @@ export default function CadastroCrianca() {
     const [ofertas, setOfertas] = useState([]);
     const [motorista, setMotorista] = useState(null);
 
-
-
     const { id } = useLocalSearchParams();
 
 
     const fetchCrianca = async () => {
         try {
-            console.log(`Buscando dados para a criança com ID: ${id}`);
             const response = await fetch(`${config.IP_SERVER}/criancas/${id}`);
             const data = await response.json();
             setCrianca(data);
@@ -74,40 +71,37 @@ export default function CadastroCrianca() {
 
     return (
         <SafeAreaView style={styles.total}>
-            <Stack.Screen
-                options={{
-                    headerTitle: 'Perfil Criança',
-                    headerStyle: { backgroundColor: '#0d99ff' },
-                    headerTintColor: 'white',
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                    headerTitleAlign: 'center'
-                }}
-            />
-            <KeyboardAvoidingView
-                style={styles.container}
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-                <View style={styles.containerInputs}>
+            <ScrollView contentContainerStyle={styles.scrollView}>
+                <Stack.Screen
+                    options={{
+                        headerTitle: 'Perfil da criança',
+                        headerStyle: { backgroundColor: '#0d99ff' },
+                        headerTintColor: 'white',
+                        headerTitleStyle: {
+                            fontWeight: 'bold',
+                        },
+                        headerTitleAlign: 'center'
+                    }}
+                />
 
+                <View style={styles.containerInputs}>
+                    <Text style={styles.text}>Nome</Text>
                     <TextInput
                         placeholder="Nome da criança"
                         style={styles.textInputs}
                         value={crianca.nome}
                         onChangeText={(text) => setCrianca({ ...crianca, nome: text })} // Atualiza apenas o nome
                     />
+
+                    <Text style={styles.text}>Idade</Text>
                     <TextInput
                         placeholder="Idade da criança"
                         style={styles.textInputs}
                         value={crianca.idade ? crianca.idade.toString() : ''} // Converte para string
                         onChangeText={(text) => setCrianca({ ...crianca, idade: parseInt(text) || '' })} // Converte para número
                         keyboardType="numeric"
-                    />
-                    <TextInput
-                        placeholder="Nome da criança"
-                        style={styles.textInputs}
-                        value={crianca.status}
-                        onChangeText={(text) => setCrianca({ ...crianca, status: text })} // Atualiza apenas o nome
+                        editable={false}
+                        
                     />
                 </View>
 
@@ -142,7 +136,8 @@ export default function CadastroCrianca() {
                         <Text>Telefone: {motorista.telefone}</Text>
                     </View>
                 )}
-            </KeyboardAvoidingView>
+
+            </ScrollView>
         </SafeAreaView >
     );
 }
@@ -150,25 +145,36 @@ export default function CadastroCrianca() {
 const styles = StyleSheet.create({
     total: {
         flex: 1,
-        margin: 10,
+        backgroundColor: "#f5f5f5",
+    },
+    scrollView: {
+        paddingHorizontal: 20,
+        paddingBottom: 50,
     },
     container: {
         flex: 1,
         justifyContent: 'space-between'
     },
     containerInputs: {
-        flex: 1,
-        justifyContent: 'center',
-        gap: 20
+        marginBottom: 20,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 15,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
+        elevation: 3,
     },
     textInputs: {
-        backgroundColor: "transparent",
-        width: "100%",
-        height: 50,
-        borderRadius: 20,
-        borderColor: "black",
-        borderWidth: 2,
-        textAlign: "center"
+        backgroundColor: "#f9f9f9",
+        borderColor: "#ddd",
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 15,
+        fontSize: 16,
+        color: "#333",
     },
     buttonSubmit: {
         backgroundColor: "#ffbf00",
@@ -205,5 +211,9 @@ const styles = StyleSheet.create({
         textAlign: "center",
         borderRadius: 10,
         fontWeight: "700"
-    },
+    }, text: {
+        fontSize: 14,
+        marginBottom: 5,
+        color: "#666",
+    }
 });

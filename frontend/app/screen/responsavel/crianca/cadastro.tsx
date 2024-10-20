@@ -1,22 +1,51 @@
 import { Link, Stack, useRouter } from "expo-router";
-import { ScrollView, View, StyleSheet, Text, Image, TextInput, Pressable, Alert } from "react-native";
+import { ScrollView, View, StyleSheet, Text, Image, TextInput, Pressable, Alert, Platform } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker"
 import { useState } from "react";
 import config from '@/app/config';
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function Cadastro() {
 
     const router = useRouter();
 
     const [nome, setNome] = useState('');
-    const [idade, setIdade] = useState('');
+    const [dataNascimento, setDataNascimento] = useState("");
+
+    const [date, setDate] = useState(new Date(2000, 0, 1))
+    const [showPicker, setShowPicker] = useState(false);
+
+    const toggleDataPicker = () => {
+        setShowPicker(!showPicker);
+    }
+
+    const onChange = ({ type }, selectedDate) => {
+        if (type == "set") {
+            const currentDate = selectedDate;
+            setDate(currentDate);
+
+            if (Platform.OS === "android") {
+                toggleDataPicker();
+                const formattedDate = format(currentDate, "dd/MM/yyyy", { locale: ptBR });
+
+                setDataNascimento(formattedDate); // Exemplo de uso
+            }
+
+        } else {
+            toggleDataPicker();
+        }
+    }
 
     const handleSubmit = async () => {
 
         try {
+            const formattedDateNascimento = format(date, "dd/MM/yyyy");
+
             const idResponsavel = await AsyncStorage.getItem('idResponsavel');
 
-            alert("ID KKKKK: " + idResponsavel)
             const response = await fetch(`${config.IP_SERVER}/crianca`, {
                 method: "POST",
                 headers: {
@@ -24,7 +53,7 @@ export default function Cadastro() {
                 },
                 body: JSON.stringify({
                     nome,
-                    idade,
+                    dataNascimento: formattedDateNascimento,
                     idResponsavel,
                 }),
             });
@@ -41,47 +70,76 @@ export default function Cadastro() {
     };
 
     return (
-        <ScrollView style={{ backgroundColor: "white" }}>
-            <Stack.Screen
-                options={{
-                    headerTitle: 'Cadastrar Criança',
-                    headerStyle: { backgroundColor: '#0d99ff' },
-                    headerTintColor: 'white',
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                    headerTitleAlign: 'center'
-                }}
-            />
-            <View style={styles.container}>
+        <SafeAreaView style={styles.total}>
+            <ScrollView contentContainerStyle={styles.scrollView}>
+                <Stack.Screen
+                    options={{
+                        headerTitle: 'Cadastrar Criança',
+                        headerStyle: { backgroundColor: '#0d99ff' },
+                        headerTintColor: 'white',
+                        headerTitleStyle: {
+                            fontWeight: 'bold',
+                        },
+                        headerTitleAlign: 'center'
+                    }}
+                />
+
                 <View style={styles.containerInputs}>
+
+                    <Text style={styles.text}>Nome da criança</Text>
                     <TextInput
-                        placeholder="Nome da criança"
                         style={styles.textInputs}
                         value={nome}
                         onChangeText={setNome}
                     />
-                    <TextInput
-                        placeholder="Idade da criança"
-                        style={styles.textInputs}
-                        value={idade}
-                        onChangeText={setIdade}
-                        keyboardType="numeric"
-                    />
+                    <Text style={styles.text}>Data de nascimento</Text>
+                    {showPicker && (
+                        <DateTimePicker
+                            mode="date"
+                            display="spinner"
+                            value={date}
+                            onChange={onChange}
+
+                        />
+                    )}
+
+                    {!showPicker && (
+                        <Pressable onPress={toggleDataPicker}>
+                            <TextInput
+                                style={styles.textInputs}
+                                value={dataNascimento}
+                                onChangeText={setDataNascimento}
+                                placeholder='Selecione'
+                                editable={false}
+                            />
+                        </Pressable>
+                    )}
                 </View>
 
                 <Pressable style={styles.buttonSubmit} onPress={handleSubmit}>
                     <Text style={styles.buttonText}>Cadastrar</Text>
                 </Pressable>
-            </View>
-        </ScrollView>
+
+            </ScrollView>
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
-    container: {
+    total: {
         flex: 1,
-        backgroundColor: "#ffffff",
+        backgroundColor: "#f5f5f5",
+    },
+    scrollView: {
+        paddingHorizontal: 20,
+        paddingBottom: 50,
+    },
+    containerCards: {
+        marginTop: 20,
+        flexDirection: "row",
+        justifyContent: "center",
+        flexWrap: "wrap",
+        gap: 10,
     },
     cardDados: {
         backgroundColor: "#ffbf00",
@@ -94,13 +152,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         gap: 20,
     },
-    containerCards: {
-        marginTop: 20,
-        flexDirection: "row",
-        justifyContent: "center",
-        flexWrap: "wrap",
-        gap: 10,
-    },
+
     cardsMotoristas: {
         height: 150,
         width: 150,
@@ -112,17 +164,25 @@ const styles = StyleSheet.create({
         fontWeight: "600",
     },
     containerInputs: {
-        margin: 20,
-        gap: 10,
+        marginBottom: 20,
+        backgroundColor: '#fff',
+        borderRadius: 10,
+        padding: 15,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
+        elevation: 3,
     },
     textInputs: {
-        backgroundColor: "transparent",
-        width: "100%",
-        height: 50,
-        borderRadius: 20,
-        borderColor: "black",
-        borderWidth: 2,
-        textAlign: "center",
+        backgroundColor: "#f9f9f9",
+        borderColor: "#ddd",
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 15,
+        fontSize: 16,
+        color: "#333",
     },
     buttonSubmit: {
         backgroundColor: "#ffbf00",
@@ -140,4 +200,9 @@ const styles = StyleSheet.create({
         alignSelf: "center",
         marginTop: 20,
     },
+    text: {
+        fontSize: 14,
+        marginBottom: 5,
+        color: "#666",
+    }
 });

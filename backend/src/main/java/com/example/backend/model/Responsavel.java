@@ -1,6 +1,10 @@
 package com.example.backend.model;
 
+import java.time.LocalDate;
+import java.time.Period;
+
 import com.example.backend.security.Usuario;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -24,10 +28,12 @@ public class Responsavel {
     Long id;
     private String nome;
     private String email;
-    private Integer idade;
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private LocalDate dataNascimento;
     private String cpf;
     private String telefone;
     private String status;
+    private Integer idade;
 
     @OneToOne
     private Usuario usuario;
@@ -36,4 +42,11 @@ public class Responsavel {
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 
+    public Integer getIdade(){
+       if (dataNascimento != null) {
+            LocalDate today = LocalDate.now();
+            return Period.between(dataNascimento, today).getYears();
+        }
+        return 0; 
+    }
 }

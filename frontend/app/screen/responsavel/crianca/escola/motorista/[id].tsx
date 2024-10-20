@@ -113,7 +113,7 @@ export default function Motorista() {
 
             {/* Botão para solicitar valor */}
             <TouchableOpacity style={styles.button} onPress={enviarOferta}>
-                <Text style={styles.buttonText}>Enviar Oferta</Text>
+                <Text style={styles.buttonText}>Solicitar orçamento</Text>
             </TouchableOpacity>
         </View>
     );

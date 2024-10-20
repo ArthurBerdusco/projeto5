@@ -10,6 +10,7 @@ export default function AceitarOferta() {
 
     const fetchOfertas = async () => {
         try {
+            alert("ID CRIANÇA: " + ofertaId)
             const response = await fetch(`${config.IP_SERVER}/oferta/${ofertaId}`);
 
             if (response.status === 204) {

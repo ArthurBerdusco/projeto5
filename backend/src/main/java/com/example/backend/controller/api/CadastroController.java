@@ -34,6 +34,8 @@ public class CadastroController {
 
     @PostMapping("/cadastro")
     public ResponseEntity<?> cadastrar(@RequestBody UsuarioDTO dto) {
+            
+        System.out.println("\n\n\nData Nascimento: " + dto.getDataNascimento() + "\n\n\n");
         Motorista motorista = null; // Declaração fora do bloco
         Responsavel responsavel = null; // Declaração fora do bloco
 
@@ -62,7 +64,7 @@ public class CadastroController {
                 motorista.setEmail(dto.getEmail());
                 motorista.setCpf(dto.getCpf());
                 motorista.setTelefone(dto.getTelefone());
-                motorista.setIdade(dto.getIdade());
+                motorista.setDataNascimento(dto.getDataNascimento());
                 motorista.setEndereco(dto.getEndereco());
                 motorista.setStatus("Pendente ativação");
                 motorista.setUsuario(usuario);
@@ -73,11 +75,12 @@ public class CadastroController {
                             .body("Erro: O CPF já está cadastrado.");
                 }
                 responsavel = new Responsavel(); // Inicialização da variável
+               
                 responsavel.setNome(dto.getNome());
                 responsavel.setEmail(dto.getEmail());
                 responsavel.setCpf(dto.getCpf());
                 responsavel.setTelefone(dto.getTelefone());
-                responsavel.setIdade(dto.getIdade());
+                responsavel.setDataNascimento(dto.getDataNascimento());
                 responsavel.setEndereco(dto.getEndereco());
                 responsavel.setStatus("Pendente ativação");
                 responsavel.setUsuario(usuario);

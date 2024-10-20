@@ -1,9 +1,8 @@
 import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { View, StyleSheet, Text, Pressable, TextInput, SafeAreaView, Switch } from "react-native";
-import DropDownPicker from 'react-native-dropdown-picker';
 
 import { useState } from "react";
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import config from '@/app/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -21,9 +20,7 @@ interface Van {
     tvEntretenimento: boolean;
     camerasSeguranca: boolean;
     cintoSeguranca: boolean;
-    manutencaoRegular: string; // Data da última manutenção
     extintorIncendio: boolean;
-    certificacaoInspecao: string; // Data de validade da certificação
     cnh: string;
     antecedentesCriminais: boolean;
     fotosVeiculo: string[]; // Array para armazenar URLs ou paths das fotos do veículo
@@ -47,9 +44,7 @@ export default function CadastroResponsavel() {
         tvEntretenimento: false,
         camerasSeguranca: false,
         cintoSeguranca: false,
-        manutencaoRegular: '', // Data da última manutenção
         extintorIncendio: false,
-        certificacaoInspecao: '', // Data de validade da certificação
         cnh: '',
         antecedentesCriminais: false,
         fotosVeiculo: [] // Array para armazenar URLs ou paths das fotos do veículo
@@ -64,10 +59,10 @@ export default function CadastroResponsavel() {
 
     const handleSubmit = async () => {
         try {
-            
+
             const idMotorista = await AsyncStorage.getItem('idMotorista');
 
-            
+
 
             if (!idMotorista) {
                 Alert.alert("Error", "ID do motorista não encontrado.");
@@ -87,7 +82,7 @@ export default function CadastroResponsavel() {
             });
 
             console.log("Resposta do servidor:", response);
-            
+
             const responseBody = await response.text();
             console.log("Corpo da resposta:", responseBody);
 
@@ -123,12 +118,17 @@ export default function CadastroResponsavel() {
                         value={van.modelo}
                         onChangeText={(text) => handleChange('modelo', text)}
                     />
+
+                    <Text style={styles.text}>Ano do veículo</Text>
                     <TextInput
-                        placeholder="Ano de Fabricação"
+                        placeholder="Exemplo '2012'"
+                        maxLength={4}
                         style={styles.textInputs}
                         value={van.anoFabricacao}
+                        keyboardType='numeric'
                         onChangeText={(text) => handleChange('anoFabricacao', text)}
                     />
+
 
                     <TextInput
                         placeholder="Cor"
@@ -206,12 +206,8 @@ export default function CadastroResponsavel() {
                             onValueChange={(value) => handleChange('cintoSeguranca', value)}
                         />
                     </View>
-                    <TextInput
-                        placeholder="Data de Manutenção Regular"
-                        style={styles.textInputs}
-                        value={van.manutencaoRegular}
-                        onChangeText={(text) => handleChange('manutencaoRegular', text)}
-                    />
+
+
                     <View style={styles.switchContainer}>
                         <Text style={styles.text}>Extintor de Incêndio</Text>
                         <Switch
@@ -219,12 +215,7 @@ export default function CadastroResponsavel() {
                             onValueChange={(value) => handleChange('extintorIncendio', value)}
                         />
                     </View>
-                    <TextInput
-                        placeholder="Certificação de Inspeção"
-                        style={styles.textInputs}
-                        value={van.certificacaoInspecao}
-                        onChangeText={(text) => handleChange('certificacaoInspecao', text)}
-                    />
+
                 </View>
 
                 {/* Documentação do Motorista */}
