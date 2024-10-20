@@ -1,7 +1,7 @@
 // config.js
 const config = {
 
-    IP_SERVER: 'http://192.168.15.6:8080'
+    IP_SERVER: 'http://192.168.15.159:8080'
 
 };
 

@@ -2,7 +2,11 @@ import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, Button, Image, Platform, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+
+import * as ImagePicker from 'expo-image-picker';
+import FotoPerfil from "@/app/components/Foto/FotoPerfil";
+
 
 interface Endereco {
     cep: string;
@@ -12,17 +16,22 @@ interface Endereco {
     complemento: string;
 }
 
+interface Imagem {
+    id: number;
+    nome: string;
+    dados: string | null;
+}
+
 interface Motorista {
     nome: string;
     cpf: string;
     email: string;
     telefone: string;
     endereco: Endereco;
+    imagem: Imagem;
 }
 
 export default function Perfil() {
-
-    const [loading, setLoading] = useState(false);
 
     const [motorista, setMotorista] = useState<Motorista>({
         nome: '',
@@ -35,33 +44,52 @@ export default function Perfil() {
             numero: '',
             bairro: '',
             complemento: ''
-        }
+        },
+        imagem: {
+            id: 0,
+            nome: '',
+            dados: '',
+        } 
     });
 
+    const [loading, setLoading] = useState(false);
+    const [idMotorista, setIdMotorista] = useState('');
 
-    const fetchmotorista = async () => {
+
+
+
+    const fetchMotorista = async () => {
         setLoading(true);
         try {
-            const motorista = await AsyncStorage.getItem('idMotorista')
+            const motoristaId = (await AsyncStorage.getItem('idMotorista')) ?? "";
+            setIdMotorista(motoristaId);
 
-            const resultado = await fetch(`${config.IP_SERVER}/motorista/${motorista}`);
+            const resultado = await fetch(`${config.IP_SERVER}/motorista/${motoristaId}`);
+            if (!resultado.ok) {
+                throw new Error(`Erro ao buscar motorista: ${resultado.statusText}`);
+            }
+
             const dados = await resultado.json();
+
+
             setMotorista(dados);
 
         } catch (err) {
-            alert(err)
+            Alert.alert(`Erro: ${err.message}`); // Exibir mensagem de erro
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
+
+
 
     useEffect(() => {
-        fetchmotorista();
+        fetchMotorista();
     }, []);
 
     if (loading) {
         return (
-            <View style={styles.loadingContainer}>
+            <View>
                 <ActivityIndicator size="large" color="#0d99ff" />
             </View>
         );
@@ -123,6 +151,13 @@ export default function Perfil() {
                 }}
             />
             <ScrollView contentContainerStyle={styles.scrollView}>
+
+                <FotoPerfil
+                    idEntidade={idMotorista}
+                    entidade={"Motorista"}
+                    initialImage={motorista.imagem?.dados ? `data:image/jpeg;base64,${motorista.imagem.dados}` : null}
+                />
+
                 <View style={styles.containerInputs}>
                     <Text style={styles.textTitle}>Dados Pessoais: </Text>
                     <View>
@@ -279,5 +314,13 @@ const styles = StyleSheet.create({
         color: '#fff',
         fontSize: 16,
         fontWeight: 'bold',
+    },
+    image: {
+        borderRadius: 75,
+        borderColor: "#f6f6f6",
+        borderWidth: 6,
+        width: 150,
+        height: 150,
+        alignSelf: 'center'
     },
 })

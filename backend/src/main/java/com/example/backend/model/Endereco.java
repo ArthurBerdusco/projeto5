@@ -4,12 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
-import lombok.Data;
 
 @Entity
-@Data
 public class Endereco {
 
     @Id
@@ -22,10 +18,6 @@ public class Endereco {
     private String cep;
     private String estado;
     private String complemento;
-
-    @OneToOne
-    @JoinColumn(name = "id_responsavel")
-    private Responsavel responsavel;
 
     public Long getId() {
         return id;
@@ -91,11 +83,4 @@ public class Endereco {
         this.complemento = complemento;
     }
 
-    public Responsavel getResponsavel() {
-        return responsavel;
-    }
-
-    public void setResponsavel(Responsavel responsavel) {
-        this.responsavel = responsavel;
-    }
 }

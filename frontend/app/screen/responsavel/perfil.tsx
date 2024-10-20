@@ -1,3 +1,4 @@
+import FotoPerfil from "@/app/components/Foto/FotoPerfil";
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Stack } from "expo-router";
@@ -18,11 +19,19 @@ interface Responsavel {
     email: string;
     telefone: string;
     endereco: Endereco;
+    imagem: Imagem;
+}
+
+interface Imagem {
+    id: number;
+    nome: string;
+    dados: string;
 }
 
 
 export default function Perfil() {
 
+    const [idResponsavel, setIdResponsavel] = useState('');
     const [loading, setLoading] = useState(false);
 
 
@@ -37,14 +46,20 @@ export default function Perfil() {
             numero: '',
             bairro: '',
             complemento: ''
-        }
+        },
+        imagem: {
+            id: 0,
+            nome: '',
+            dados: '',
+        } // Adicione esta linha
     });
 
 
     const fetchResponsavel = async () => {
         setLoading(true);
         try {
-            const responsavel = await AsyncStorage.getItem('idResponsavel')
+            const responsavel = (await AsyncStorage.getItem('idResponsavel')) ?? "";
+            setIdResponsavel(responsavel);
 
             const resultado = await fetch(`${config.IP_SERVER}/responsavel/${responsavel}`);
             const dados = await resultado.json();
@@ -63,7 +78,7 @@ export default function Perfil() {
 
     if (loading) {
         return (
-            <View style={styles.loadingContainer}>
+            <View>
                 <ActivityIndicator size="large" color="#0d99ff" />
             </View>
         );
@@ -125,6 +140,14 @@ export default function Perfil() {
                 }}
             />
             <ScrollView contentContainerStyle={styles.scrollView}>
+
+                <FotoPerfil
+                    idEntidade={idResponsavel}
+                    entidade={"Responsavel"}
+                    initialImage={responsavel.imagem?.dados ? `data:image/jpeg;base64,${responsavel.imagem.dados}` : null}
+                />
+
+
                 <View style={styles.containerInputs}>
                     <Text style={styles.textTitle}>Dados Pessoais: </Text>
                     <View>
