@@ -4,8 +4,34 @@ import { useState, useEffect } from "react";
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+interface Imagem {
+    id: number;
+    nome: string;
+    dados: string | null;
+  }
+  
+  interface Responsavel {
+    nome: string;
+    telefone: string;
+    idade: number;
+    imagem: Imagem;
+  }
+
 export default function Index() {
-    const [responsavel, setResponsavel] = useState({ nome: '', email: '', telefone: '', idade: null })
+
+
+    const [responsavel, setResponsavel] = useState<Responsavel>(
+        {
+            nome: '',
+            telefone: '',
+            idade: 0,
+            imagem: {
+                id: 0,
+                nome: '',
+                dados: null,
+            }
+        }
+    )
     const [criancas, setCriancas] = useState([]);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
@@ -83,7 +109,23 @@ export default function Index() {
             />
             <View style={styles.container}>
                 <Pressable onPress={() => router.push('/screen/responsavel/perfil')} style={styles.cardDados}>
-                    <Image source={require('../assets/icons/icone2.png')} style={{ resizeMode: "cover", height: 90, width: 90 }} />
+                    {responsavel.imagem && responsavel.imagem.dados ? (
+                        <Image
+                            source={{
+                                uri: responsavel.imagem.dados.startsWith('data:image/')
+                                    ? responsavel.imagem.dados // Se já estiver no formato base64 completo, usa como está
+                                    : `data:image/jpeg;base64,${responsavel.imagem.dados}` // Caso contrário, adiciona o prefixo
+                            }}
+                            style={styles.image}
+                        />
+                    ) : (
+                        <View>
+                            <Image
+                                source={require("../assets/icons/perfil.png")}
+                                style={styles.image}
+                            />
+                        </View>
+                    )}
                     <View>
                         <View>
                             <Text style={styles.textoDados}>Nome: {responsavel.nome}</Text>
@@ -238,5 +280,13 @@ const styles = StyleSheet.create({
         color: 'red',
         textAlign: 'center',
         marginBottom: 20,
+    },
+    image: {
+        borderRadius: 75,
+        borderColor: "#f6f6f6",
+        borderWidth: 6,
+        width: 100,
+        height: 100,
+        alignSelf: 'center'
     },
 });

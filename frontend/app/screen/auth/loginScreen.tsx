@@ -16,6 +16,7 @@ export default function loginScreen() {
 
     const handleSubmit = async () => {
         try {
+            alert('ola')
             const response = await fetch(`${config.IP_SERVER}/loginapi`, {
 
                 method: "POST",
