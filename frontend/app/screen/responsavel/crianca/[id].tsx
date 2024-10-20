@@ -71,6 +71,7 @@ export default function CadastroCrianca() {
 
     return (
         <SafeAreaView style={styles.total}>
+
             <ScrollView contentContainerStyle={styles.scrollView}>
                 <Stack.Screen
                     options={{
@@ -103,6 +104,7 @@ export default function CadastroCrianca() {
                         editable={false}
                         
                     />
+
                 </View>
 
 
@@ -131,7 +133,7 @@ export default function CadastroCrianca() {
                 )}
 
                 {motorista && (
-                    <View style={styles.motoristaInfo}>
+                    <View style={styles.cardMotorista}>
                         <Text>Nome do Motorista: {motorista.nome}</Text>
                         <Text>Telefone: {motorista.telefone}</Text>
                     </View>
@@ -155,6 +157,41 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'space-between'
     },
+
+    cardMotorista: {
+        backgroundColor: "#ffbf00",
+        padding: 20,
+        marginBottom: 20,
+        borderRadius: 20,
+        height: 120,
+        justifyContent: "center",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 20,
+    },
+    cardDados: {
+        backgroundColor: "#0d99ff",
+        padding: 20,
+        marginBottom: 20,
+        borderRadius: 20,
+        height: 120,
+        justifyContent: "center",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 20,
+    },
+    containerCards: {
+        flexDirection: "row",
+        flexWrap: "wrap",
+        justifyContent: "space-between",
+        gap: 10,
+    },
+    textoDados: {
+        fontSize: 15,
+        fontWeight: "600",
+        color: "#333",
+    },
+
     containerInputs: {
         marginBottom: 20,
         backgroundColor: '#fff',
