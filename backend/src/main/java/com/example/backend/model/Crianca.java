@@ -1,12 +1,16 @@
 package com.example.backend.model;
 
+import java.time.LocalDate;
+import java.time.Period;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import lombok.Data;
 
 @Entity
@@ -19,6 +23,8 @@ public class Crianca {
 
     private String nome;
 
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private LocalDate dataNascimento;
     private Integer idade;
 
     private String status;
@@ -34,5 +40,13 @@ public class Crianca {
     @ManyToOne
     @JoinColumn(name = "id_motorista")
     private Motorista motorista;
+
+    public Integer getIdade(){
+       if (dataNascimento != null) {
+            LocalDate today = LocalDate.now();
+            return Period.between(dataNascimento, today).getYears();
+        }
+        return 0; 
+    }
 
 }

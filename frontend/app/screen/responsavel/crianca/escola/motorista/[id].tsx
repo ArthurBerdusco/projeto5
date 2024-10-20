@@ -95,23 +95,7 @@ export default function Motorista() {
                     headerTitleAlign: 'center'
                 }}
             />
-            {/* <Text style={styles.name}>{motorista.nome}</Text>
-            <Text style={styles.info}>Idade: {motorista.idade} anos</Text>
-            <Text style={styles.info}>Email: {motorista.email}</Text>
-            <Text style={styles.info}>CPF: {motorista.cpf}</Text>
-            <Text style={styles.info}>Telefone: {motorista.telefone}</Text>
-            <Text style={styles.status}>Status: {motorista.status}</Text>
-
-            <TextInput
-                style={styles.input}
-                placeholder="Digite sua mensagem..."
-                value={mensagem}
-                onChangeText={setMensagem}
-            />
-
-            <TouchableOpacity style={styles.button} onPress={enviarOferta}>
-                <Text style={styles.buttonText}>Enviar Oferta</Text>
-            </TouchableOpacity> */}
+           
             <View style={styles.parteSuperiorPerfil}>
                 <Image source={require('@/app/screen/assets/icons/motorista.png')} style={{ width: 120, height: 120 }} />
                 <View style={styles.containerInformacoes}>
@@ -162,6 +146,7 @@ export default function Motorista() {
                     <Text style={styles.buttonText}>Fazer orçamento</Text>
                 </TouchableOpacity>
             </View>
+
         </View>
     );
 }

@@ -86,6 +86,8 @@ public class OfertaController {
             dto.setCriancaNome(oferta.getCrianca().getNome());
             dto.setResponsavelId(oferta.getResponsavel().getId());
             dto.setResponsavelNome(oferta.getResponsavel().getNome());
+            dto.setStatus(oferta.getStatus());
+            dto.setEndereco(oferta.getResponsavel().getEndereco().getRua() + ", " + oferta.getResponsavel().getEndereco().getNumero());
             dto.setMensagem(oferta.getMensagem());
             dto.setId(oferta.getId());
             return dto;
@@ -154,6 +156,7 @@ public class OfertaController {
             dto.setCriancaNome(oferta.getCrianca().getNome());
             dto.setResponsavelId(oferta.getResponsavel().getId());
             dto.setResponsavelNome(oferta.getResponsavel().getNome());
+            dto.setStatus(oferta.getStatus());
             dto.setMensagem(oferta.getMensagem());
             dto.setId(oferta.getId());
             return dto;

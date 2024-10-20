@@ -1,10 +1,15 @@
-import { Alert, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { Alert, Platform, ScrollView, Keyboard  } from 'react-native';
 import { View, StyleSheet, Text, Pressable, TextInput, SafeAreaView } from "react-native";
-import DropDownPicker from 'react-native-dropdown-picker';
 import { useState } from "react";
 import config from '@/app/config';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import DateTimePicker from "@react-native-community/datetimepicker"
+import { format } from 'date-fns'; // se você estiver usando date-fns
+import { ptBR } from 'date-fns/locale';
+import { Picker } from '@react-native-picker/picker'; // Importando o Picker
+
+
 
 
 interface Endereco {
@@ -22,15 +27,10 @@ export default function CadastroScreen() {
     const [nome, setNome] = useState("");
     const [email, setEmail] = useState("");
     const [senha, setSenha] = useState("");
-    const [idade, setIdade] = useState("");
+    const [dataNascimento, setDataNascimento] = useState("");
     const [cpf, setCpf] = useState("");
     const [telefone, setTelefone] = useState("");
     const [role, setRole] = useState(null);
-    const [open, setOpen] = useState(false);
-    const [items, setItems] = useState([
-        { label: 'Motorista', value: 'MOTORISTA' },
-        { label: 'Responsavel', value: 'RESPONSAVEL' }
-    ]);
 
     const [endereco, setEndereco] = useState<Endereco>({
         cep: '',
@@ -40,15 +40,105 @@ export default function CadastroScreen() {
         complemento: ''
     })
 
-    const handleEnderecoChange = (field: keyof typeof endereco, value: string) => {
+    const handleEnderecoChange = (field: keyof Endereco, value: string) => {
+        // Atualiza o estado do endereço
         setEndereco(prevState => ({
             ...prevState,
             [field]: value
         }));
+
+        // Se o campo alterado for o CEP
+        if (field === 'cep') {
+            const formattedCep = formatCep(value);
+            setEndereco(prevState => ({
+                ...prevState,
+                cep: formattedCep
+            }));
+
+            if (formattedCep.length === 9) { // Verifica se o CEP tem o formato completo
+                buscarEnderecoPorCep(formattedCep.replace('-', '')); // Remove o traço antes de buscar
+            } else {
+                limparCamposEndereco();
+            }
+        }
     };
+
+    const formatCep = (value: string) => {
+        // Remove caracteres não numéricos
+        const cleaned = value.replace(/\D/g, '');
+        if (cleaned.length <= 5) return cleaned; // Retorna se ainda não tiver o suficiente
+        return `${cleaned.slice(0, 5)}-${cleaned.slice(5, 8)}`; // Formata no padrão xxxxx-xxx
+    };
+
+    const buscarEnderecoPorCep = async (cep: string) => {
+        try {
+            const response = await fetch(`https://viacep.com.br/ws/${cep}/json/`);
+            const data = await response.json();
+
+            // Verifica se o retorno é válido
+            if (!data.erro) {
+                Keyboard.dismiss();
+
+                // Atualiza os campos do endereço com os dados retornados
+                setEndereco(prevState => ({
+                    ...prevState,
+                    rua: data.logradouro,
+                    bairro: data.bairro,
+                    complemento: data.complemento || '', // Preenche complemento se existir
+                    numero: '' // Limpa o número ao buscar
+                }));
+            } else {
+                Alert.alert("Erro", "CEP não encontrado. Verifique e tente novamente.");
+                limparCamposEndereco();
+            }
+        } catch (error) {
+            Alert.alert("Erro", "Erro ao buscar o endereço. Tente novamente mais tarde.");
+            console.error("Erro ao buscar endereço: ", error);
+        }
+    };
+
+    const limparCamposEndereco = () => {
+        setEndereco(prevState => ({
+            ...prevState,
+            rua: '',
+            bairro: '',
+            complemento: '',
+            numero: '' // Limpa o campo de número se necessário
+        }));
+    };
+
+
+    const [date, setDate] = useState(new Date(2000,0,1))
+    const [showPicker, setShowPicker] = useState(false);
+
+    const toggleDataPicker = () => {
+        setShowPicker(!showPicker);
+    }
+
+    const onChange = ({ type }, selectedDate) => {
+        if (type == "set") {
+            const currentDate = selectedDate;
+            setDate(currentDate);
+
+            if (Platform.OS === "android") {
+                toggleDataPicker();
+                const formattedDate = format(currentDate, "dd/MM/yyyy", { locale: ptBR });
+
+                setDataNascimento(formattedDate); // Exemplo de uso
+            }
+
+        } else {
+            toggleDataPicker();
+        }
+    }
+
+
 
     const handleSubmit = async () => {
         try {
+
+            const formattedDateNascimento = format(date, "dd/MM/yyyy");
+
             const response = await fetch(`${config.IP_SERVER}/cadastro`, {
                 method: "POST",
                 headers: {
@@ -58,7 +148,7 @@ export default function CadastroScreen() {
                     nome: nome,
                     email: email,
                     senha: senha,
-                    idade: idade,
+                    dataNascimento: formattedDateNascimento,
                     cpf: cpf,
                     telefone: telefone,
                     role: role,
@@ -122,12 +212,28 @@ export default function CadastroScreen() {
                         secureTextEntry
                     />
 
-                    <Text style={styles.text}>Idade</Text>
-                    <TextInput
-                        style={styles.textInputs}
-                        value={idade}
-                        onChangeText={setIdade}
-                    />
+                    <Text style={styles.text}>Data de nascimento</Text>
+                    {showPicker && (
+                        <DateTimePicker
+                            mode="date"
+                            display="spinner"
+                            value={date}
+                            onChange={onChange}
+
+                        />
+                    )}
+
+                    {!showPicker && (
+                        <Pressable onPress={toggleDataPicker}>
+                            <TextInput
+                                style={styles.textInputs}
+                                value={dataNascimento}
+                                onChangeText={setDataNascimento}
+                                placeholder='Selecione'
+                                editable={false}
+                            />
+                        </Pressable>
+                    )}
 
                     <Text style={styles.text}>CPF</Text>
                     <TextInput
@@ -145,64 +251,61 @@ export default function CadastroScreen() {
 
                     {/* DropDownPicker para tipo de usuário */}
                     <Text style={styles.text}>Tipo de usuário</Text>
-                    <View style={styles.dropdownWrapper}>
-                        <DropDownPicker
-                            open={open}
-                            value={role}
-                            items={items}
-                            setOpen={setOpen}
-                            setValue={setRole}
-                            setItems={setItems}
-                            placeholder="Selecione"
-                            style={styles.picker}
-                            dropDownContainerStyle={styles.dropdown}
-                        />
-                    </View>
+                    <Picker
+                        selectedValue={role}
+                        onValueChange={(itemValue) => setRole(itemValue)}
+                        style={styles.picker}
+                    >
+                        <Picker.Item label="Selecione" value={null} />
+                        <Picker.Item label="Motorista" value="MOTORISTA" />
+                        <Picker.Item label="Responsavel" value="RESPONSAVEL" />
+                    </Picker>
                 </View>
 
                 <View style={styles.containerInputs}>
-                    <Text style={styles.textTitle}>Endereço:</Text>
-                    <View>
-                        <Text style={styles.text}>CEP</Text>
-                        <TextInput
-                            style={styles.textInputs}
-                            value={endereco.cep}
-                            onChangeText={(text) => handleEnderecoChange('cep', text)}
-                        />
-                    </View>
-                    <View>
-                        <Text style={styles.text}>Rua</Text>
-                        <TextInput
-                            style={styles.textInputs}
-                            value={endereco.rua}
-                            onChangeText={(text) => handleEnderecoChange('rua', text)}
-                        />
-                    </View>
-                    <View>
-                        <Text style={styles.text}>Número</Text>
-                        <TextInput
-                            style={styles.textInputs}
-                            value={endereco.numero}
-                            onChangeText={(text) => handleEnderecoChange('numero', text)}
-                        />
-                    </View>
-                    <View>
-                        <Text style={styles.text}>Bairro</Text>
-                        <TextInput
-                            style={styles.textInputs}
-                            value={endereco.bairro}
-                            onChangeText={(text) => handleEnderecoChange('bairro', text)}
-                        />
-                    </View>
-                    <View>
-                        <Text style={styles.text}>Complemento</Text>
-                        <TextInput
-                            style={styles.textInputs}
-                            value={endereco.complemento}
-                            onChangeText={(text) => handleEnderecoChange('complemento', text)}
-                        />
-                    </View>
-                </View>
+            <Text style={styles.textTitle}>Endereço:</Text>
+            <View>
+                <Text style={styles.text}>CEP</Text>
+                <TextInput
+                    style={styles.textInputs}
+                    value={endereco.cep}
+                    onChangeText={(text) => handleEnderecoChange('cep', text)}
+                    maxLength={10} // Limite de caracteres para o formato xxxxx-xxx
+                />
+            </View>
+            <View>
+                <Text style={styles.text}>Rua</Text>
+                <TextInput
+                    style={styles.textInputs}
+                    value={endereco.rua}
+                    onChangeText={(text) => handleEnderecoChange('rua', text)}
+                />
+            </View>
+            <View>
+                <Text style={styles.text}>Número</Text>
+                <TextInput
+                    style={styles.textInputs}
+                    value={endereco.numero}
+                    onChangeText={(text) => handleEnderecoChange('numero', text)}
+                />
+            </View>
+            <View>
+                <Text style={styles.text}>Bairro</Text>
+                <TextInput
+                    style={styles.textInputs}
+                    value={endereco.bairro}
+                    onChangeText={(text) => handleEnderecoChange('bairro', text)}
+                />
+            </View>
+            <View>
+                <Text style={styles.text}>Complemento</Text>
+                <TextInput
+                    style={styles.textInputs}
+                    value={endereco.complemento}
+                    onChangeText={(text) => handleEnderecoChange('complemento', text)}
+                />
+            </View>
+        </View>
 
                 <View style={styles.containerButton}>
                     <Pressable style={styles.buttonSubmit} onPress={handleSubmit}>
@@ -246,6 +349,11 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 3,
     },
+    text: {
+        fontSize: 14,
+        marginBottom: 5,
+        color: "#666",
+    },
     textInputs: {
         backgroundColor: "#f9f9f9",
         borderColor: "#ddd",
@@ -275,11 +383,6 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         marginBottom: 10,
         color: "#333",
-    },
-    text: {
-        fontSize: 14,
-        marginBottom: 5,
-        color: "#666",
     },
     containerButton: {
         alignItems: 'center',

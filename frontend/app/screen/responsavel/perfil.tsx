@@ -149,6 +149,7 @@ export default function Perfil() {
                             style={styles.textInputs}
                             value={responsavel.email}
                             onChangeText={(text) => handleDadosPessoaisChange('email', text)}
+                            editable={false}
                         />
                     </View>
                     <View>

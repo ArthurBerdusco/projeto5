@@ -1,5 +1,8 @@
 package com.example.backend;
 
+import java.time.LocalDate;
+import java.time.Year;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -74,7 +77,7 @@ public class ServerApplication {
             m.setEmail("myka@email.com.br");
             m.setNome("Mika Souza");
             m.setTelefone("(11) 92830-9903");
-            m.setIdade(34);
+            m.setDataNascimento(LocalDate.of(2004, 2, 10));
             m.setCpf("35829012247");
             m.setStatus("ATIVO");
 
@@ -99,7 +102,7 @@ public class ServerApplication {
             m.setEndereco(enderecoMika);
 
             Van van = new Van();
-            van.setAnoFabricacao("2024");
+            van.setAnoFabricacao(Year.of(2019));
             van.setMotorista(m);
             vanRepository.save(van);
             
@@ -110,7 +113,7 @@ public class ServerApplication {
             r.setEmail("ryu@email.com.br");
             r.setNome("Ryu Silva");
             r.setTelefone("(11) 97893-0443");
-            r.setIdade(39);
+            r.setDataNascimento(LocalDate.of(2004, 2, 10));
             r.setCpf("93102981213");
             r.setStatus("ATIVO");
 

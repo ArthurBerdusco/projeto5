@@ -1,5 +1,6 @@
 package com.example.backend.model;
-import java.util.Date;
+
+import java.time.Year;
 import java.util.List;
 
 import jakarta.persistence.ElementCollection;
@@ -9,8 +10,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import lombok.Data;
 
 @Entity
@@ -23,7 +22,7 @@ public class Van {
 
     private String placa;
     private String renavam;
-    private String anoFabricacao;
+    private Year anoFabricacao;
     private String modelo;
     private String fabricante;
     private String cor;
@@ -35,19 +34,13 @@ public class Van {
     private boolean camerasSeguranca;
     private boolean cintoSeguranca;
 
-    @Temporal(TemporalType.DATE)
-    private Date manutencaoRegular; // Data da última manutenção
-
     private boolean extintorIncendio;
-
-    @Temporal(TemporalType.DATE)
-    private Date certificacaoInspecao; // Data de validade da certificação
 
     private String cnh;
     private boolean antecedentesCriminais;
 
     @ElementCollection
-    private List<String> fotosVeiculo; // URLs ou paths das fotos do veículo
+    private List<String> fotosVeiculo;
 
     @ManyToOne
     @JoinColumn(name = "motorista_id", nullable = false)

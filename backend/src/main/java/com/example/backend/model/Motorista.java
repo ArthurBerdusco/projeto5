@@ -1,8 +1,11 @@
 package com.example.backend.model;
 
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 import com.example.backend.security.Usuario;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -24,10 +27,12 @@ public class Motorista {
     
     private String nome;
     private String email;
-    private Integer idade;
+     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private LocalDate dataNascimento;
     private String cpf;
     private String telefone;
     private String status;
+    private Integer idade;
 
     @OneToOne
     private Usuario usuario;
@@ -67,12 +72,12 @@ public class Motorista {
         this.email = email;
     }
 
-    public Integer getIdade() {
-        return idade;
+    public LocalDate getDataNascimento() {
+        return dataNascimento;
     }
 
-    public void setIdade(Integer idade) {
-        this.idade = idade;
+    public void setDataNascimento(LocalDate dataNascimento) {
+        this.dataNascimento = dataNascimento;
     }
 
     public String getCpf() {
@@ -123,10 +128,24 @@ public class Motorista {
         this.endereco = endereco;
     }
 
+    
+
     @Override
     public String toString() {
-        return "Motorista [id=" + id + ", nome=" + nome + ", email=" + email + ", idade=" + idade + ", cpf=" + cpf
+        return "Motorista [id=" + id + ", nome=" + nome + ", email=" + email + ", data_nascimento=" + dataNascimento + ", cpf=" + cpf
                 + ", telefone=" + telefone + ", status=" + status + "]";
+    }
+
+    public Integer getIdade() {
+        if (dataNascimento != null) {
+            LocalDate today = LocalDate.now();
+            return Period.between(dataNascimento, today).getYears();
+        }
+        return 0; 
+    }
+
+    public void setIdade(Integer idade) {
+        this.idade = idade;
     }
 
 }

@@ -74,7 +74,7 @@ public class CriancaController {
             System.out.println("\n\n\n CRIANÇA: " + dto + "\n\n\n");
             Crianca crianca = new Crianca();
             crianca.setNome(dto.getNome());
-            crianca.setIdade(dto.getIdade());
+            crianca.setDataNascimento(dto.getDataNascimento());
             crianca.setResponsavel(responsavelRepository.findById(dto.getIdResponsavel()).orElseThrow());
 
             criancaRepository.save(crianca);
