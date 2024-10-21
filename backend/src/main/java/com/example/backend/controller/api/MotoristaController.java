@@ -53,9 +53,9 @@ public class MotoristaController {
             // Busca a van pelo id do motorista
             Van van = vanRepository.findByMotoristaId(idMotorista)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Van não encontrada para o motorista com ID: " + idMotorista));
+                            "Van não encontrada para o motorista com ID: " + idMotorista));
 
-                    System.out.println("\n\n\nVAN: " + van + "\n\n\n");
+            System.out.println("\n\n\nVAN: " + van + "\n\n\n");
 
             // Retorna status OK (200) com a van encontrada
             return ResponseEntity.ok(van);
@@ -103,7 +103,7 @@ public class MotoristaController {
             // Verifica se a van com o ID fornecido existe
             Van vanExistente = vanRepository.findById(id)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                    "Van não encontrada com ID: " + id));
+                            "Van não encontrada com ID: " + id));
 
             // Verifica se o ID no corpo da requisição corresponde ao ID na URL
             if (!vanAtualizada.getId().equals(id)) {
@@ -147,49 +147,7 @@ public class MotoristaController {
         }
     }
 
-    @PostMapping("/{id}/upload")
-    public ResponseEntity<String> uploadImagem(@RequestParam("file") MultipartFile file, @PathVariable Long id) {
-        try {
-            // Busca o motorista pelo ID
-            Optional<Motorista> motoristaOptional = motoristaRepository.findById(id);
-
-            if (motoristaOptional.isPresent()) {
-                Motorista motorista = motoristaOptional.get();
-
-                // Verifica se já existe uma imagem com o mesmo nome
-                Optional<Imagem> imagemExistente = imagemRepository.findByNome(file.getOriginalFilename());
-
-                if (imagemExistente.isPresent()) {
-                    // Atualiza os dados da imagem existente
-                    Imagem imagem = imagemExistente.get();
-                    imagem.setDados(file.getBytes()); // Atualiza os dados da imagem
-                    motorista.setImagem(imagem);
-
-                    imagemRepository.save(imagem); // Salva a imagem atualizada
-
-                    return ResponseEntity.ok("Imagem atualizada com sucesso! ID da imagem: " + imagem.getId());
-                } else {
-                    // Cria uma nova imagem, caso não exista
-                    Imagem imagem = new Imagem();
-                    imagem.setNome(file.getOriginalFilename());
-                    imagem.setDados(file.getBytes()); // Converte para array de bytes
-
-                    // Associa a nova imagem ao motorista
-                    motorista.setImagem(imagem);
-
-                    // Salva o motorista com a nova imagem associada (a imagem será salva automaticamente)
-                    motoristaRepository.save(motorista);
-
-                    return ResponseEntity.ok("Imagem enviada e associada ao motorista com sucesso! ID da imagem: " + imagem.getId());
-                }
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Motorista não encontrado.");
-            }
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao salvar a imagem.");
-        }
-    }
-
+    
     @PostMapping("/atualizar/{id}")
     public ResponseEntity<Motorista> atualizarmotorista(@PathVariable Long id,
             @RequestBody Motorista motoristaAtualizado) {
@@ -204,6 +162,8 @@ public class MotoristaController {
             motorista.setCpf(motoristaAtualizado.getCpf());
             motorista.setTelefone(motoristaAtualizado.getTelefone());
             motorista.setEndereco(motoristaAtualizado.getEndereco());
+            motorista.setSobreMim(motoristaAtualizado.getSobreMim());
+            motorista.setExperiencia(motoristaAtualizado.getExperiencia());
 
             Motorista motoristaSalvo = motoristaRepository.save(motorista);
             return ResponseEntity.ok(motoristaSalvo);
@@ -212,4 +172,40 @@ public class MotoristaController {
         }
     }
 
+    @PostMapping("/{id}/upload")
+    public ResponseEntity<String> uploadImagem(@RequestParam("file") MultipartFile file, @PathVariable Long id) {
+        try {
+            // Busca o motorista pelo ID
+            Optional<Motorista> motoristaOptional = motoristaRepository.findById(id);
+            if (motoristaOptional.isPresent()) {
+                Motorista motorista = motoristaOptional.get();
+                // Verifica se já existe uma imagem com o mesmo nome
+                Optional<Imagem> imagemExistente = imagemRepository.findByNome(file.getOriginalFilename());
+                if (imagemExistente.isPresent()) {
+                    // Atualiza os dados da imagem existente
+                    Imagem imagem = imagemExistente.get();
+                    imagem.setDados(file.getBytes()); // Atualiza os dados da imagem
+                    motorista.setImagem(imagem);
+                    imagemRepository.save(imagem); // Salva a imagem atualizada
+                    return ResponseEntity.ok("Imagem atualizada com sucesso! ID da imagem: " + imagem.getId());
+                } else {
+                    // Cria uma nova imagem, caso não exista
+                    Imagem imagem = new Imagem();
+                    imagem.setNome(file.getOriginalFilename());
+                    imagem.setDados(file.getBytes()); // Converte para array de bytes
+                    // Associa a nova imagem ao motorista
+                    motorista.setImagem(imagem);
+                    // Salva o motorista com a nova imagem associada (a imagem será salva
+                    // automaticamente)
+                    motoristaRepository.save(motorista);
+                    return ResponseEntity
+                            .ok("Imagem enviada e associada ao motorista com sucesso! ID da imagem: " + imagem.getId());
+                }
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Motorista não encontrado.");
+            }
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao salvar a imagem.");
+        }
+    }
 }

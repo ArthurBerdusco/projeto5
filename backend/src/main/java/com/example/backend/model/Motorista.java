@@ -24,29 +24,43 @@ public class Motorista {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long id;
 
-    
     private String nome;
     private String email;
-     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate dataNascimento;
     private String cpf;
     private String telefone;
     private String status;
     private Integer idade;
+    private String experiencia;
+    private String sobreMim;
+
+    public String getExperiencia() {
+        return experiencia;
+    }
+
+    public void setExperiencia(String experiencia) {
+        this.experiencia = experiencia;
+    }
+
+    public String getSobreMim() {
+        return sobreMim;
+    }
+
+    public void setSobreMim(String sobreMim) {
+        this.sobreMim = sobreMim;
+    }
 
     @OneToOne
     private Usuario usuario;
 
-    @OneToOne(cascade= CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 
-    @OneToOne(cascade= CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "imagem_id")
     private Imagem imagem;
-
-
-    
 
     @ManyToMany
     @JoinTable(name = "motorista_escolas", // Nome da tabela de junção
@@ -135,12 +149,12 @@ public class Motorista {
         this.endereco = endereco;
     }
 
-    
-
     @Override
     public String toString() {
-        return "Motorista [id=" + id + ", nome=" + nome + ", email=" + email + ", data_nascimento=" + dataNascimento + ", cpf=" + cpf
-                + ", telefone=" + telefone + ", status=" + status + ", endereco: " + endereco + ", imagem: " + imagem + "]";
+        return "Motorista [id=" + id + ", nome=" + nome + ", email=" + email + ", data_nascimento=" + dataNascimento
+                + ", cpf=" + cpf
+                + ", telefone=" + telefone + ", status=" + status + ", endereco: " + endereco + ", imagem: " + imagem
+                + "]";
     }
 
     public Integer getIdade() {
@@ -148,7 +162,7 @@ public class Motorista {
             LocalDate today = LocalDate.now();
             return Period.between(dataNascimento, today).getYears();
         }
-        return 0; 
+        return 0;
     }
 
     public void setIdade(Integer idade) {
@@ -162,8 +176,5 @@ public class Motorista {
     public void setImagem(Imagem imagem) {
         this.imagem = imagem;
     }
-
-
-    
 
 }

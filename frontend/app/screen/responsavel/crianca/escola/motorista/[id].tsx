@@ -2,19 +2,50 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, Alert, StyleSheet, TouchableOpacity, TextInput, Image } from 'react-native';
 import { useRouter, useLocalSearchParams, Stack } from "expo-router";
 import config from '@/app/config';
-
+interface Van {
+    placa: string;
+    renavam: string;
+    anoFabricacao: string;
+    modelo: string;
+    fabricante: string;
+    cor: string;
+    quantidadeAssentos: string;
+    acessibilidade: boolean;
+    arCondicionado: boolean;
+    cortinas: boolean;
+    tvEntretenimento: boolean;
+    camerasSeguranca: boolean;
+    cintoSeguranca: boolean;
+    extintorIncendio: boolean;
+    cnh: string;
+    antecedentesCriminais: boolean;
+    fotosVeiculo: string[]; // Array para armazenar URLs ou paths das fotos do veículo
+}
 export default function Motorista() {
     const [motorista, setMotorista] = useState(null);
+    const [van, setVan] = useState<Van | null>(null); // Inicializa o estado da van
+
     const [loading, setLoading] = useState(true);
     const [mensagem, setMensagem] = useState("");
     const { id, escolaId, crianca: criancaString, responsavelId } = useLocalSearchParams();
     const crianca = JSON.parse(criancaString); // Fazendo o parse corretamente
-    console.log("Dados da Criança na envia oferta:", JSON.stringify(crianca)); // Log do objeto completo
-    console.log("ID da Criança na envia oferta:", crianca?.id); // Acessando o ID diretamente
+    // console.log("Dados da Criança na envia oferta:", JSON.stringify(crianca)); // Log do objeto completo
+    // console.log("ID da Criança na envia oferta:", crianca?.id); // Acessando o ID diretamente
+
+    // console.log("ID do Responsável:", responsavelId); // Agora você pode ver o ID do responsável
 
 
-    console.log("ID do Responsável:", responsavelId); // Agora você pode ver o ID do responsável
-
+    const buscarVan = async () => {
+        try {
+            const response = await fetch(`${config.IP_SERVER}/motorista/van/${id}`); // Substitua `id` pelo identificador da van
+            const data = await response.json();
+            setVan(data);
+            setLoading(false);
+        } catch (error) {
+            console.error('Erro ao buscar van:', error);
+            setLoading(false);
+        }
+    };
 
     // Função para buscar as informações do motorista
     const buscarMotorista = async () => {
@@ -31,6 +62,8 @@ export default function Motorista() {
 
     useEffect(() => {
         buscarMotorista(); // Chama a função para buscar dados do motorista
+        buscarVan(); // Chama a função para buscar os dados da van
+
     }, [id]);
 
     // Função para enviar a oferta
@@ -95,7 +128,7 @@ export default function Motorista() {
                     headerTitleAlign: 'center'
                 }}
             />
-           
+
             <View style={styles.parteSuperiorPerfil}>
                 <Image source={require('@/app/screen/assets/icons/motorista.png')} style={{ width: 120, height: 120 }} />
                 <View style={styles.containerInformacoes}>
@@ -118,26 +151,32 @@ export default function Motorista() {
             <View style={styles.informacoes}>
                 <View>
                     <Text style={styles.titulo}>Experiência</Text>
-                    <Text style={styles.descricao}>Atua em 5 escolas no aplicativo</Text>
+                    <Text style={styles.descricao}>{motorista.experiencia}</Text>
                 </View>
 
                 <View>
                     <Text style={styles.titulo}>Van Escolar</Text>
-                    <View style={styles.list}>
-                        <Text style={styles.listItem}>• 24 lugares</Text>
-                        <Text style={styles.listItem}>• S/ acessibilidade</Text>
-                        <Text style={styles.listItem}>• C/ Ar-condicionado</Text>
-                    </View>
+                    {van ? (
+                        <>
+                            <Text style={styles.descricao}>- Modelo: {van.modelo}</Text>
+                            <Text style={styles.descricao}>- Fabricante: {van.fabricante}</Text>
+                            <Text style={styles.descricao}>- RENAVAM: {van.renavam}</Text>
+                            <Text style={styles.descricao}>- Ano de Fabricação: {van.anoFabricacao}</Text>
+                            <Text style={styles.descricao}>- Cor: {van.cor}</Text>
+                            <Text style={styles.descricao}>- Quantidade de Assentos: {van.quantidadeAssentos}</Text>
+                            <Text style={styles.descricao}>- Acessibilidade: {van.acessibilidade ? 'Sim' : 'Não'}</Text>
+                            <Text style={styles.descricao}>- Ar Condicionado: {van.ar_condicionado ? 'Sim' : 'Não'}</Text>
 
-
+                        </>
+                    ) : (
+                        <Text style={styles.descricao}>Van não encontrada ou sem dados disponíveis.</Text>
+                    )}
                 </View>
 
                 <View>
                     <Text style={styles.titulo}>Sobre mim</Text>
-                    <Text style={styles.descricao}>Olá! Sou um motorista de perua apaixonado pelo que faço. Com mais de 5 anos de experiência nas estradas, conheço cada atalho e sempre busco o caminho mais seguro e rápido para levar você ao seu destino.
+                    <Text style={styles.descricao}>{motorista.sobreMim}</Text>
 
-                        Sou uma pessoa tranquila, que adora ouvir músicas durante o trajeto e criar um ambiente amigável para os passageiros. Minha prioridade é garantir que você chegue bem e feliz! Além disso, sou flexível e estou sempre disposto a ajudar no que for preciso.
-                        Vamos juntos nessa viagem! 🚐✨</Text>
                 </View>
             </View>
 

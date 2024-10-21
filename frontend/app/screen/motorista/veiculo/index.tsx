@@ -177,7 +177,6 @@ export default function VehicleInfoScreen() {
                     />
                 </View>
 
-                {/* Capacidade e Conforto */}
                 <View style={styles.janela}>
                     <Text style={styles.textTitle}>Capacidade e Conforto</Text>
                     <TextInput

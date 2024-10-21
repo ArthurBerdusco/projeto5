@@ -11,11 +11,11 @@ export default function Escola() {
 
     const { id, crianca: criancaString } = useLocalSearchParams();
     const crianca = JSON.parse(criancaString); // Parseando a string para objeto
-    console.log("ID da criança na lisa de motorista", crianca?.id); // Usando optional chaining
+    // console.log("ID da criança na lisa de motorista", crianca?.id); // Usando optional chaining
 
     const responsavelId = crianca.responsavel.id;
-    console.log("ID da criança:", crianca?.id);
-    console.log("ID do responsável:", responsavelId); // Exibindo o ID do responsável
+    // console.log("ID da criança:", crianca?.id);
+    // console.log("ID do responsável:", responsavelId); // Exibindo o ID do responsável
 
     const fetchEscola = async () => {
         try {
