@@ -12,6 +12,12 @@ interface Endereco {
     complemento: string;
 }
 
+interface Imagem {
+    id: number;
+    nome: string;
+    dados: string | null;
+}
+
 interface Motorista {
     nome: string;
     cpf: string;
@@ -20,6 +26,7 @@ interface Motorista {
     endereco: Endereco;
     experiencia: string;
     sobreMim: string;
+    imagem: Imagem;
 }
 
 interface Van {
@@ -46,6 +53,7 @@ interface Van {
 export default function Perfil() {
 
     const [loading, setLoading] = useState(false);
+    const [idMotorista, setIdMotorista] = useState('');
 
     const [motorista, setMotorista] = useState<Motorista>({
         nome: '',
@@ -60,7 +68,12 @@ export default function Perfil() {
             complemento: ''
         },
         experiencia: '',
-        sobreMim: ''
+        sobreMim: '',
+        imagem: {
+            id: 0,
+            nome: '',
+            dados: '',
+        }
     });
 
     const [van, setVan] = useState<Van>({
@@ -106,7 +119,6 @@ export default function Perfil() {
 
             const resultado = await fetch(`${config.IP_SERVER}/motorista/${motorista}`);
             const dados = await resultado.json();
-            console.log(dados);
             setMotorista(dados);
 
         } catch (err) {
@@ -151,13 +163,23 @@ export default function Perfil() {
             <View style={styles.container}>
 
                 <View style={styles.parteSuperiorPerfil}>
-                    <Image source={require('@/app/screen/assets/icons/motorista.png')} style={{ width: 120, height: 120 }} />
+                    {motorista.imagem && motorista.imagem.dados ? (
+                        <Image
+                            source={{
+                                uri: motorista.imagem.dados.startsWith('data:image/')
+                                    ? motorista.imagem.dados
+                                    : `data:image/jpeg;base64,${motorista.imagem.dados}`
+                            }}
+                            style={{ width: 120, height: 120, borderRadius: 60 }} // Estilize a imagem conforme necessário
+                        />
+                    ) : (
+                        <Image source={require('@/app/screen/assets/icons/motorista.png')} style={{ width: 120, height: 120 }} />
+                    )}
                     <View style={styles.containerInformacoes}>
                         <Text style={styles.name}>{motorista.nome}</Text>
                         <Text style={styles.info}>Idade: {motorista.idade} anos</Text>
                         <Text style={styles.info}>Email: {motorista.email}</Text>
                         <Text style={styles.info}>Telefone: {motorista.telefone}</Text>
-                        <Text style={styles.info}>Nota:  4.5</Text>
                     </View>
                 </View>
                 <View style={styles.barraSeletor}>
@@ -365,7 +387,7 @@ const styles = StyleSheet.create({
     },
     descricao: {
         fontWeight: '500',
-        color: "#434343"
+        color: "#5a5a5a"
     },
 
     list: {

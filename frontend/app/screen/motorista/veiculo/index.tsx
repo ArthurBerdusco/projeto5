@@ -1,8 +1,16 @@
+import FotoPerfil from '@/app/components/Foto/FotoPerfil';
+import FotosVan from '@/app/components/Foto/FotosVan';
 import config from '@/app/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Stack } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Switch, Button, Image, ScrollView, TouchableOpacity, SafeAreaView, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
+
+interface Imagem {
+    id: number;
+    nome: string;
+    dados: string | null;
+}
 
 interface Van {
     placa: string;
@@ -21,13 +29,14 @@ interface Van {
     extintorIncendio: boolean;
     cnh: string;
     antecedentesCriminais: boolean;
-    fotosVeiculo: string[]; // Array para armazenar URLs ou paths das fotos do veículo
+    imagem: Imagem;
 }
 
 
 export default function VehicleInfoScreen() {
 
     const [loading, setLoading] = useState(false)
+    const [idMotorista, setIdMotorista] = useState("");
 
     const [van, setVan] = useState<Van>({
         placa: '',
@@ -46,13 +55,19 @@ export default function VehicleInfoScreen() {
         extintorIncendio: false,
         cnh: '',
         antecedentesCriminais: false,
-        fotosVeiculo: [] // Array para armazenar URLs ou paths das fotos do veículo
+        imagem: {
+            id: 0,
+            nome: '',
+            dados: null
+        }
     });
 
     const fetchVan = async () => {
         setLoading(true);
         try {
-            const motorista = await AsyncStorage.getItem('idMotorista')
+            const motorista = (await AsyncStorage.getItem('idMotorista')) ?? "";
+
+            setIdMotorista(motorista);
 
             const resultado = await fetch(`${config.IP_SERVER}/motorista/van/${motorista}`);
             const dados = await resultado.json();
@@ -162,7 +177,6 @@ export default function VehicleInfoScreen() {
                     />
                 </View>
 
-                {/* Capacidade e Conforto */}
                 <View style={styles.janela}>
                     <Text style={styles.textTitle}>Capacidade e Conforto</Text>
                     <TextInput
@@ -247,7 +261,13 @@ export default function VehicleInfoScreen() {
                     </View>
                 </View>
 
-                {/* Botão de Salvar */}
+                <FotoPerfil
+                    idEntidade={idMotorista}
+                    entidade={"Van"}
+                    initialImage={van.imagem?.dados ? `data:image/jpeg;base64,${van.imagem.dados}` : null}
+                />
+
+
                 <Pressable style={styles.button} onPress={handleAlterar}>
                     <Text style={styles.textButton}>Salvar</Text>
                 </Pressable>

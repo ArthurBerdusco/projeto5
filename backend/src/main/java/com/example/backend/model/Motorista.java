@@ -58,6 +58,10 @@ public class Motorista {
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "imagem_id")
+    private Imagem imagem;
+
     @ManyToMany
     @JoinTable(name = "motorista_escolas", // Nome da tabela de junção
             joinColumns = @JoinColumn(name = "motorista_id"), // Coluna para o motorista
@@ -149,7 +153,8 @@ public class Motorista {
     public String toString() {
         return "Motorista [id=" + id + ", nome=" + nome + ", email=" + email + ", data_nascimento=" + dataNascimento
                 + ", cpf=" + cpf
-                + ", telefone=" + telefone + ", status=" + status + "]";
+                + ", telefone=" + telefone + ", status=" + status + ", endereco: " + endereco + ", imagem: " + imagem
+                + "]";
     }
 
     public Integer getIdade() {
@@ -162,6 +167,14 @@ public class Motorista {
 
     public void setIdade(Integer idade) {
         this.idade = idade;
+    }
+
+    public Imagem getImagem() {
+        return imagem;
+    }
+
+    public void setImagem(Imagem imagem) {
+        this.imagem = imagem;
     }
 
 }

@@ -1,8 +1,10 @@
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router, Stack } from "expo-router";
+import { Stack, router } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Alert, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import * as ImagePicker from 'expo-image-picker';
+import FotoPerfil from "@/app/components/Foto/FotoPerfil";
 
 interface Endereco {
     cep: string;
@@ -10,6 +12,12 @@ interface Endereco {
     numero: string;
     bairro: string;
     complemento: string;
+}
+
+interface Imagem {
+    id: number;
+    nome: string;
+    dados: string | null;
 }
 
 interface Motorista {
@@ -20,12 +28,10 @@ interface Motorista {
     endereco: Endereco;
     experiencia: string;
     sobreMim: string;
+    imagem: Imagem;
 }
 
 export default function Perfil() {
-
-    const [loading, setLoading] = useState(false);
-
     const [motorista, setMotorista] = useState<Motorista>({
         nome: '',
         cpf: '',
@@ -39,28 +45,40 @@ export default function Perfil() {
             complemento: ''
         },
         experiencia: '',
-        sobreMim: ''
+        sobreMim: '',
+        imagem: {
+            id: 0,
+            nome: '',
+            dados: '',
+        }
     });
 
+    const [loading, setLoading] = useState(false);
+    const [idMotorista, setIdMotorista] = useState('');
 
-    const fetchmotorista = async () => {
+    const fetchMotorista = async () => {
         setLoading(true);
         try {
-            const motorista = await AsyncStorage.getItem('idMotorista')
+            const motoristaId = (await AsyncStorage.getItem('idMotorista')) ?? "";
+            setIdMotorista(motoristaId);
 
-            const resultado = await fetch(`${config.IP_SERVER}/motorista/${motorista}`);
+            const resultado = await fetch(`${config.IP_SERVER}/motorista/${motoristaId}`);
+            if (!resultado.ok) {
+                throw new Error(`Erro ao buscar motorista: ${resultado.statusText}`);
+            }
+
             const dados = await resultado.json();
             setMotorista(dados);
 
         } catch (err) {
-            alert(err)
+            Alert.alert(`Erro: ${err.message}`);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
-        fetchmotorista();
+        fetchMotorista();
     }, []);
 
     if (loading) {
@@ -71,7 +89,7 @@ export default function Perfil() {
         );
     }
 
-    const handleDadosPessoaisChange = (field: keyof Omit<Motorista, 'endereco'>, value: string) => {
+    const handleDadosPessoaisChange = (field: keyof Omit<Motorista, 'endereco' | 'imagem'>, value: string) => {
         setMotorista(prevState => ({
             ...prevState,
             [field]: value
@@ -90,7 +108,7 @@ export default function Perfil() {
 
     const handleSubmit = async () => {
         try {
-            const idMotorista = await AsyncStorage.getItem('idMotorista')
+            const idMotorista = await AsyncStorage.getItem('idMotorista');
             const response = await fetch(`${config.IP_SERVER}/motorista/atualizar/${idMotorista}`, {
                 method: 'POST',
                 headers: {
@@ -103,16 +121,13 @@ export default function Perfil() {
                 Alert.alert("Success", "Dados salvos com sucesso");
                 router.push('/screen/motorista/perfil');
             } else {
-                alert('Erro ao atualizar dados.');
+                Alert.alert('Erro', 'Erro ao atualizar dados.');
             }
         } catch (error) {
             console.error(error);
-            alert('Ocorreu um erro ao enviar os dados.');
+            Alert.alert('Erro', 'Ocorreu um erro ao enviar os dados.');
         }
     };
-
-
-
 
     return (
         <SafeAreaView style={styles.total}>
@@ -128,110 +143,94 @@ export default function Perfil() {
                 }}
             />
             <ScrollView contentContainerStyle={styles.scrollView}>
+                <FotoPerfil
+                    idEntidade={idMotorista}
+                    entidade={"Motorista"}
+                    initialImage={motorista.imagem?.dados ? `data:image/jpeg;base64,${motorista.imagem.dados}` : null}
+                />
                 <View style={styles.containerInputs}>
-                    <Text style={styles.textTitle}>Dados Pessoais: </Text>
-                    <View>
-                        <Text style={styles.text}>Nome de preferência</Text>
-                        <TextInput
-                            style={styles.textInputs}
-                            value={motorista.nome}
-                            onChangeText={(text) => handleDadosPessoaisChange('nome', text)}
-                        />
-                    </View>
-                    <View>
-                        <Text style={styles.text}>CPF</Text>
-                        <TextInput
-                            style={styles.textInputs}
-                            value={motorista.cpf}
-                            onChangeText={(text) => handleDadosPessoaisChange('cpf', text)}
-                        />
-                    </View>
-                    <View>
-                        <Text style={styles.text}>Email</Text>
-                        <TextInput
-                            style={styles.textInputs}
-                            value={motorista.email}
-                            onChangeText={(text) => handleDadosPessoaisChange('email', text)}
-                            editable={false}
-                        />
-                    </View>
-                    <View>
-                        <Text style={styles.text}>Telefone</Text>
-                        <TextInput
-                            style={styles.textInputs}
-                            value={motorista.telefone}
-                            onChangeText={(text) => handleDadosPessoaisChange('telefone', text)}
-                        />
-                    </View>
-
-                    <View>
-                        <Text style={styles.text}>Experiência</Text>
-                        <TextInput
-                            style={styles.textInputs}
-                            value={motorista.experiencia}
-                            onChangeText={(text) => handleDadosPessoaisChange('experiencia', text)}
-                        />
-                    </View>
-                    <View>
-                        <Text style={styles.text}>Sobre Mim</Text>
-                        <TextInput
-                            style={styles.textInputs}
-                            multiline
-                            numberOfLines={4}
-                            value={motorista.sobreMim}
-                            onChangeText={(text) => handleDadosPessoaisChange('sobreMim', text)}
-                        />
-                    </View>
+                    <Text style={styles.textTitle}>Dados Pessoais:</Text>
+                    <Text style={styles.text}>Nome de preferência</Text>
+                    <TextInput
+                        style={styles.textInputs}
+                        value={motorista.nome}
+                        onChangeText={(text) => handleDadosPessoaisChange('nome', text)}
+                    />
+                    <Text style={styles.text}>CPF</Text>
+                    <TextInput
+                        style={styles.textInputs}
+                        value={motorista.cpf}
+                        onChangeText={(text) => handleDadosPessoaisChange('cpf', text)}
+                    />
+                    <Text style={styles.text}>Email</Text>
+                    <TextInput
+                        style={styles.textInputs}
+                        value={motorista.email}
+                        onChangeText={(text) => handleDadosPessoaisChange('email', text)}
+                        editable={false}
+                    />
+                    <Text style={styles.text}>Telefone</Text>
+                    <TextInput
+                        style={styles.textInputs}
+                        value={motorista.telefone}
+                        onChangeText={(text) => handleDadosPessoaisChange('telefone', text)}
+                    />
                 </View>
                 <View style={styles.containerInputs}>
-                    <Text style={styles.textTitle}>Endereço: </Text>
-                    <View>
-                        <Text style={styles.text}>CEP</Text>
-                        <TextInput
-                            style={styles.textInputs}
-                            value={motorista.endereco.cep}
-                            onChangeText={(text) => handleEnderecoChange('cep', text)}
-                        />
-                    </View>
-                    <View>
-                        <Text style={styles.text}>Rua</Text>
-                        <TextInput
-                            style={styles.textInputs}
-                            value={motorista.endereco.rua}
-                            onChangeText={(text) => handleEnderecoChange('rua', text)}
-                        />
-                    </View>
-                    <View>
-                        <Text style={styles.text}>Número</Text>
-                        <TextInput
-                            style={styles.textInputs}
-                            value={motorista.endereco.numero}
-                            onChangeText={(text) => handleEnderecoChange('numero', text)}
-                        />
-                    </View>
-                    <View>
-                        <Text style={styles.text}>Bairro</Text>
-                        <TextInput
-                            style={styles.textInputs}
-                            value={motorista.endereco.bairro}
-                            onChangeText={(text) => handleEnderecoChange('bairro', text)}
-                        />
-                    </View>
-                    <View>
-                        <Text style={styles.text}>Complemento</Text>
-                        <TextInput
-                            style={styles.textInputs}
-                            value={motorista.endereco.complemento}
-                            onChangeText={(text) => handleEnderecoChange('complemento', text)}
-                        />
-                    </View>
+                    <Text style={styles.textTitle}>Endereço:</Text>
+                    <Text style={styles.text}>CEP</Text>
+                    <TextInput
+                        style={styles.textInputs}
+                        value={motorista.endereco.cep}
+                        onChangeText={(text) => handleEnderecoChange('cep', text)}
+                    />
+                    <Text style={styles.text}>Rua</Text>
+                    <TextInput
+                        style={styles.textInputs}
+                        value={motorista.endereco.rua}
+                        onChangeText={(text) => handleEnderecoChange('rua', text)}
+                    />
+                    <Text style={styles.text}>Número</Text>
+                    <TextInput
+                        style={styles.textInputs}
+                        value={motorista.endereco.numero}
+                        onChangeText={(text) => handleEnderecoChange('numero', text)}
+                    />
+                    <Text style={styles.text}>Bairro</Text>
+                    <TextInput
+                        style={styles.textInputs}
+                        value={motorista.endereco.bairro}
+                        onChangeText={(text) => handleEnderecoChange('bairro', text)}
+                    />
+                    <Text style={styles.text}>Complemento</Text>
+                    <TextInput
+                        style={styles.textInputs}
+                        value={motorista.endereco.complemento}
+                        onChangeText={(text) => handleEnderecoChange('complemento', text)}
+                    />
+                </View>
+                <View style={styles.containerInputs}>
+                    <Text style={styles.textTitle}>Experiência:</Text>
+                    <TextInput
+                        style={styles.textInputs}
+                        value={motorista.experiencia}
+                        onChangeText={(text) => handleDadosPessoaisChange('experiencia', text)}
+                    />
+                </View>
+                <View style={styles.containerInputs}>
+                    <Text style={styles.textTitle}>Sobre Mim:</Text>
+                    <TextInput
+                        style={styles.textInputs}
+                        value={motorista.sobreMim}
+                        onChangeText={(text) => handleDadosPessoaisChange('sobreMim', text)}
+                    />
                 </View>
                 <Pressable style={styles.buttonSubmit} onPress={handleSubmit}>
                     <Text style={styles.buttonText}>Salvar</Text>
                 </Pressable>
             </ScrollView>
         </SafeAreaView>
-    )
+    );
 }
 
 const styles = StyleSheet.create({
@@ -244,14 +243,11 @@ const styles = StyleSheet.create({
         paddingHorizontal: 20,
         paddingBottom: 50,
     },
-    header: {
+    loadingContainer: {
+        flex: 1,
+        justifyContent: 'center',
         alignItems: 'center',
-        marginVertical: 20,
-    },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        color: '#333',
+        backgroundColor: "#f5f5f5",
     },
     containerInputs: {
         marginBottom: 20,
@@ -285,69 +281,16 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         color: "#666",
     },
-    containerButton: {
+    buttonSubmit: {
+        backgroundColor: '#0d99ff',
+        paddingVertical: 15,
+        borderRadius: 8,
         alignItems: 'center',
         marginTop: 20,
-    },
-    buttonSubmit: {
-        backgroundColor: '#007bff',
-        paddingVertical: 15,
-        paddingHorizontal: 30,
-        borderRadius: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%',
     },
     buttonText: {
         color: '#fff',
+        fontWeight: 'bold',
         fontSize: 16,
-        fontWeight: 'bold',
     },
-
-
-    container: {
-        padding: 20,
-        backgroundColor: '#f2f2f2',
-        flex: 1,
-        justifyContent: 'space-around'
-    },
-    name: {
-        fontSize: 20,
-        fontWeight: 'bold',
-        color: 'black',
-
-    },
-    info: {
-        fontSize: 15,
-        marginVertical: 5,
-        color: '#555',
-    },
-    status: {
-        fontSize: 18,
-        marginVertical: 5,
-        color: 'green',
-    },
-    button: {
-        marginTop: 30,
-        backgroundColor: '#ffbf00',
-        padding: 10,
-        borderRadius: 55,
-        alignItems: 'center',
-    },
-
-    input: {
-        borderWidth: 1,
-        borderColor: '#ccc',
-        borderRadius: 5,
-        padding: 10,
-        marginTop: 20,
-        marginBottom: 20,
-    },
-    loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-
-
-})
+});

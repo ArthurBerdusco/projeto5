@@ -29,10 +29,10 @@ export default function Motorista() {
     const [mensagem, setMensagem] = useState("");
     const { id, escolaId, crianca: criancaString, responsavelId } = useLocalSearchParams();
     const crianca = JSON.parse(criancaString); // Fazendo o parse corretamente
-    console.log("Dados da Criança na envia oferta:", JSON.stringify(crianca)); // Log do objeto completo
-    console.log("ID da Criança na envia oferta:", crianca?.id); // Acessando o ID diretamente
+    // console.log("Dados da Criança na envia oferta:", JSON.stringify(crianca)); // Log do objeto completo
+    // console.log("ID da Criança na envia oferta:", crianca?.id); // Acessando o ID diretamente
 
-    console.log("ID do Responsável:", responsavelId); // Agora você pode ver o ID do responsável
+    // console.log("ID do Responsável:", responsavelId); // Agora você pode ver o ID do responsável
 
 
     const buscarVan = async () => {
@@ -134,7 +134,7 @@ export default function Motorista() {
                 <View style={styles.containerInformacoes}>
                     <Text style={styles.name}>{motorista.nome}</Text>
                     <Text style={styles.info}>Idade: {motorista.idade} anos</Text>
-                    <Text style={styles.info}>Email: {motorista.z}</Text>
+                    <Text style={styles.info}>Email: {motorista.email}</Text>
                     <Text style={styles.info}>Telefone: {motorista.telefone}</Text>
                     <Text style={styles.info}>Nota:  4.5</Text>
                 </View>
@@ -151,24 +151,32 @@ export default function Motorista() {
             <View style={styles.informacoes}>
                 <View>
                     <Text style={styles.titulo}>Experiência</Text>
-                    <Text style={styles.descricao}>Atua em 5 escolas no aplicativo</Text>
+                    <Text style={styles.descricao}>{motorista.experiencia}</Text>
                 </View>
 
                 <View>
                     <Text style={styles.titulo}>Van Escolar</Text>
-                    {/* <Text style={styles.descricao}>- Modelo: {van.modelo}</Text>
-                    <Text style={styles.descricao}>- Fabricante: {van.fabricante}</Text>
-                    <Text style={styles.descricao}>- Ano de Fabricação: {van.anoFabricacao}</Text> */}
+                    {van ? (
+                        <>
+                            <Text style={styles.descricao}>- Modelo: {van.modelo}</Text>
+                            <Text style={styles.descricao}>- Fabricante: {van.fabricante}</Text>
+                            <Text style={styles.descricao}>- RENAVAM: {van.renavam}</Text>
+                            <Text style={styles.descricao}>- Ano de Fabricação: {van.anoFabricacao}</Text>
+                            <Text style={styles.descricao}>- Cor: {van.cor}</Text>
+                            <Text style={styles.descricao}>- Quantidade de Assentos: {van.quantidadeAssentos}</Text>
+                            <Text style={styles.descricao}>- Acessibilidade: {van.acessibilidade ? 'Sim' : 'Não'}</Text>
+                            <Text style={styles.descricao}>- Ar Condicionado: {van.ar_condicionado ? 'Sim' : 'Não'}</Text>
 
-
+                        </>
+                    ) : (
+                        <Text style={styles.descricao}>Van não encontrada ou sem dados disponíveis.</Text>
+                    )}
                 </View>
 
                 <View>
                     <Text style={styles.titulo}>Sobre mim</Text>
-                    <Text style={styles.descricao}>Olá! Sou um motorista de perua apaixonado pelo que faço. Com mais de 5 anos de experiência nas estradas, conheço cada atalho e sempre busco o caminho mais seguro e rápido para levar você ao seu destino.
+                    <Text style={styles.descricao}>{motorista.sobreMim}</Text>
 
-                        Sou uma pessoa tranquila, que adora ouvir músicas durante o trajeto e criar um ambiente amigável para os passageiros. Minha prioridade é garantir que você chegue bem e feliz! Além disso, sou flexível e estou sempre disposto a ajudar no que for preciso.
-                        Vamos juntos nessa viagem! 🚐✨</Text>
                 </View>
             </View>
 

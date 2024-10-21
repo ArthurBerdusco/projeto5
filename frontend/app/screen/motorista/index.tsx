@@ -12,15 +12,35 @@ import {
   ActivityIndicator,
 } from "react-native";
 
+
+interface Imagem {
+  id: number;
+  nome: string;
+  dados: string | null;
+}
+
+interface Motorista {
+  nome: string;
+  telefone: string;
+  idade: number;
+  imagem: Imagem;
+}
+
 export default function Index() {
+
   const router = useRouter();
+
   const [loading, setLoading] = useState(false);
 
-  const [motorista, setMotorista] = useState({
+  const [motorista, setMotorista] = useState<Motorista>({
     nome: "",
-    email: "",
     telefone: "",
-    idade: null,
+    idade: 0,
+    imagem: {
+      id: 0,
+      nome: "",
+      dados: null,
+    }
   });
   const [escolasAtendidas, setEscolasAtendidas] = useState([]); // Novo estado para armazenar as escolas atendidas
 
@@ -33,10 +53,9 @@ export default function Index() {
       );
 
       const data = await response.json();
-  
+
       setMotorista(data);
 
-      // Requisição para buscar as escolas atendidas pelo motorista
       const escolasResponse = await fetch(
         `${config.IP_SERVER}/api/escolas/atendidas`,
         {
@@ -56,12 +75,20 @@ export default function Index() {
   };
 
   useEffect(() => {
-    setLoading(true);
+    const fetchData = async () => {
+      setLoading(true); // Inicia o carregamento
+      try {
+        await fetchMotorista(); // Chama a função para buscar os dados
+      } catch (error) {
+        console.error("Erro ao carregar dados:", error);
+      } finally {
+        setLoading(false); // Finaliza o carregamento independentemente do resultado
+      }
+    };
 
-    fetchMotorista();
-
-    setLoading(false);
+    fetchData(); // Chama a função de busca
   }, []);
+
 
   if (loading) {
     return (
@@ -85,16 +112,30 @@ export default function Index() {
         }}
       />
 
-      {/* Parte que pode rolar */}
       <ScrollView style={styles.container}>
         <Pressable
           onPress={() => router.push("/screen/motorista/perfil")}
           style={styles.cardDados}
         >
-          <Image
-            source={require("../assets/icons/icone6.png")}
-            style={{ resizeMode: "cover", height: 90, width: 90 }}
-          />
+          {motorista.imagem && motorista.imagem.dados ? (
+            <Image
+              source={{
+                uri: motorista.imagem.dados.startsWith('data:image/')
+                  ? motorista.imagem.dados // Se já estiver no formato base64 completo, usa como está
+                  : `data:image/jpeg;base64,${motorista.imagem.dados}` // Caso contrário, adiciona o prefixo
+              }}
+              style={styles.image}
+            />
+          ) : (
+            <View>
+              <Image
+                source={require("../assets/icons/perfil.png")}
+                style={styles.image}
+              />
+            </View>
+          )}
+
+
           <View>
             <Text style={styles.textoDados}>Nome: {motorista.nome}</Text>
             <Text style={styles.textoDados}>Idade: {motorista.idade}</Text>
@@ -130,34 +171,34 @@ export default function Index() {
 
       <View style={styles.fixedFooter}>
         <Pressable
-          style={styles.botaoOferta}
+          style={styles.botaoMenu}
           onPress={() => router.push("/screen/motorista/ofertas/verOfertas")}
         >
           <Image
             source={require("../assets/icons/ofertas.png")}
-            style={styles.image}
+            style={styles.icon}
           />
         </Pressable>
 
         <Pressable
-          style={styles.botaoProcura}
+          style={styles.botaoMenu}
           onPress={() =>
             router.push("/screen/motorista/escola/escolasAtendidas")
           }
         >
           <Image
             source={require("../assets/icons/search.png")}
-            style={{ height: 80, width: 80 }}
+            style={styles.icon}
           />
         </Pressable>
 
         <Pressable
-          style={styles.botaoOferta}
+          style={styles.botaoMenu}
           onPress={() => router.push("/screen/motorista/veiculo")}
         >
           <Image
             source={require("../assets/icons/editar.png")}
-            style={styles.image}
+            style={styles.icon}
           />
         </Pressable>
       </View>
@@ -200,26 +241,18 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
 
-  botaoProcura: {
-    alignSelf: "center",
-  },
   buttonText: {
     color: "black",
     fontWeight: "700",
   },
 
-  botaoOferta: {
+  botaoMenu: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: 80,
-    width: 80,
+    height: 40,
+    width: 40,
     borderRadius: 10,
-  },
-  image: {
-    width: 80,
-    height: 80,
-    resizeMode: "contain",
   },
   loadingContainer: {
     flex: 1,
@@ -240,7 +273,16 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    height: 80,
-    width: 80,
+    borderRadius: 75,
+    borderColor: "#ff0000",
+    borderWidth: 2,
+    width: 100,
+    height: 100,
+    alignSelf: 'center'
   },
+  icon: {
+    height: 60,
+    width: 60,
+    borderRadius: 50
+  }
 });
