@@ -2,9 +2,29 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, Alert, StyleSheet, TouchableOpacity, TextInput, Image } from 'react-native';
 import { useRouter, useLocalSearchParams, Stack } from "expo-router";
 import config from '@/app/config';
-
+interface Van {
+    placa: string;
+    renavam: string;
+    anoFabricacao: string;
+    modelo: string;
+    fabricante: string;
+    cor: string;
+    quantidadeAssentos: string;
+    acessibilidade: boolean;
+    arCondicionado: boolean;
+    cortinas: boolean;
+    tvEntretenimento: boolean;
+    camerasSeguranca: boolean;
+    cintoSeguranca: boolean;
+    extintorIncendio: boolean;
+    cnh: string;
+    antecedentesCriminais: boolean;
+    fotosVeiculo: string[]; // Array para armazenar URLs ou paths das fotos do veículo
+}
 export default function Motorista() {
     const [motorista, setMotorista] = useState(null);
+    const [van, setVan] = useState<Van | null>(null); // Inicializa o estado da van
+
     const [loading, setLoading] = useState(true);
     const [mensagem, setMensagem] = useState("");
     const { id, escolaId, crianca: criancaString, responsavelId } = useLocalSearchParams();
@@ -12,9 +32,20 @@ export default function Motorista() {
     console.log("Dados da Criança na envia oferta:", JSON.stringify(crianca)); // Log do objeto completo
     console.log("ID da Criança na envia oferta:", crianca?.id); // Acessando o ID diretamente
 
-
     console.log("ID do Responsável:", responsavelId); // Agora você pode ver o ID do responsável
 
+
+    const buscarVan = async () => {
+        try {
+            const response = await fetch(`${config.IP_SERVER}/motorista/van/${id}`); // Substitua `id` pelo identificador da van
+            const data = await response.json();
+            setVan(data);
+            setLoading(false);
+        } catch (error) {
+            console.error('Erro ao buscar van:', error);
+            setLoading(false);
+        }
+    };
 
     // Função para buscar as informações do motorista
     const buscarMotorista = async () => {
@@ -31,6 +62,8 @@ export default function Motorista() {
 
     useEffect(() => {
         buscarMotorista(); // Chama a função para buscar dados do motorista
+        buscarVan(); // Chama a função para buscar os dados da van
+
     }, [id]);
 
     // Função para enviar a oferta
@@ -95,13 +128,13 @@ export default function Motorista() {
                     headerTitleAlign: 'center'
                 }}
             />
-           
+
             <View style={styles.parteSuperiorPerfil}>
                 <Image source={require('@/app/screen/assets/icons/motorista.png')} style={{ width: 120, height: 120 }} />
                 <View style={styles.containerInformacoes}>
                     <Text style={styles.name}>{motorista.nome}</Text>
                     <Text style={styles.info}>Idade: {motorista.idade} anos</Text>
-                    <Text style={styles.info}>Email: {motorista.email}</Text>
+                    <Text style={styles.info}>Email: {motorista.z}</Text>
                     <Text style={styles.info}>Telefone: {motorista.telefone}</Text>
                     <Text style={styles.info}>Nota:  4.5</Text>
                 </View>
@@ -123,11 +156,9 @@ export default function Motorista() {
 
                 <View>
                     <Text style={styles.titulo}>Van Escolar</Text>
-                    <View style={styles.list}>
-                        <Text style={styles.listItem}>• 24 lugares</Text>
-                        <Text style={styles.listItem}>• S/ acessibilidade</Text>
-                        <Text style={styles.listItem}>• C/ Ar-condicionado</Text>
-                    </View>
+                    {/* <Text style={styles.descricao}>- Modelo: {van.modelo}</Text>
+                    <Text style={styles.descricao}>- Fabricante: {van.fabricante}</Text>
+                    <Text style={styles.descricao}>- Ano de Fabricação: {van.anoFabricacao}</Text> */}
 
 
                 </View>

@@ -140,6 +140,20 @@ public class MotoristaController {
         }
     }
 
+    @GetMapping("/van/{id}")
+    public ResponseEntity<?> getVanById(@PathVariable Long id) {
+        try {
+            Optional<Van> van = vanRepository.findById(id);
+            if (van.isPresent()) {
+                return ResponseEntity.ok(van.get());
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Van não encontrada.");
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro interno do servidor.");
+        }
+    }
+
     @PostMapping("/atualizar/{id}")
     public ResponseEntity<Motorista> atualizarmotorista(@PathVariable Long id,
             @RequestBody Motorista motoristaAtualizado) {
@@ -154,6 +168,8 @@ public class MotoristaController {
             motorista.setCpf(motoristaAtualizado.getCpf());
             motorista.setTelefone(motoristaAtualizado.getTelefone());
             motorista.setEndereco(motoristaAtualizado.getEndereco());
+            motorista.setSobreMim(motoristaAtualizado.getSobreMim());
+            motorista.setExperiencia(motoristaAtualizado.getExperiencia());
 
             Motorista motoristaSalvo = motoristaRepository.save(motorista);
             return ResponseEntity.ok(motoristaSalvo);
