@@ -1,5 +1,5 @@
 import { Link, Stack, useRouter } from "expo-router";
-import { ScrollView, View, StyleSheet, Text, Image, TextInput, Pressable, Alert, Platform } from "react-native";
+import { ScrollView, View, StyleSheet, Text, TextInput, Pressable, Alert, Platform } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker"
 import { useState } from "react";
 import config from '@/app/config';
@@ -60,7 +60,7 @@ export default function Cadastro() {
 
             if (response.ok) {
                 Alert.alert("Success", "Criança cadastrada com sucesso!");
-                router.push('/screen/responsavel');
+                router.navigate('/screen/responsavel');
             } else {
                 Alert.alert("Error", "Não foi possível realizar o cadastro.");
             }
@@ -72,17 +72,6 @@ export default function Cadastro() {
     return (
         <SafeAreaView style={styles.total}>
             <ScrollView contentContainerStyle={styles.scrollView}>
-                <Stack.Screen
-                    options={{
-                        headerTitle: 'Cadastrar Criança',
-                        headerStyle: { backgroundColor: '#0d99ff' },
-                        headerTintColor: 'white',
-                        headerTitleStyle: {
-                            fontWeight: 'bold',
-                        },
-                        headerTitleAlign: 'center'
-                    }}
-                />
 
                 <View style={styles.containerInputs}>
 

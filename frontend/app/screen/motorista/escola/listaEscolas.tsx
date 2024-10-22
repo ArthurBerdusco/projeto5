@@ -44,17 +44,6 @@ export default function ListaEscolas() {
 
     return (
         <View style={styles.container}>
-            <Stack.Screen
-                options={{
-                    headerTitle: 'Lista de Escolas',
-                    headerStyle: { backgroundColor: '#ffbf00' },
-                    headerTintColor: 'white',
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                    headerTitleAlign: 'center'
-                }}
-            />
 
             {loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />

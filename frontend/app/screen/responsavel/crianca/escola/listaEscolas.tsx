@@ -62,17 +62,7 @@ export default function ListaEscolas() {
 
     return (
         <View style={styles.container}>
-            <Stack.Screen
-                options={{
-                    headerTitle: '',
-                    headerStyle: { backgroundColor: '#0d99ff' },
-                    headerTintColor: 'white',
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                    headerTitleAlign: 'center'
-                }}
-            />
+
             <Text style={styles.title}>Selecione a escola</Text>
 
             {loading ? (

@@ -6,7 +6,7 @@ import config from "@/app/config";
 
 
 
-export default function loginScreen() {
+export default function LoginScreen() {
 
     const [email, setEmail] = useState("mika@email.com.br");
     const [senha, setSenha] = useState("1234");
@@ -16,7 +16,6 @@ export default function loginScreen() {
 
     const handleSubmit = async () => {
         try {
-            alert('ola')
             const response = await fetch(`${config.IP_SERVER}/loginapi`, {
 
                 method: "POST",
@@ -38,9 +37,9 @@ export default function loginScreen() {
                     await AsyncStorage.setItem('motorista', resultado.toString());
                     await AsyncStorage.setItem('idMotorista', resultado.id.toString());
                     if (resultado.status === "Pendente ativação") {
-                        router.push('/screen/motorista/cadastro');
+                        router.navigate('/screen/motorista/cadastro');
                     } else {
-                        router.push('/screen/motorista');
+                        router.navigate('/screen/motorista');
                     }
                 }
 
@@ -48,9 +47,9 @@ export default function loginScreen() {
                     await AsyncStorage.setItem('responsavel', resultado.toString());
                     await AsyncStorage.setItem('idResponsavel', resultado.id.toString());
                     if (resultado.status === "DESATIVADO") {
-                        router.push('/screen/responsavel/cadastro');
+                        router.navigate('/screen/responsavel/cadastro');
                     } else {
-                        router.push('/screen/responsavel');
+                        router.navigate('/screen/responsavel');
                     }
                 }
 
@@ -64,20 +63,9 @@ export default function loginScreen() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Stack.Screen
-                options={{
-                    headerTitle: 'Login',
-                    headerStyle: { backgroundColor: '#0d99ff' },
-                    headerTintColor: 'white',
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                    headerTitleAlign: 'center'
-                }}
-            />
 
             <View style={styles.logo}>
-                <Image source={require('../assets/logo/logovan.png')} />
+                <Image source={require('../../assets/logo/logovan.png')} />
             </View>
 
             <View style={styles.containerInputs}>

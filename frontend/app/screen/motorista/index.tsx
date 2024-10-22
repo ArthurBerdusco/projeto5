@@ -100,21 +100,10 @@ export default function Index() {
 
   return (
     <View style={{ flex: 1, backgroundColor: "white" }}>
-      <Stack.Screen
-        options={{
-          headerTitle: "Home",
-          headerStyle: { backgroundColor: "#ffbf00" },
-          headerTintColor: "white",
-          headerTitleStyle: {
-            fontWeight: "bold",
-          },
-          headerTitleAlign: "center",
-        }}
-      />
 
       <ScrollView style={styles.container}>
         <Pressable
-          onPress={() => router.push("/screen/motorista/perfil")}
+          onPress={() => router.navigate("/screen/motorista/perfil")}
           style={styles.cardDados}
         >
           {motorista.imagem && motorista.imagem.dados ? (
@@ -129,7 +118,7 @@ export default function Index() {
           ) : (
             <View>
               <Image
-                source={require("../assets/icons/perfil.png")}
+                source={require("@/app/assets/icons/perfil.png")}
                 style={styles.image}
               />
             </View>
@@ -156,7 +145,7 @@ export default function Index() {
                 key={escola.id}
                 style={styles.cardsMotoristas}
                 onPress={() =>
-                  router.push(
+                  router.navigate(
                     `/screen/motorista/escola/detalhesEscola?escolaId=${escola.id}`
                   )
                 } // Navega para a nova tela passando o ID da escola
@@ -172,10 +161,10 @@ export default function Index() {
       <View style={styles.fixedFooter}>
         <Pressable
           style={styles.botaoMenu}
-          onPress={() => router.push("/screen/motorista/ofertas/verOfertas")}
+          onPress={() => router.navigate("/screen/motorista/ofertas/verOfertas")}
         >
           <Image
-            source={require("../assets/icons/ofertas.png")}
+            source={require("@/app/assets/icons/ofertas.png")}
             style={styles.icon}
           />
         </Pressable>
@@ -183,21 +172,21 @@ export default function Index() {
         <Pressable
           style={styles.botaoMenu}
           onPress={() =>
-            router.push("/screen/motorista/escola/escolasAtendidas")
+            router.navigate("/screen/motorista/escola/escolasAtendidas")
           }
         >
           <Image
-            source={require("../assets/icons/search.png")}
+            source={require("@/app/assets/icons/search.png")}
             style={styles.icon}
           />
         </Pressable>
 
         <Pressable
           style={styles.botaoMenu}
-          onPress={() => router.push("/screen/motorista/veiculo")}
+          onPress={() => router.navigate("/screen/motorista/veiculo")}
         >
           <Image
-            source={require("../assets/icons/editar.png")}
+            source={require("@/app/assets/icons/editar.png")}
             style={styles.icon}
           />
         </Pressable>

@@ -73,17 +73,6 @@ export default function CadastroCrianca() {
         <SafeAreaView style={styles.total}>
 
             <ScrollView contentContainerStyle={styles.scrollView}>
-                <Stack.Screen
-                    options={{
-                        headerTitle: 'Perfil da criança',
-                        headerStyle: { backgroundColor: '#0d99ff' },
-                        headerTintColor: 'white',
-                        headerTitleStyle: {
-                            fontWeight: 'bold',
-                        },
-                        headerTitleAlign: 'center'
-                    }}
-                />
 
                 <View style={styles.containerInputs}>
                     <Text style={styles.text}>Nome</Text>
@@ -113,7 +102,7 @@ export default function CadastroCrianca() {
                     <View style={styles.containerButton}>
                         <Pressable style={styles.button2}
                             onPress={() =>
-                                router.push({
+                                router.navigate({
                                     pathname: `/screen/responsavel/crianca/escola/listaEscolas`,
                                     params: { crianca: JSON.stringify(crianca) },
                                 })}

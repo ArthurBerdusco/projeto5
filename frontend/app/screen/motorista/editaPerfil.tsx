@@ -1,9 +1,8 @@
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Stack, router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
-import * as ImagePicker from 'expo-image-picker';
 import FotoPerfil from "@/app/components/Foto/FotoPerfil";
 
 interface Endereco {
@@ -119,7 +118,7 @@ export default function Perfil() {
 
             if (response.ok) {
                 Alert.alert("Success", "Dados salvos com sucesso");
-                router.push('/screen/motorista/perfil');
+                router.back()
             } else {
                 Alert.alert('Erro', 'Erro ao atualizar dados.');
             }
@@ -131,17 +130,7 @@ export default function Perfil() {
 
     return (
         <SafeAreaView style={styles.total}>
-            <Stack.Screen
-                options={{
-                    headerTitle: 'Perfil',
-                    headerStyle: { backgroundColor: '#ffbf00' },
-                    headerTintColor: 'white',
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                    headerTitleAlign: 'center'
-                }}
-            />
+
             <ScrollView contentContainerStyle={styles.scrollView}>
                 <FotoPerfil
                     idEntidade={idMotorista}

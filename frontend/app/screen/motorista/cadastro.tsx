@@ -87,7 +87,7 @@ export default function CadastroResponsavel() {
             console.log("Corpo da resposta:", responseBody);
 
             if (response.ok) {
-                router.push('/screen/motorista');
+                router.navigate('/screen/motorista');
             } else {
                 alert(responseBody)
                 Alert.alert("Error", "Não foi possível realizar o cadastro.");

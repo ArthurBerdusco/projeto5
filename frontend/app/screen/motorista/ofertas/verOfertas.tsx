@@ -79,19 +79,6 @@ export default function MostraOfertas() {
 
         <SafeAreaView>
 
-            <Stack.Screen
-                options={{
-                    headerTitle: 'Ofertas',
-                    headerStyle: { backgroundColor: '#ffbf00' },
-                    headerTintColor: 'white',
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                    headerTitleAlign: 'center'
-                }}
-            />
-
-
             <FlatList
                 style={styles.flatList}
                 data={ofertas}

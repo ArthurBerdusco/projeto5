@@ -1,7 +1,6 @@
 import FotoPerfil from "@/app/components/Foto/FotoPerfil";
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Stack } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
@@ -128,17 +127,7 @@ export default function Perfil() {
 
     return (
         <SafeAreaView style={styles.total}>
-            <Stack.Screen
-                options={{
-                    headerTitle: 'Perfil',
-                    headerStyle: { backgroundColor: '#0d99ff' },
-                    headerTintColor: 'white',
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                    headerTitleAlign: 'center'
-                }}
-            />
+
             <ScrollView contentContainerStyle={styles.scrollView}>
 
                 <FotoPerfil

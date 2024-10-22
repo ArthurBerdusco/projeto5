@@ -123,17 +123,7 @@ export default function VehicleInfoScreen() {
 
     return (
         <SafeAreaView style={styles.container}>
-            <Stack.Screen
-                options={{
-                    headerTitle: 'Veiculo Escolar',
-                    headerStyle: { backgroundColor: '#ffbf00' },
-                    headerTintColor: 'white',
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                    headerTitleAlign: 'center'
-                }}
-            />
+
             <ScrollView>
                 {/* Identificação do Veículo */}
                 <View style={styles.janela}>

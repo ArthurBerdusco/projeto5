@@ -75,17 +75,7 @@ export default function DetalhesEscola() {
 
   return (
     <ScrollView style={styles.container}>
-      <Stack.Screen
-        options={{
-          headerTitle: 'Detalhes',
-          headerStyle: { backgroundColor: '#ffbf00' },
-          headerTintColor: 'white',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-          headerTitleAlign: 'center'
-        }}
-      />
+
       <Text style={styles.title}>Crianças na Escola</Text>
       {criancas.length === 0 ? (
         <Text>Nenhuma criança encontrada</Text>
