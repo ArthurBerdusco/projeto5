@@ -66,7 +66,8 @@ export default function Escola() {
 
             if (response.ok) {
                 setAtende(prev => !prev); // Inverte o status de atendimento
-                router.push('/screen/motorista/escola/escolasAtendidas');
+                router.navigate('/screen/motorista/escola/escolasAtendidas');
+                
             } else {
                 Alert.alert('Erro', result); // Exibe a mensagem de erro do backend
             }
@@ -82,17 +83,7 @@ export default function Escola() {
 
     return (
         <View style={{ padding: 20 }}>
-            <Stack.Screen
-                options={{
-                    headerTitle: 'Escola',
-                    headerStyle: { backgroundColor: '#ffbf00' },
-                    headerTintColor: 'white',
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                    headerTitleAlign: 'center'
-                }}
-            />
+
             {escola ? (
                 <>
                     <Text style={{ fontSize: 24, fontWeight: 'bold' }}>{escola.nome}</Text>

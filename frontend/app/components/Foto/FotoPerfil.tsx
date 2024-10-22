@@ -95,7 +95,7 @@ const FotoPerfil: React.FC<FotoPerfilProps> = ({ idEntidade, entidade, initialIm
                 <Image source={{ uri: image }} style={styles.image} />
             ) : (
                 <View>
-                    <Image source={require("../../screen/assets/icons/perfil.png")}
+                    <Image source={require("@/app/assets/icons/perfil.png")}
                         style={styles.image} />
                 </View>
             )}

@@ -96,19 +96,9 @@ export default function Index() {
 
     return (
         <ScrollView style={styles.scrollView}>
-            <Stack.Screen
-                options={{
-                    headerTitle: 'Home',
-                    headerStyle: { backgroundColor: '#0d99ff' },
-                    headerTintColor: 'white',
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                    headerTitleAlign: 'center'
-                }}
-            />
+
             <View style={styles.container}>
-                <Pressable onPress={() => router.push('/screen/responsavel/perfil')} style={styles.cardDados}>
+                <Pressable onPress={() => router.navigate('/screen/responsavel/perfil')} style={styles.cardDados}>
                     {responsavel.imagem && responsavel.imagem.dados ? (
                         <Image
                             source={{
@@ -121,7 +111,7 @@ export default function Index() {
                     ) : (
                         <View>
                             <Image
-                                source={require("../assets/icons/perfil.png")}
+                                source={require("@/app/assets/icons/perfil.png")}
                                 style={styles.image}
                             />
                         </View>
@@ -144,7 +134,7 @@ export default function Index() {
                         {criancas.map(crianca => (
                             <Pressable
                                 onPress={() =>
-                                    router.push({
+                                    router.navigate({
                                         pathname: `/screen/responsavel/crianca/[id]`,
                                         params: { id: crianca.id }
                                     })
@@ -170,7 +160,7 @@ export default function Index() {
                 )}
 
                 {criancas.length > 0 && (
-                    <Pressable onPress={() => router.push(`/screen/responsavel/crianca/cadastro`)}>
+                    <Pressable onPress={() => router.navigate(`/screen/responsavel/crianca/cadastro`)}>
                         <Text style={styles.cadastrarTexto}>Cadastrar Criança</Text>
                     </Pressable>
                 )}

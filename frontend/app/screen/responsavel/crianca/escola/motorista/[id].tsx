@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, Alert, StyleSheet, TouchableOpacity, TextInput, Image } from 'react-native';
-import { useRouter, useLocalSearchParams, Stack } from "expo-router";
+import { useRouter, useLocalSearchParams } from "expo-router";
 import config from '@/app/config';
 interface Van {
     placa: string;
@@ -117,20 +117,9 @@ export default function Motorista() {
 
     return (
         <View style={styles.container}>
-            <Stack.Screen
-                options={{
-                    headerTitle: 'Detalhes do Perueiro',
-                    headerStyle: { backgroundColor: '#0d99ff' },
-                    headerTintColor: 'white',
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                    headerTitleAlign: 'center'
-                }}
-            />
-
+            
             <View style={styles.parteSuperiorPerfil}>
-                <Image source={require('@/app/screen/assets/icons/motorista.png')} style={{ width: 120, height: 120 }} />
+                <Image source={require('@/app/assets/icons/motorista.png')} style={{ width: 120, height: 120 }} />
                 <View style={styles.containerInformacoes}>
                     <Text style={styles.name}>{motorista.nome}</Text>
                     <Text style={styles.info}>Idade: {motorista.idade} anos</Text>

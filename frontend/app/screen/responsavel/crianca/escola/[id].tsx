@@ -54,18 +54,6 @@ export default function Escola() {
 
     return (
         <SafeAreaView>
-            <Stack.Screen
-                options={{
-                    headerTitle: 'Encontrar Perueiros',
-                    headerStyle: { backgroundColor: '#0d99ff' },
-                    headerTintColor: 'white',
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                    headerTitleAlign: 'center'
-                }}
-            />
-
 
             <View style={{ padding: 20 }}>
 
@@ -87,7 +75,7 @@ export default function Escola() {
 
                             <Pressable
                                 onPress={() =>
-                                    router.push({
+                                    router.navigate({
                                         pathname: `/screen/responsavel/crianca/escola/motorista/${item.id}`,
                                         params: {
                                             crianca: JSON.stringify(crianca),

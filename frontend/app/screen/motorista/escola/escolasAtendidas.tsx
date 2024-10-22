@@ -55,17 +55,6 @@ export default function EscolasAtendidas() {
     return (
         <SafeAreaView>
 
-            <Stack.Screen
-                options={{
-                    headerTitle: 'Escolas',
-                    headerStyle: { backgroundColor: '#ffbf00' },
-                    headerTintColor: 'white',
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                    headerTitleAlign: 'center'
-                }}
-            />
             <View style={styles.container}>
                 <Text style={styles.title}>Gerenciar escolas </Text>
                 <Link style={styles.buttonVerEscolas} href={"/screen/motorista/escola/listaEscolas"}>

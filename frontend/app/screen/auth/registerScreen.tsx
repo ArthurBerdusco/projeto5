@@ -163,11 +163,11 @@ export default function CadastroScreen() {
                 if (role === "MOTORISTA") {
                     await AsyncStorage.setItem('motorista', JSON.stringify(resultado));
                     await AsyncStorage.setItem('idMotorista', resultado.id.toString());
-                    router.push('/screen/motorista/cadastro');
+                    router.navigate('/screen/motorista/cadastro');
                 } else if (role === "RESPONSAVEL") {
                     await AsyncStorage.setItem('responsavel', JSON.stringify(resultado));
                     await AsyncStorage.setItem('idResponsavel', resultado.id.toString());
-                    router.push('/screen/responsavel');
+                    router.navigate('/screen/responsavel');
                 }
             } else {
                 const errorMessage = await response.text(); // Lê o corpo como texto em caso de erro

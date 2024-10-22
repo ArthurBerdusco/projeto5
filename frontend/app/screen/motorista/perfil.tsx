@@ -1,6 +1,6 @@
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router, Stack } from "expo-router";
+import { router } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
@@ -148,17 +148,6 @@ export default function Perfil() {
 
     return (
         <SafeAreaView style={styles.total}>
-            <Stack.Screen
-                options={{
-                    headerTitle: 'Perfil',
-                    headerStyle: { backgroundColor: '#ffbf00' },
-                    headerTintColor: 'white',
-                    headerTitleStyle: {
-                        fontWeight: 'bold',
-                    },
-                    headerTitleAlign: 'center'
-                }}
-            />
 
             <View style={styles.container}>
 
@@ -173,7 +162,7 @@ export default function Perfil() {
                             style={{ width: 120, height: 120, borderRadius: 60 }} // Estilize a imagem conforme necessário
                         />
                     ) : (
-                        <Image source={require('@/app/screen/assets/icons/motorista.png')} style={{ width: 120, height: 120 }} />
+                        <Image source={require('@/app/assets/icons/motorista.png')} style={{ width: 120, height: 120 }} />
                     )}
                     <View style={styles.containerInformacoes}>
                         <Text style={styles.name}>{motorista.nome}</Text>
@@ -221,7 +210,7 @@ export default function Perfil() {
 
 
                 <View>
-                    <TouchableOpacity style={styles.button} onPress={() => router.push("/screen/motorista/editaPerfil")}>
+                    <TouchableOpacity style={styles.button} onPress={() => router.navigate("/screen/motorista/editaPerfil")}>
                         <Text style={styles.buttonText}>Editar Perfil</Text>
                     </TouchableOpacity>
                 </View>
