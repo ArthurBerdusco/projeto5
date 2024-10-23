@@ -37,7 +37,7 @@ export default function LoginScreen() {
                     await AsyncStorage.setItem('motorista', resultado.toString());
                     await AsyncStorage.setItem('idMotorista', resultado.id.toString());
                     if (resultado.status === "Pendente ativação") {
-                        router.navigate('/screen/motorista/cadastro');
+                        router.navigate('/screen/motorista/vanForm');
                     } else {
                         router.navigate('/screen/motorista');
                     }

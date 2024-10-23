@@ -1,75 +1,69 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Button, ActivityIndicator, Alert } from 'react-native';
-import { useRouter, useLocalSearchParams, Stack } from "expo-router";
+import { useRouter, useLocalSearchParams, useNavigation } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '@/app/config';
 
 export default function Escola() {
-    const [escola, setEscola] = useState(null);
-    const [loading, setLoading] = useState(true);
-    const [atende, setAtende] = useState(false);
     const router = useRouter();
     const { id } = useLocalSearchParams();
 
+    const [escola, setEscola] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [atende, setAtende] = useState(false);
+
     // Função para verificar se o motorista já atende a escola
-    const verificarAtendimento = async () => {
-        try {
-            const idMotorista = await AsyncStorage.getItem('idMotorista');
-            const response = await fetch(`${config.IP_SERVER}/api/escolas/motorista/atende/${idMotorista}/${id}`);
-            const data = await response.json();
-            setAtende(data); // Corrigido para data diretamente, que deve ser true ou false
-        } catch (error) {
-            console.error('Erro ao verificar atendimento:', error);
-        }
+    const verificarAtendimento = async (idMotorista) => {
+        const response = await fetch(`${config.IP_SERVER}/api/escolas/motorista/atende/${idMotorista}/${id}`);
+        const data = await response.json();
+        setAtende(data); // Atualiza o status de atendimento (true/false)
     };
 
     // Função para buscar os dados da escola pelo ID
     const fetchEscola = async () => {
+        const response = await fetch(`${config.IP_SERVER}/api/escolas/${id}`);
+        const data = await response.json();
+        setEscola(data); // Atualiza os dados da escola
+    };
+
+    // Função para carregar dados da escola e atendimento em paralelo
+    const loadData = async () => {
         try {
-            const response = await fetch(`${config.IP_SERVER}/api/escolas/${id}`);
-            const data = await response.json();
-            setEscola(data);
+            const idMotorista = await AsyncStorage.getItem('idMotorista');
+            await Promise.all([fetchEscola(), verificarAtendimento(idMotorista)]);
         } catch (error) {
-            console.error('Erro ao buscar os detalhes da escola:', error);
+            console.error('Erro ao carregar dados:', error);
         } finally {
-            setLoading(false);
+            setLoading(false); // Finaliza o loading após carregar os dados
         }
     };
 
     useEffect(() => {
-        const carregarDados = async () => {
-            setLoading(true);
-            await fetchEscola(); // Buscar dados da escola
-            await verificarAtendimento(); // Verificar se já atende a escola
-            setLoading(false);
-        };
-        carregarDados();
+        loadData(); // Carregar dados na inicialização
     }, []);
 
+    // Função para confirmar ou cancelar atendimento
     const confirmarAtendimento = async () => {
         try {
             const idMotorista = await AsyncStorage.getItem('idMotorista');
-            const idEscola = id;
-
             const response = await fetch(`${config.IP_SERVER}/api/escolas/motorista`, {
-                method: atende ? 'DELETE' : 'POST', // POST para atender, DELETE para parar de atender
+                method: atende ? 'DELETE' : 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    idMotorista: idMotorista,
-                    idEscola: idEscola,
+                    idMotorista,
+                    idEscola: id,
                 }),
             });
 
             const result = await response.text();
 
             if (response.ok) {
-                setAtende(prev => !prev); // Inverte o status de atendimento
-                router.navigate('/screen/motorista/escola/escolasAtendidas');
-                
+                setAtende((prev) => !prev); // Alterna o estado de atendimento
+                router.push('/screen/motorista/(tabs)/escolasAtendidas'); // Navega para a tela de escolas atendidas
             } else {
-                Alert.alert('Erro', result); // Exibe a mensagem de erro do backend
+                Alert.alert('Erro', result); // Mostra mensagem de erro
             }
         } catch (error) {
             console.error('Erro ao atualizar o status:', error);
@@ -77,6 +71,7 @@ export default function Escola() {
         }
     };
 
+    // Exibe o indicador de loading enquanto os dados estão sendo carregados
     if (loading) {
         return <ActivityIndicator size="large" color="#0000ff" />;
     }

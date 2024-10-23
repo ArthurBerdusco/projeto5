@@ -124,11 +124,7 @@ public class OfertaController {
             ofertaRepository.save(oferta);
 
             String mensagem = "Oferta recebida: " + ofertaDTO.getMensagem();
-            System.out.println("Mensagem para o motorista " + motorista.getNome() + ": " + mensagem);
-            System.out.println("ID da escola: " + escola.getId()); // Log do ID da escola
-            System.out.println("ID CRIANÇA: " + crianca.getId());
-            System.out.println("ID Responsável: " + responsavel.getId());
-
+            
             Map<String, String> response = new HashMap<>();
             response.put("message", "Mensagem enviada com sucesso para o motorista");
 

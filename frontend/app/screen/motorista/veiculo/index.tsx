@@ -1,8 +1,8 @@
 import FotoPerfil from '@/app/components/Foto/FotoPerfil';
-import FotosVan from '@/app/components/Foto/FotosVan';
 import config from '@/app/config';
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Stack } from 'expo-router';
+import { useNavigation, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Switch, Button, Image, ScrollView, TouchableOpacity, SafeAreaView, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 
@@ -33,9 +33,11 @@ interface Van {
 }
 
 
-export default function VehicleInfoScreen() {
+export default function Index() {
+    const router = useRouter();
+    const navigation = useNavigation();
 
-    const [loading, setLoading] = useState(false)
+    const [loading, setLoading] = useState(false);
     const [idMotorista, setIdMotorista] = useState("");
 
     const [van, setVan] = useState<Van>({
@@ -58,31 +60,40 @@ export default function VehicleInfoScreen() {
         imagem: {
             id: 0,
             nome: '',
-            dados: null
-        }
+            dados: null,
+        },
     });
 
     const fetchVan = async () => {
         setLoading(true);
         try {
             const motorista = (await AsyncStorage.getItem('idMotorista')) ?? "";
-
             setIdMotorista(motorista);
 
             const resultado = await fetch(`${config.IP_SERVER}/motorista/van/${motorista}`);
             const dados = await resultado.json();
             setVan(dados);
+            console.log("IMAGEM VAN INFO: " + dados.imagem)
 
         } catch (err) {
-            alert(err)
+            alert(err);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
-        fetchVan();
-    }, []);
+
+        const unsubscribeFocus = navigation.addListener("focus", () => {
+            fetchVan();
+        });
+
+        return () => {
+            unsubscribeFocus();
+        };
+    }, [navigation]);
+
+
 
     if (loading) {
         return (
@@ -92,241 +103,129 @@ export default function VehicleInfoScreen() {
         );
     }
 
-    const handleChange = (field: keyof Van, value: string | boolean) => {
-        setVan((prev) => ({
-            ...prev,
-            [field]: value
-        }));
-    };
-
-    const handleAlterar = async () => {
-        try {
-            const idMotorista = await AsyncStorage.getItem('idMotorista')
-            const response = await fetch(`${config.IP_SERVER}/motorista/van/atualizar/${idMotorista}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(van),
-            });
-
-            if (response.ok) {
-                alert('Dados alterados com sucesso!');
-            } else {
-                alert('Erro ao atualizar dados.');
-            }
-        } catch (error) {
-            console.error(error);
-            alert('Ocorreu um erro ao enviar os dados.');
-        }
-    };
-
     return (
-        <SafeAreaView style={styles.container}>
-
-            <ScrollView>
+        <SafeAreaView style={styles.total}>
+            <ScrollView style={styles.scrollView}>
                 {/* Identificação do Veículo */}
-                <View style={styles.janela}>
-                    <Text style={styles.textTitle}>Identificação do Veículo</Text>
-                    <TextInput
-                        placeholder="Fabricante"
-                        style={styles.textInputs}
-                        value={van.fabricante}
-                        onChangeText={(text) => handleChange('fabricante', text)}
-                    />
-                    <TextInput
-                        placeholder="Modelo"
-                        style={styles.textInputs}
-                        value={van.modelo}
-                        onChangeText={(text) => handleChange('modelo', text)}
-                    />
-                    <TextInput
-                        placeholder="Ano de Fabricação"
-                        style={styles.textInputs}
-                        value={van.anoFabricacao}
-                        onChangeText={(text) => handleChange('anoFabricacao', text)}
-                    />
-
-                    <TextInput
-                        placeholder="Cor"
-                        style={styles.textInputs}
-                        value={van.cor}
-                        onChangeText={(text) => handleChange('cor', text)}
-                    />
-                    <TextInput
-                        placeholder="Placa"
-                        style={styles.textInputs}
-                        value={van.placa}
-                        onChangeText={(text) => handleChange('placa', text)}
-                    />
-                    <TextInput
-                        placeholder="Renavam"
-                        style={styles.textInputs}
-                        value={van.renavam}
-                        onChangeText={(text) => handleChange('renavam', text)}
-                    />
+                <View style={styles.containerInputs}>
+                    <View style={styles.titleContainer}>
+                        <FontAwesome name="car" size={24} color="#333" style={styles.icon} />
+                        <Text style={styles.textTitle}>Identificação do Veículo</Text>
+                    </View>
+                    <Text style={styles.text}>Fabricante: {van.fabricante}</Text>
+                    <Text style={styles.text}>Modelo: {van.modelo}</Text>
+                    <Text style={styles.text}>Ano de Fabricação: {van.anoFabricacao}</Text>
+                    <Text style={styles.text}>Cor: {van.cor}</Text>
+                    <Text style={styles.text}>Placa: {van.placa}</Text>
+                    <Text style={styles.text}>Renavam: {van.renavam}</Text>
                 </View>
 
-                <View style={styles.janela}>
-                    <Text style={styles.textTitle}>Capacidade e Conforto</Text>
-                    <TextInput
-                        placeholder="Quantidade de Assentos"
-                        style={styles.textInputs}
-                        value={van.quantidadeAssentos}
-                        onChangeText={(text) => handleChange('quantidadeAssentos', text)}
-                    />
-                    <View style={styles.switchContainer}>
-                        <Text style={styles.text}>Acessibilidade</Text>
-                        <Switch
-                            value={van.acessibilidade}
-                            onValueChange={(value) => handleChange('acessibilidade', value)}
-                        />
+                {/* Capacidade e Conforto */}
+                <View style={styles.containerInputs}>
+                    <View style={styles.titleContainer}>
+                        <FontAwesome name="users" size={24} color="#333" style={styles.icon} />
+                        <Text style={styles.textTitle}>Capacidade e Conforto</Text>
                     </View>
-                    <View style={styles.switchContainer}>
-                        <Text style={styles.text}>Ar Condicionado</Text>
-                        <Switch
-                            value={van.arCondicionado}
-                            onValueChange={(value) => handleChange('arCondicionado', value)}
-                        />
-                    </View>
-                    <View style={styles.switchContainer}>
-                        <Text style={styles.text}>Cortinas</Text>
-                        <Switch
-                            value={van.cortinas}
-                            onValueChange={(value) => handleChange('cortinas', value)}
-                        />
-                    </View>
-                    <View style={styles.switchContainer}>
-                        <Text style={styles.text}>TV Entretenimento</Text>
-                        <Switch
-                            value={van.tvEntretenimento}
-                            onValueChange={(value) => handleChange('tvEntretenimento', value)}
-                        />
-                    </View>
+                    <Text style={styles.text}>Quantidade de Assentos: {van.quantidadeAssentos}</Text>
+                    <Text style={styles.text}>Acessibilidade: {van.acessibilidade ? 'Sim' : 'Não'}</Text>
+                    <Text style={styles.text}>Ar Condicionado: {van.arCondicionado ? 'Sim' : 'Não'}</Text>
+                    <Text style={styles.text}>Cortinas: {van.cortinas ? 'Sim' : 'Não'}</Text>
+                    <Text style={styles.text}>TV Entretenimento: {van.tvEntretenimento ? 'Sim' : 'Não'}</Text>
                 </View>
 
                 {/* Segurança */}
-                <View style={styles.janela}>
-                    <Text style={styles.textTitle}>Segurança</Text>
-                    <View style={styles.switchContainer}>
-                        <Text style={styles.text}>Câmeras de Segurança</Text>
-                        <Switch
-                            value={van.camerasSeguranca}
-                            onValueChange={(value) => handleChange('camerasSeguranca', value)}
-                        />
+                <View style={styles.containerInputs}>
+                    <View style={styles.titleContainer}>
+                        <FontAwesome name="shield" size={24} color="#333" style={styles.icon} />
+                        <Text style={styles.textTitle}>Segurança</Text>
                     </View>
-                    <View style={styles.switchContainer}>
-                        <Text style={styles.text}>Cinto de Segurança</Text>
-                        <Switch
-                            value={van.cintoSeguranca}
-                            onValueChange={(value) => handleChange('cintoSeguranca', value)}
-                        />
-                    </View>
-
-                    <View style={styles.switchContainer}>
-                        <Text style={styles.text}>Extintor de Incêndio</Text>
-                        <Switch
-                            value={van.extintorIncendio}
-                            onValueChange={(value) => handleChange('extintorIncendio', value)}
-                        />
-                    </View>
-
+                    <Text style={styles.text}>Câmeras de Segurança: {van.camerasSeguranca ? 'Sim' : 'Não'}</Text>
+                    <Text style={styles.text}>Cinto de Segurança: {van.cintoSeguranca ? 'Sim' : 'Não'}</Text>
+                    <Text style={styles.text}>Extintor de Incêndio: {van.extintorIncendio ? 'Sim' : 'Não'}</Text>
                 </View>
 
                 {/* Documentação do Motorista */}
-                <View style={styles.janela}>
-                    <Text style={styles.textTitle}>Documentação do Motorista</Text>
-                    <TextInput
-                        placeholder="CNH"
-                        style={styles.textInputs}
-                        value={van.cnh}
-                        onChangeText={(text) => handleChange('cnh', text)}
-                    />
-                    <View style={styles.switchContainer}>
-                        <Text style={styles.text}>Antecedentes Criminais</Text>
-                        <Switch
-                            value={van.antecedentesCriminais}
-                            onValueChange={(value) => handleChange('antecedentesCriminais', value)}
-                        />
+                <View style={styles.containerInputs}>
+                    <View style={styles.titleContainer}>
+                        <FontAwesome name="id-card" size={24} color="#333" style={styles.icon} />
+                        <Text style={styles.textTitle}>Documentação do Motorista</Text>
                     </View>
+                    <Text style={styles.text}>CNH: {van.cnh}</Text>
+                    <Text style={styles.text}>Antecedentes Criminais: {van.antecedentesCriminais ? 'Sim' : 'Não'}</Text>
                 </View>
 
-                <FotoPerfil
-                    idEntidade={idMotorista}
-                    entidade={"Van"}
-                    initialImage={van.imagem?.dados ? `data:image/jpeg;base64,${van.imagem.dados}` : null}
+                <Image
+                    source={van.imagem?.dados ? { uri: `data:image/jpeg;base64,${van.imagem.dados}` } : require('@/app/assets/icons/take-a-picture.png')}
+                    style={styles.image}
                 />
 
-
-                <Pressable style={styles.button} onPress={handleAlterar}>
-                    <Text style={styles.textButton}>Salvar</Text>
-                </Pressable>
+                {/* Botão para edição */}
+                <TouchableOpacity style={styles.buttonSubmit} onPress={() => router.push("/screen/motorista/vanForm")}>
+                    <Text style={styles.buttonText}>Editar</Text>
+                </TouchableOpacity>
             </ScrollView>
         </SafeAreaView>
     );
-};
+}
 
 const styles = StyleSheet.create({
-    container: {
+    total: {
         flex: 1,
-        justifyContent: 'space-between',
+        backgroundColor: "#f5f5f5",
+    },
+    scrollView: {
+        paddingHorizontal: 20,
+        paddingBottom: 50,
+    },
+    containerInputs: {
+        marginBottom: 20,
         backgroundColor: '#fff',
-        padding: 10,
-        margin: 10,
-    },
-    janela: {
-        flex: 0.3,
-        backgroundColor: 'beige',
-        borderWidth: 5,
-        padding: 10
-    },
-    textTitle: {
-        lineHeight: 21,
-        fontWeight: 'bold',
-        letterSpacing: 0.25,
-        marginTop: 10,
-        marginBottom: 5,
-    },
-    textInputs: {
-        backgroundColor: 'white',
-        height: 50,
         borderRadius: 10,
-        borderColor: "gray",
-        borderWidth: 1,
-        paddingLeft: 10,
-        marginBottom: 10
-    },
-    text: {
-        marginTop: 10,
-        marginBottom: 5,
-    },
-    button: {
-        marginVertical: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        paddingVertical: 12,
-        paddingHorizontal: 32,
-        borderRadius: 10,
+        padding: 15,
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowOffset: { width: 0, height: 2 },
+        shadowRadius: 4,
         elevation: 3,
-        backgroundColor: '#ffbf00',
     },
-    textButton: {
-        fontSize: 16,
-        lineHeight: 21,
-        fontWeight: 'bold',
-        letterSpacing: 0.25,
-        color: 'white',
-    },
-    loadingContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: "#ffffff",
-    },
-    switchContainer: {
+    titleContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        marginVertical: 5,
+        marginBottom: 10,
+    },
+    icon: {
+        marginRight: 10,
+    },
+    textTitle: {
+        fontSize: 18,
+        fontWeight: "bold",
+        color: "#333",
+    },
+    text: {
+        fontSize: 16,
+        marginBottom: 5,
+        color: "#666",
+    },
+    buttonSubmit: {
+        backgroundColor: '#007bff',
+        paddingVertical: 15,
+        paddingHorizontal: 30,
+        borderRadius: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginVertical: 20,
+    },
+    buttonText: {
+        color: '#fff',
+        fontSize: 16,
+        fontWeight: 'bold',
+    },
+    image: {
+        backgroundColor: 'white',
+        width: '100%',
+        height: 200,
+        resizeMode: 'contain',
+        borderRadius: 10,
+        marginVertical: 15,
     },
 });

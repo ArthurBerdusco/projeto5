@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -101,8 +100,6 @@ public class EscolaController {
 
         Motorista motorista = motoristaRepository.findById(request.getIdMotorista())
                 .orElseThrow(() -> new RuntimeException("Motorista não encontrado"));
-        System.out.println(
-                "\n\n\nMOTORISTA ID: " + motorista.getId() + ", ESCOLA ID: " + request.getIdEscola() + "\n\n\n");
 
         motoristaEscolaRepository.deleteByMotoristaIdAndEscolaId(motorista.getId(), request.getIdEscola());
 
@@ -138,7 +135,6 @@ public class EscolaController {
             motoristas.add(motoristaEscola.getMotorista());
         }
 
-        System.out.println("\n\n\n CHEGUEI AQUI: " + motoristas + "\n\n\n");
         // Retornar a lista de motoristas
         return motoristas;
     }

@@ -35,7 +35,6 @@ public class CadastroController {
     @PostMapping("/cadastro")
     public ResponseEntity<?> cadastrar(@RequestBody UsuarioDTO dto) {
             
-        System.out.println("\n\n\nData Nascimento: " + dto.getDataNascimento() + "\n\n\n");
         Motorista motorista = null; // Declaração fora do bloco
         Responsavel responsavel = null; // Declaração fora do bloco
 
