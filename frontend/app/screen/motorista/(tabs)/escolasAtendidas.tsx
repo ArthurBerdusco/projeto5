@@ -1,39 +1,61 @@
 import React, { useEffect, useState } from 'react';
 import { Text, View, FlatList, ActivityIndicator, StyleSheet, Alert, SafeAreaView } from 'react-native';
-import { Link, Stack } from "expo-router";
+import { Link, useRouter, useNavigation } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '@/app/config';
 
+
+const fetchAtendidas = async (idMotorista, setEscolasAtendidas, setLoading) => {
+    setLoading(true);
+    try {
+        const atendidasResponse = await fetch(`${config.IP_SERVER}/api/escolas/atendidas`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ idMotorista }),
+        });
+
+        const atendidasData = await atendidasResponse.json();
+        setEscolasAtendidas(atendidasData);
+
+    } catch (error) {
+        Alert.alert('Erro', 'Erro ao buscar escolas atendidas.');
+        console.log(error);
+    } finally {
+        setLoading(false);
+    }
+};
+
+
 export default function EscolasAtendidas() {
+
     const [escolasAtendidas, setEscolasAtendidas] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
+    const router = useRouter();
+    const navigation = useNavigation();
 
-    const fetchAtendidas = async () => {
-        try {
-            const idMotorista = await AsyncStorage.getItem('idMotorista');
-            const atendidasResponse = await fetch(`${config.IP_SERVER}/api/escolas/atendidas`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ idMotorista }),
-            });
-            const atendidasData = await atendidasResponse.json();
-
-            // Cria um Set com os IDs das escolas atendidas
-            setEscolasAtendidas(atendidasData);
-
-        } catch (error) {
-            Alert.alert('Erro', 'Erro ao buscar escolas atendidas.');
-            console.log(error);
-        } finally {
-            setLoading(false);
-        }
+    const fetchData = async () => {
+        const idMotorista = await AsyncStorage.getItem('idMotorista');
+        await fetchAtendidas(idMotorista, setEscolasAtendidas, setLoading);
     };
 
     useEffect(() => {
-        fetchAtendidas();
-    }, []);
+
+        const unsubscribeFocus = navigation.addListener("focus", () => {
+
+            fetchData();
+
+        })
+
+        return () => {
+            unsubscribeFocus();
+        };
+
+       
+
+    }, [navigation]);  // Dependendo do `router`, ele reage a mudanças de navegação
+    
 
     const renderItem = ({ item }) => {
 

@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { View, Text, ScrollView, ActivityIndicator, StyleSheet, Linking, Alert, Button } from "react-native";
-import { Stack, useLocalSearchParams, useRouter, } from "expo-router";
+import { useLocalSearchParams } from "expo-router";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import config from "@/app/config";
 
 export default function DetalhesEscola() {
-  const router = useRouter();
+
   const { escolaId } = useLocalSearchParams();
   const [criancas, setCriancas] = useState([]);
   const [loading, setLoading] = useState(true);

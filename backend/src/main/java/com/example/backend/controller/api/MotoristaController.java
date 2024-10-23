@@ -55,8 +55,7 @@ public class MotoristaController {
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                             "Van não encontrada para o motorista com ID: " + idMotorista));
 
-            System.out.println("\n\n\nVAN: " + van + "\n\n\n");
-
+ 
             // Retorna status OK (200) com a van encontrada
             return ResponseEntity.ok(van);
 

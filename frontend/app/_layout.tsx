@@ -5,7 +5,7 @@ export default function RootLayout() {
     <Stack
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#4CAF50', // Cor de fundo do header
+          backgroundColor: '#ffbf00', // Cor de fundo do header
         },
         headerTintColor: '#fff', // Cor do texto e ícones do header
         headerTitleStyle: {
@@ -30,22 +30,15 @@ export default function RootLayout() {
         options={{ title: 'Cadastro' }} 
       />
 
-      {/* NAVEGAÇÕES MOTORISTA */}
-      <Stack.Screen
-        name="screen/motorista/index"
-        options={{ title: 'Motorista - Início' }} 
-      />
-      <Stack.Screen
-        name="screen/motorista/perfil"
-        options={{ title: 'Perfil do Motorista' }} 
-      />
+      <Stack.Screen name="screen/motorista/(tabs)" options={{ headerShown: false }} />
+      
       <Stack.Screen
         name="screen/motorista/editaPerfil"
         options={{ title: 'Editar Perfil' }} 
       />
       <Stack.Screen
-        name="screen/motorista/cadastro"
-        options={{ title: 'Cadastro de Motorista' }} 
+        name="screen/motorista/vanForm"
+        options={{ title: 'Formulário Van Escolar' }} 
       />
 
       {/* NAVEGAÇÕES MOTORISTA/ESCOLA */}
@@ -57,20 +50,15 @@ export default function RootLayout() {
         name="screen/motorista/escola/detalhesEscola"
         options={{ title: 'Detalhes da Escola' }} 
       />
-      <Stack.Screen
+      {/* <Stack.Screen
         name="screen/motorista/escola/escolasAtendidas"
         options={{ title: 'Escolas Atendidas' }} 
-      />
+      /> */}
       <Stack.Screen
         name="screen/motorista/escola/listaEscolas"
         options={{ title: 'Lista de Escolas' }} 
       />
 
-      {/* NAVEGAÇÕES MOTORISTA/OFERTAS */}
-      <Stack.Screen
-        name="screen/motorista/ofertas/verOfertas"
-        options={{ title: 'Ofertas Disponíveis' }} 
-      />
 
       {/* NAVEGAÇÕES MOTORISTA/VEÍCULOS */}
       <Stack.Screen

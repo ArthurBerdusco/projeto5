@@ -53,7 +53,6 @@ public class CriancaController {
 
     @GetMapping("/criancas/{id}")
     public ResponseEntity<Crianca> getCrianca(@PathVariable Long id) {
-        System.out.println("\n\n\nCRIANÇA kkkk: " + id + "\n\n\n");
 
         // Usando Optional para verificar se a criança existe
         Optional<Crianca> criancaOptional = criancaRepository.findById(id);
@@ -71,7 +70,6 @@ public class CriancaController {
     @PostMapping("/crianca")
     public ResponseEntity<String> cadastroCrianca(@RequestBody CriancaDTO dto) {
         try {
-            System.out.println("\n\n\n CRIANÇA: " + dto + "\n\n\n");
             Crianca crianca = new Crianca();
             crianca.setNome(dto.getNome());
             crianca.setDataNascimento(dto.getDataNascimento());

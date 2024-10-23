@@ -1,6 +1,6 @@
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { Link, Stack, useRouter } from "expo-router";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
   ScrollView,
@@ -102,37 +102,6 @@ export default function Index() {
     <View style={{ flex: 1, backgroundColor: "white" }}>
 
       <ScrollView style={styles.container}>
-        <Pressable
-          onPress={() => router.navigate("/screen/motorista/perfil")}
-          style={styles.cardDados}
-        >
-          {motorista.imagem && motorista.imagem.dados ? (
-            <Image
-              source={{
-                uri: motorista.imagem.dados.startsWith('data:image/')
-                  ? motorista.imagem.dados // Se já estiver no formato base64 completo, usa como está
-                  : `data:image/jpeg;base64,${motorista.imagem.dados}` // Caso contrário, adiciona o prefixo
-              }}
-              style={styles.image}
-            />
-          ) : (
-            <View>
-              <Image
-                source={require("@/app/assets/icons/perfil.png")}
-                style={styles.image}
-              />
-            </View>
-          )}
-
-
-          <View>
-            <Text style={styles.textoDados}>Nome: {motorista.nome}</Text>
-            <Text style={styles.textoDados}>Idade: {motorista.idade}</Text>
-            <Text style={styles.textoDados}>
-              Telefone: {motorista.telefone}
-            </Text>
-          </View>
-        </Pressable>
 
         <Text style={{ fontSize: 20, marginLeft: 20 }}>Escolas de atuação</Text>
 
@@ -158,39 +127,6 @@ export default function Index() {
         </View>
       </ScrollView>
 
-      <View style={styles.fixedFooter}>
-        <Pressable
-          style={styles.botaoMenu}
-          onPress={() => router.navigate("/screen/motorista/ofertas/verOfertas")}
-        >
-          <Image
-            source={require("@/app/assets/icons/ofertas.png")}
-            style={styles.icon}
-          />
-        </Pressable>
-
-        <Pressable
-          style={styles.botaoMenu}
-          onPress={() =>
-            router.navigate("/screen/motorista/escola/escolasAtendidas")
-          }
-        >
-          <Image
-            source={require("@/app/assets/icons/search.png")}
-            style={styles.icon}
-          />
-        </Pressable>
-
-        <Pressable
-          style={styles.botaoMenu}
-          onPress={() => router.navigate("/screen/motorista/veiculo")}
-        >
-          <Image
-            source={require("@/app/assets/icons/editar.png")}
-            style={styles.icon}
-          />
-        </Pressable>
-      </View>
     </View>
   );
 }

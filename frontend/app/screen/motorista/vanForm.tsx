@@ -1,10 +1,17 @@
-import { Alert, Image, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { ActivityIndicator, Alert, Image, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { View, StyleSheet, Text, Pressable, TextInput, SafeAreaView, Switch } from "react-native";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from 'expo-router';
 import config from '@/app/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import FotoPerfil from '@/app/components/Foto/FotoPerfil';
+
+interface Imagem {
+    id: number;
+    nome: string;
+    dados: string | null;
+}
 
 interface Van {
     placa: string;
@@ -23,13 +30,11 @@ interface Van {
     extintorIncendio: boolean;
     cnh: string;
     antecedentesCriminais: boolean;
-    fotosVeiculo: string[]; // Array para armazenar URLs ou paths das fotos do veículo
+    imagem: Imagem;
 }
 
-export default function CadastroResponsavel() {
-
-    const router = useRouter();
-
+export default function VanForm() {
+    const [loading, setLoading] = useState(false);
     const [van, setVan] = useState<Van>({
         placa: '',
         renavam: '',
@@ -47,8 +52,43 @@ export default function CadastroResponsavel() {
         extintorIncendio: false,
         cnh: '',
         antecedentesCriminais: false,
-        fotosVeiculo: [] // Array para armazenar URLs ou paths das fotos do veículo
+        imagem: {
+            id: 0,
+            nome: '',
+            dados: null,
+        },
     });
+
+    const [isEditing, setIsEditing] = useState(false); // Estado para controlar se é edição ou criação
+    const [idMotorista, setIdMotorista] = useState('');
+
+    const router = useRouter();
+
+    const fetchVan = async () => {
+        setLoading(true);
+        try {
+            const motorista = (await AsyncStorage.getItem('idMotorista')) ?? "";
+            setIdMotorista(motorista);
+
+            const resultado = await fetch(`${config.IP_SERVER}/motorista/van/${motorista}`);
+            const dados = await resultado.json();
+
+            if (dados) {
+                setVan(dados); // Preenche o formulário com os dados da van existente
+                setIsEditing(true); // Sinaliza que estamos editando uma van existente
+            }
+
+        } catch (err) {
+            console.error("Erro ao buscar dados da van:", err);
+            alert(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
+        fetchVan(); // Busca os dados da van ao carregar a tela
+    }, []);
 
     const handleChange = (field: keyof Van, value: string | boolean) => {
         setVan((prev) => ({
@@ -59,19 +99,12 @@ export default function CadastroResponsavel() {
 
     const handleSubmit = async () => {
         try {
-
             const idMotorista = await AsyncStorage.getItem('idMotorista');
-
-
 
             if (!idMotorista) {
                 Alert.alert("Error", "ID do motorista não encontrado.");
                 return;
             }
-
-            console.log("Iniciando envio de dados...");
-
-            console.log("Dados a serem enviados:", van);
 
             const response = await fetch(`${config.IP_SERVER}/motorista/cadastro-van/${idMotorista}`, {
                 method: "POST",
@@ -81,29 +114,59 @@ export default function CadastroResponsavel() {
                 body: JSON.stringify(van),
             });
 
-            console.log("Resposta do servidor:", response);
-
             const responseBody = await response.text();
-            console.log("Corpo da resposta:", responseBody);
 
             if (response.ok) {
                 router.navigate('/screen/motorista');
             } else {
-                alert(responseBody)
-                Alert.alert("Error", "Não foi possível realizar o cadastro.");
+                Alert.alert("Error", responseBody);
             }
         } catch (error) {
-            alert("error")
             console.error("Erro de conexão com o backend:", error);
             Alert.alert("Error", "Erro de conexão com o backend.");
         }
     };
 
+    const handleAlterar = async () => {
+        try {
+            const idMotorista = await AsyncStorage.getItem('idMotorista');
 
+            if (!idMotorista) {
+                Alert.alert("Error", "ID do motorista não encontrado.");
+                return;
+            }
+
+            const response = await fetch(`${config.IP_SERVER}/motorista/van/atualizar/${idMotorista}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(van),
+            });
+
+            if (response.ok) {
+                Alert.alert('Sucesso', 'Dados alterados com sucesso!');
+                router.navigate('/screen/motorista/veiculo');
+            } else {
+                Alert.alert('Erro', 'Erro ao atualizar dados.');
+            }
+        } catch (error) {
+            console.error(error);
+            Alert.alert('Erro', 'Ocorreu um erro ao enviar os dados.');
+        }
+    };
+
+    if (loading) {
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#0d99ff" />
+            </View>
+        );
+    }
 
     return (
         <SafeAreaView style={styles.total}>
-            <ScrollView>
+            <ScrollView style={styles.scrollView}>
                 <Text style={{ fontWeight: '800', textAlign: 'center', fontSize: 20 }}>Cadastrar Perua escolar</Text>
                 <View style={styles.containerInputs}>
                     <TextInput
@@ -236,8 +299,17 @@ export default function CadastroResponsavel() {
                     </View>
                 </View>
 
-                <Pressable style={styles.buttonSubmit} onPress={handleSubmit}>
-                    <Text style={styles.buttonText}>Salvar</Text>
+                <FotoPerfil
+                    idEntidade={idMotorista}
+                    entidade={"Van"}
+                    initialImage={van.imagem?.dados ? `data:image/jpeg;base64,${van.imagem.dados}` : null}
+                />
+
+                <Pressable
+                    style={styles.buttonSubmit}
+                    onPress={isEditing ? handleAlterar : handleSubmit}
+                >
+                    <Text style={styles.buttonText}>{isEditing ? 'Alterar' : 'Salvar'}</Text>
                 </Pressable>
             </ScrollView>
         </SafeAreaView>
@@ -331,5 +403,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'space-between',
         marginVertical: 5,
+    },
+    loadingContainer: {
+        flex: 1,               
+        justifyContent: 'center',
+        alignItems: 'center', 
+        backgroundColor: '#fff', 
     },
 });

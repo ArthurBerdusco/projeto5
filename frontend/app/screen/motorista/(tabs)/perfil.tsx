@@ -1,7 +1,7 @@
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router } from "expo-router";
-import { useEffect, useState } from "react";
+import { router, useNavigation } from "expo-router";
+import { useEffect, useState, useCallback } from "react";
 import { ActivityIndicator, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
 interface Endereco {
@@ -53,7 +53,8 @@ interface Van {
 export default function Perfil() {
 
     const [loading, setLoading] = useState(false);
-    const [idMotorista, setIdMotorista] = useState('');
+
+    const navigation = useNavigation();
 
     const [motorista, setMotorista] = useState<Motorista>({
         nome: '',
@@ -96,43 +97,39 @@ export default function Perfil() {
         fotosVeiculo: [] // Array para armazenar URLs ou paths das fotos do veículo
     });
 
-    const fetchVan = async () => {
+    const fetchData = async () => {
         setLoading(true);
         try {
-            const motorista = await AsyncStorage.getItem('idMotorista')
+            const idMotorista = await AsyncStorage.getItem('idMotorista');
 
-            const resultado = await fetch(`${config.IP_SERVER}/motorista/van/${motorista}`);
-            const dados = await resultado.json();
-            setVan(dados);
+            const [motoristaResponse, vanResponse] = await Promise.all([
+                fetch(`${config.IP_SERVER}/motorista/${idMotorista}`),
+                fetch(`${config.IP_SERVER}/motorista/van/${idMotorista}`)
+            ]);
 
-        } catch (err) {
-            alert(err)
-        } finally {
-            setLoading(false)
-        }
-    }
+            const motoristaDados = await motoristaResponse.json();
+            const vanDados = await vanResponse.json();
 
-    const fetchmotorista = async () => {
-        setLoading(true);
-        try {
-            const motorista = await AsyncStorage.getItem('idMotorista')
-
-            const resultado = await fetch(`${config.IP_SERVER}/motorista/${motorista}`);
-            const dados = await resultado.json();
-            setMotorista(dados);
+            setMotorista(motoristaDados);
+            setVan(vanDados);
 
         } catch (err) {
-            alert(err)
+            alert("Erro ao carregar dados: " + err.message);
         } finally {
-            setLoading(false)
+            setLoading(false);
         }
-    }
+    };
 
     useEffect(() => {
-        fetchmotorista();
-        fetchVan();
+        const unsubscribeFocus = navigation.addListener("focus", () => {
+            fetchData();
+        });
 
-    }, []);
+        return () => {
+            unsubscribeFocus();
+        };
+    }, [navigation]);
+
 
     if (loading) {
         return (
@@ -141,15 +138,12 @@ export default function Perfil() {
             </View>
         );
     }
-
-
-
-
+    
 
     return (
         <SafeAreaView style={styles.total}>
 
-            <View style={styles.container}>
+            <ScrollView style={styles.scrollView}>
 
                 <View style={styles.parteSuperiorPerfil}>
                     {motorista.imagem && motorista.imagem.dados ? (
@@ -162,7 +156,7 @@ export default function Perfil() {
                             style={{ width: 120, height: 120, borderRadius: 60 }} // Estilize a imagem conforme necessário
                         />
                     ) : (
-                        <Image source={require('@/app/assets/icons/motorista.png')} style={{ width: 120, height: 120 }} />
+                        <Image source={require('@/app/assets/icons/perfil.png')} style={{ width: 120, height: 120 }} />
                     )}
                     <View style={styles.containerInformacoes}>
                         <Text style={styles.name}>{motorista.nome}</Text>
@@ -213,8 +207,15 @@ export default function Perfil() {
                     <TouchableOpacity style={styles.button} onPress={() => router.navigate("/screen/motorista/editaPerfil")}>
                         <Text style={styles.buttonText}>Editar Perfil</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => router.navigate("/screen/motorista/veiculo")}>
+                        <Text style={styles.buttonText}>Minha van</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styles.button} onPress={() => router.navigate("/screen/auth/loginScreen")}>
+                        <Text style={styles.buttonText}>Sair</Text>
+                    </TouchableOpacity>
                 </View>
-            </View>
+                
+            </ScrollView>
         </SafeAreaView>
     )
 }
@@ -319,11 +320,6 @@ const styles = StyleSheet.create({
         borderRadius: 55,
         alignItems: 'center',
     },
-    buttonText: {
-        color: 'black',
-        fontSize: 17,
-        fontWeight: 'bold',
-    },
     input: {
         borderWidth: 1,
         borderColor: '#ccc',
@@ -333,9 +329,10 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     loadingContainer: {
-        flex: 1,
+        flex: 1,       
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center',  
+        backgroundColor: '#fff',
     },
     parteSuperiorPerfil: {
         // backgroundColor: "#a3a3a3",
