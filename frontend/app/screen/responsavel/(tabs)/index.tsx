@@ -1,98 +1,56 @@
 import { Link, Stack, useRouter } from "expo-router";
-import { ScrollView, View, StyleSheet, Text, Image, ActivityIndicator, TouchableOpacity, Alert, Pressable } from "react-native";
+import { ScrollView, View, StyleSheet, Text, ActivityIndicator, TouchableOpacity, Alert, Pressable } from "react-native";
 import { useState, useEffect } from "react";
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-interface Imagem {
+interface Crianca {
     id: number;
     nome: string;
-    dados: string | null;
-}
-
-interface Responsavel {
-    nome: string;
-    telefone: string;
     idade: number;
-    imagem: Imagem;
-}
+  }
 
 export default function Index() {
-
-
-    const [responsavel, setResponsavel] = useState<Responsavel>(
-        {
-            nome: '',
-            telefone: '',
-            idade: 0,
-            imagem: {
-                id: 0,
-                nome: '',
-                dados: null,
-            }
-        }
-    )
-    const [criancas, setCriancas] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(null);
+   
+    const [criancas, setCriancas] = useState<Crianca[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
     const router = useRouter();
-
-
-    const fetchResponsavel = async () => {
-        try {
-            const responsavel = await AsyncStorage.getItem('idResponsavel');
-
-            const response = await fetch(`${config.IP_SERVER}/responsavel/${responsavel}`);
-
-
-            const data = await response.json();
-
-            setResponsavel(data)
-        } catch (err) {
-            setError('Erro ao carregar o responsavel');
-            console.error(err)
-        }
-
-
-    }
-
+  
     const fetchCriancas = async () => {
-        try {
-
-            const responsavel = await AsyncStorage.getItem('idResponsavel');
-
-
-            const response = await fetch(`${config.IP_SERVER}/crianca/responsavel/${responsavel}`);
-
-
-            const data = await response.json();
-
-            setCriancas(data);
-        } catch (err) {
-            setError('Erro ao carregar as crianças.');
-            console.error(err);
+      setLoading(true); // Ativa o indicador de carregamento antes da requisição
+      try {
+        const responsavelId = await AsyncStorage.getItem('idResponsavel');
+        if (responsavelId) {
+          const response = await fetch(`${config.IP_SERVER}/crianca/responsavel/${responsavelId}`);
+          if (!response.ok) {
+            throw new Error('Erro ao carregar as crianças.');
+          }
+          const data = await response.json();
+          setCriancas(data);
+          console.log(criancas)
+        } else {
+          setError('Nenhum ID de responsável encontrado.');
         }
-
+      } catch (err) {
+        setError('Erro ao carregar as crianças.');
+        console.error(err);
+      } finally {
+        setLoading(false); // Desativa o indicador de carregamento após a requisição
+      }
     };
-
+  
     useEffect(() => {
-
-        setLoading(true);
-        fetchResponsavel();
-        fetchCriancas();
-
-        setLoading(false);
-
+      fetchCriancas();
     }, []);
-
-
+  
     if (loading) {
-        return (
-            <View style={styles.loadingContainer}>
-                <ActivityIndicator size="large" color="#0d99ff" />
-            </View>
-        );
+      return (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color="#0d99ff" />
+        </View>
+      );
     }
 
     return (
@@ -254,13 +212,5 @@ const styles = StyleSheet.create({
         color: 'red',
         textAlign: 'center',
         marginBottom: 20,
-    },
-    image: {
-        borderRadius: 75,
-        borderColor: "#f6f6f6",
-        borderWidth: 6,
-        width: 100,
-        height: 100,
-        alignSelf: 'center'
     },
 });

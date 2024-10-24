@@ -59,7 +59,7 @@ export default function Cadastro() {
             });
 
             if (response.ok) {
-                router.navigate('/screen/responsavel');
+                router.push('/screen/responsavel/(tabs)');
             } else {
                 Alert.alert("Error", "Não foi possível realizar o cadastro.");
             }
