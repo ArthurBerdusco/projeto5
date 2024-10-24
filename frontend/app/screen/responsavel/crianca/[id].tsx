@@ -3,13 +3,21 @@ import { View, StyleSheet, Text, TextInput, SafeAreaView } from "react-native";
 import { useEffect, useState } from "react";
 import config from '@/app/config';
 import { Link, router, Stack, useLocalSearchParams } from 'expo-router';
+import { Picker } from '@react-native-picker/picker';
 
 export default function CadastroCrianca() {
 
-    const [crianca, setCrianca] = useState({ nome: '', idade: '', status: '' });
+    const [crianca, setCrianca] = useState({ nome: '', idade: '', status: '', periodo: '' });
     const [loading, setLoading] = useState(false);
     const [ofertas, setOfertas] = useState([]);
     const [motorista, setMotorista] = useState(null);
+
+    const handlePeriodoChange = (itemValue) => {
+        setCrianca((prevState) => ({
+            ...prevState,
+            periodo: itemValue,
+        }));
+    };
 
     const { id } = useLocalSearchParams();
 
@@ -93,10 +101,18 @@ export default function CadastroCrianca() {
                         editable={false}
                         
                     />
+                    <Text style={styles.text}>Periodo</Text>
+                    <Picker
+                        selectedValue={crianca.periodo}
+                        onValueChange={(itemValue) => handlePeriodoChange(itemValue)}
+                        style={styles.picker}
+                    >
+                        <Picker.Item label="Selecione" value={null} />
+                        <Picker.Item label="Manhã" value="Manhã" />
+                        <Picker.Item label="Tarde" value="Tarde" />
+                    </Picker>
 
                 </View>
-
-
 
                 {crianca.status !== 'ATIVO' && (
                     <View style={styles.containerButton}>
@@ -241,5 +257,11 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginBottom: 5,
         color: "#666",
-    }
+    },
+    picker: {
+        backgroundColor: '#f9f9f9',
+        borderColor: '#ddd',
+        borderWidth: 1,
+    },
+
 });

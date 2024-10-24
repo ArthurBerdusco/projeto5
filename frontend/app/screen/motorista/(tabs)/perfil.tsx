@@ -94,7 +94,7 @@ export default function Perfil() {
         extintorIncendio: false,
         cnh: '',
         antecedentesCriminais: false,
-        fotosVeiculo: [] // Array para armazenar URLs ou paths das fotos do veículo
+        fotosVeiculo: [] 
     });
 
     const fetchData = async () => {
@@ -284,6 +284,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: '100%',
     },
+    button: {
+        marginTop: 30,
+        backgroundColor: '#ffbf00',
+        padding: 10,
+        borderRadius: 55,
+        alignItems: 'center',
+    },
     buttonText: {
         color: '#fff',
         fontSize: 16,
@@ -312,13 +319,6 @@ const styles = StyleSheet.create({
         fontSize: 18,
         marginVertical: 5,
         color: 'green',
-    },
-    button: {
-        marginTop: 30,
-        backgroundColor: '#ffbf00',
-        padding: 10,
-        borderRadius: 55,
-        alignItems: 'center',
     },
     input: {
         borderWidth: 1,

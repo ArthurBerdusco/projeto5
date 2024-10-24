@@ -3,19 +3,20 @@ import { ScrollView, View, StyleSheet, Text, Image, ActivityIndicator, Touchable
 import { useState, useEffect } from "react";
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 interface Imagem {
     id: number;
     nome: string;
     dados: string | null;
-  }
-  
-  interface Responsavel {
+}
+
+interface Responsavel {
     nome: string;
     telefone: string;
     idade: number;
     imagem: Imagem;
-  }
+}
 
 export default function Index() {
 
@@ -95,85 +96,68 @@ export default function Index() {
     }
 
     return (
-        <ScrollView style={styles.scrollView}>
+        <SafeAreaView style={styles.total}>
+            <ScrollView style={styles.scrollView}>
 
-            <View style={styles.container}>
-                <Pressable onPress={() => router.navigate('/screen/responsavel/perfil')} style={styles.cardDados}>
-                    {responsavel.imagem && responsavel.imagem.dados ? (
-                        <Image
-                            source={{
-                                uri: responsavel.imagem.dados.startsWith('data:image/')
-                                    ? responsavel.imagem.dados // Se já estiver no formato base64 completo, usa como está
-                                    : `data:image/jpeg;base64,${responsavel.imagem.dados}` // Caso contrário, adiciona o prefixo
-                            }}
-                            style={styles.image}
-                        />
+                <View style={styles.container}>
+
+                    <Text style={styles.title}>Crianças</Text>
+
+                    {error && <Text style={styles.errorText}>{error}</Text>}
+
+                    {criancas.length > 0 ? (
+                        <View style={styles.containerCards}>
+                            {criancas.map(crianca => (
+                                <Pressable
+                                    onPress={() =>
+                                        router.navigate({
+                                            pathname: `/screen/responsavel/crianca/[id]`,
+                                            params: { id: crianca.id }
+                                        })
+                                    }
+                                    style={styles.cardsCriancas}
+                                    key={crianca.id}
+                                >
+                                    <View style={{}}>
+                                        <Text style={styles.cardText}>{crianca.nome}</Text>
+                                        <Text style={styles.cardText}>{crianca.idade} anos</Text>
+                                    </View>
+                                </Pressable>
+
+                            ))}
+                        </View>
                     ) : (
-                        <View>
-                            <Image
-                                source={require("@/app/assets/icons/perfil.png")}
-                                style={styles.image}
-                            />
+                        <View style={styles.noDataContainer}>
+                            <Text style={styles.noDataText}>Nenhuma criança cadastrada.</Text>
+                            <Link href={"/screen/responsavel/crianca/cadastro"} style={styles.cadastrarLink}>
+                                <Text style={styles.cadastrarTexto}>Cadastrar Criança</Text>
+                            </Link>
                         </View>
                     )}
-                    <View>
-                        <View>
-                            <Text style={styles.textoDados}>Nome: {responsavel.nome}</Text>
-                            <Text style={styles.textoDados}>Idade: {responsavel.idade}</Text>
-                            <Text style={styles.textoDados}>Telefone: {responsavel.telefone}</Text>
-                        </View>
-                    </View>
-                </Pressable>
 
-                <Text style={styles.title}>Crianças</Text>
-
-                {error && <Text style={styles.errorText}>{error}</Text>}
-
-                {criancas.length > 0 ? (
-                    <View style={styles.containerCards}>
-                        {criancas.map(crianca => (
-                            <Pressable
-                                onPress={() =>
-                                    router.navigate({
-                                        pathname: `/screen/responsavel/crianca/[id]`,
-                                        params: { id: crianca.id }
-                                    })
-                                }
-                                style={styles.cardsCriancas}
-                                key={crianca.id}
-                            >
-                                <View style={{}}>
-                                    <Text style={styles.cardText}>{crianca.nome}</Text>
-                                    <Text style={styles.cardText}>{crianca.idade} anos</Text>
-                                </View>
-                            </Pressable>
-
-                        ))}
-                    </View>
-                ) : (
-                    <View style={styles.noDataContainer}>
-                        <Text style={styles.noDataText}>Nenhuma criança cadastrada.</Text>
-                        <Link href={"/screen/responsavel/crianca/cadastro"} style={styles.cadastrarLink}>
+                    {criancas.length > 0 && (
+                        <Pressable onPress={() => router.navigate(`/screen/responsavel/crianca/cadastro`)}>
                             <Text style={styles.cadastrarTexto}>Cadastrar Criança</Text>
-                        </Link>
-                    </View>
-                )}
-
-                {criancas.length > 0 && (
-                    <Pressable onPress={() => router.navigate(`/screen/responsavel/crianca/cadastro`)}>
-                        <Text style={styles.cadastrarTexto}>Cadastrar Criança</Text>
-                    </Pressable>
-                )}
+                        </Pressable>
+                    )}
 
 
-            </View>
-        </ScrollView >
+                </View>
+            </ScrollView >
+        </SafeAreaView>
     );
 }
 
 const styles = StyleSheet.create({
+    total: {
+        marginTop: 10,
+        flex: 1,
+        backgroundColor: "#f5f5f5",
+    },
     scrollView: {
-        backgroundColor: "white",
+        backgroundColor: 'white',
+        paddingHorizontal: 20,
+        paddingBottom: 50,
     },
     container: {
         flex: 1,

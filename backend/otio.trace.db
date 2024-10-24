@@ -1,0 +1,315 @@
+2024-10-23 13:40:12.294688-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "ENDERECO" not found; SQL statement:
+INSERT INTO escola (nome, endereco, numero, telefone) VALUES
+('Ápice Educação Infantil', 'R. José Janarelli', '348', '3721-7690'),
+('Arca da Aliança', 'R. Gal. Eldes de Souza Guedes', '55', '3749-9410'),
+('Balou', 'R. Domingos Lopes da Silva', '325', '3739-0092'),
+('Blue Sky', 'R. Mal. Hastimphilo de Moura', '27', '3743-5108'),
+('Colégio Anglo Morumbi', 'R. Diogo Pereira', '324', '3740-1000'),
+('Colégio Ascensional Mele', 'R. Ascensional', '184', '3744-7107'),
+('Colégio Cristóvão Colombo', 'R. Alexandre Benois', '352', '3744-1005'),
+('Colégio Evolve', 'R. Clementine Brenne', '385', '3502-7100'),
+('Colégio Guilherme Dumont Villares', 'Av. Dr. Guilherme Dumont Villares', '723', '3743-5531'),
+('Colégio Miguel de Cervantes', 'Av. Jorge João Saad', '905', '3779-1800'),
+('Colégio Modular', 'R. Clementine Brenne', '378', '3742-8194'),
+('Colégio Morumbi Sul', 'Av. Nossa Senhora do Bom Conselho', '351', '5818-0600'),
+('Colégio Nossa Senhora do Morumbi', 'Av. Giovanni Gronchi', '4000', '3742-5513'),
+('Colégio Pentágono', 'R. Nélson Gama de Oliveira', '1244', '3747-6277'),
+('Colégio Portal do Futuro', 'R. Ministro Heitor Bastos Tigre', '164', '3746-0356'),
+('Colégio Porto Seguro - Morumbi', 'R. Floriano Peixoto Santos', '55', '3749-3250'),
+('Colégio Porto Seguro - Panamby', 'R. Itapaiúna', '1355', '3746-1600'),
+('Colégio Porto Seguro - Portinho', 'R. Itapaiúna', '1350', '3501-8857'),
+('Colégio Saint Exupéry', 'R. José Jannarelli', '621', '3721-9466'),
+('Colégio Santo Américo', 'R. Santo Américo', '275', '2244-1888'),
+('Colégio São Domingos Sávio', 'Av. Intercontinental', '220', '3751-3286'),
+('Colégio São Luiz (Unidade Maracanã)', 'R Sta Archélia', '200', '5513-5521'),
+('Colégio Universitário', 'Rua Diogo Pereira', '324', '3740-1000'),
+('CPV', 'R. Domingos Lopes da Silva', '34', '3742-4530'),
+('Doce Começo', 'R. Regente Leon Kaniefsky', '493', '3721-4340'),
+('El Miguelito', 'Av. Jorge João Saad', '786', '3772-6967'),
+('Escola Apoio', 'R. Mal. Juarez Távora', '106', '3744-3558'),
+('Escola Cidade Jardim/ Play Pen', 'Pça. Prof. Américo de Moura', '101', '3812-9122'),
+('Escola Copo de Leite', 'R. Almadén', '55', '3746-6567'),
+('Escola da Vila', 'R. Alfredo Mendes da Silva', '55', '3751-5255'),
+('Escola de Educação Infantil Fifó', 'Rua Prof. Santiago Dantas', '280', '3758-8086'),
+('Escola de Educação Infantil Pat Way', 'R. Dr. Clóvis de Oliveira', '488', '3721-4128'),
+('Escola Graduada - Graded School', 'Av. Giovanni Gronchi', '4710', '3747-4800'),
+('Escola Habitat', 'R. Dr. Fonseca Brasil', '145', '3749-0303'),
+('Escola José Bento Monteiro Lobato', 'Av. Dr. Guilherme Dumont Villares', '498', '3744-9242'),
+('Escola Soleil', 'R. Delegado Moraes Novaes', '7', '3773-5086'),
+('Escola Soletrar', 'R. Francisco Preto', '131', '3771-5308'),
+('Escola Stimulu Infantil', 'R. Dr. Luiz Migliano', '425', '3773-8160'),
+('Escola Ursinho Branco - Unidade Morumbi', 'Av. Jorge João Saad', '1052', '3742-7829'),
+('Escola Ursinho Branco - Unidade Real Parque', 'R. Adalívia de Toledo', '251', '3758-2039'),
+('Escola Submarino Amarelo', 'R. Frei Bonifácio Dux', '149', '3749-9760'),
+('Espaço Morumbi', 'R. Panonia', '170', '3507-0621'),
+('Integration School', 'R. São Pedro Fourier', '189', '3742-6100'),
+('Jardim Escola Equilíbrio', 'R. Prof. Hilário Veiga de Carvalho', '60', '3742-0521'),
+('Kampus School', 'R. Dep. João Sussumu Hirata', '750', '3501-4066'),
+('Kinder Kampus', 'R. Dep. João Sussumu Hirata', '480', '3743-7552'),
+('Objetivo', 'Av. Duquesa de Goiás', '262', '3758-0073'),
+('Pio XII - Colégio Franciscano', 'R. Colégio Pio XII', '233', '3759-5050'),
+('Piu-Piu Escola de Educação Infantil', 'R. Mal. Juarez Távora', '220', '3743-2449'),
+('Primetime', 'R. José Gonçalves', '30', '3739-4621'),
+('Quintal', 'R. Joaquim C. de Azevedo Marques', '1234', '3742-5899'),
+('Scuola Italiana Eugênio Montale', 'R. José Gustavo Bush', '75', '3759-5959'),
+('See-Saw/Panamby Bilingual School', 'R. Visconde de Nacar', '86', '3758-2241') [42122-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:514)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.table.Table.getColumn(Table.java:759)
+	at org.h2.command.Parser.parseColumn(Parser.java:1190)
+	at org.h2.command.Parser.parseColumnList(Parser.java:1175)
+	at org.h2.command.Parser.parseInsert(Parser.java:1549)
+	at org.h2.command.Parser.parsePrepared(Parser.java:719)
+	at org.h2.command.Parser.parse(Parser.java:592)
+	at org.h2.command.Parser.parse(Parser.java:564)
+	at org.h2.command.Parser.prepareCommand(Parser.java:483)
+	at org.h2.engine.SessionLocal.prepareLocal(SessionLocal.java:639)
+	at org.h2.engine.SessionLocal.prepareCommand(SessionLocal.java:559)
+	at org.h2.jdbc.JdbcConnection.prepareCommand(JdbcConnection.java:1166)
+	at org.h2.jdbc.JdbcStatement.executeInternal(JdbcStatement.java:245)
+	at org.h2.jdbc.JdbcStatement.execute(JdbcStatement.java:231)
+	at org.h2.server.web.WebApp.getResult(WebApp.java:1345)
+	at org.h2.server.web.WebApp.query(WebApp.java:1143)
+	at org.h2.server.web.WebApp.query(WebApp.java:1119)
+	at org.h2.server.web.WebApp.process(WebApp.java:245)
+	at org.h2.server.web.WebApp.processRequest(WebApp.java:177)
+	at org.h2.server.web.JakartaWebServlet.doGet(JakartaWebServlet.java:129)
+	at org.h2.server.web.JakartaWebServlet.doPost(JakartaWebServlet.java:166)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:590)
+	at jakarta.servlet.http.HttpServlet.service(HttpServlet.java:658)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:195)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:51)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:227)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:221)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:108)
+	at org.springframework.security.web.FilterChainProxy.lambda$doFilterInternal$3(FilterChainProxy.java:231)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:365)
+	at org.springframework.security.web.access.intercept.AuthorizationFilter.doFilter(AuthorizationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:126)
+	at org.springframework.security.web.access.ExceptionTranslationFilter.doFilter(ExceptionTranslationFilter.java:120)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AnonymousAuthenticationFilter.doFilter(AnonymousAuthenticationFilter.java:100)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter.doFilter(SecurityContextHolderAwareRequestFilter.java:179)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.savedrequest.RequestCacheAwareFilter.doFilter(RequestCacheAwareFilter.java:63)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:227)
+	at org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter.doFilter(AbstractAuthenticationProcessingFilter.java:221)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:107)
+	at org.springframework.security.web.authentication.logout.LogoutFilter.doFilter(LogoutFilter.java:93)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.header.HeaderWriterFilter.doHeadersAfter(HeaderWriterFilter.java:90)
+	at org.springframework.security.web.header.HeaderWriterFilter.doFilterInternal(HeaderWriterFilter.java:75)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:82)
+	at org.springframework.security.web.context.SecurityContextHolderFilter.doFilter(SecurityContextHolderFilter.java:69)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter.doFilterInternal(WebAsyncManagerIntegrationFilter.java:62)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.session.DisableEncodeUrlFilter.doFilterInternal(DisableEncodeUrlFilter.java:42)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.springframework.security.web.FilterChainProxy$VirtualFilterChain.doFilter(FilterChainProxy.java:374)
+	at org.springframework.security.web.FilterChainProxy.doFilterInternal(FilterChainProxy.java:233)
+	at org.springframework.security.web.FilterChainProxy.doFilter(FilterChainProxy.java:191)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.servlet.handler.HandlerMappingIntrospector.lambda$createCacheFilter$3(HandlerMappingIntrospector.java:195)
+	at org.springframework.web.filter.CompositeFilter$VirtualFilterChain.doFilter(CompositeFilter.java:113)
+	at org.springframework.web.filter.CompositeFilter.doFilter(CompositeFilter.java:74)
+	at org.springframework.security.config.annotation.web.configuration.WebMvcSecurityConfiguration$CompositeFilterChainProxy.doFilter(WebMvcSecurityConfiguration.java:230)
+	at org.springframework.web.filter.DelegatingFilterProxy.invokeDelegate(DelegatingFilterProxy.java:352)
+	at org.springframework.web.filter.DelegatingFilterProxy.doFilter(DelegatingFilterProxy.java:268)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:116)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:164)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:140)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:167)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:90)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:483)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:115)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:93)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:344)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:384)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:63)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:904)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1741)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:52)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1190)
+	at org.apache.tomcat.util.threads.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:659)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:63)
+	at java.base/java.lang.Thread.run(Thread.java:1575)
+2024-10-23 13:43:43.156642-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ESCOLAS" not found; SQL statement:
+INSERT INTO escolas (id, nome, numero, rua, status, telefone) VALUES
+(1, 'Ápice Educação Infantil', '348', 'R. José Janarelli', 'ativo', '3721-7690'),
+(2, 'Arca da Aliança', '55', 'R. Gal. Eldes de Souza Guedes', 'ativo', '3749-9410'),
+(3, 'Balou', '325', 'R. Domingos Lopes da Silva', 'ativo', '3739-0092'),
+(4, 'Blue Sky', '27', 'R. Mal. Hastimphilo de Moura', 'ativo', '3743-5108'),
+(5, 'Colégio Anglo Morumbi', '324', 'R. Diogo Pereira', 'ativo', '3740-1000'),
+(6, 'Colégio Ascensional Mele', '184', 'R. Ascensional', 'ativo', '3744-7107'),
+(7, 'Colégio Cristóvão Colombo', '352', 'R. Alexandre Benois', 'ativo', '3744-1005'),
+(8, 'Colégio Evolve', '385', 'R. Clementine Brenne', 'ativo', '3502-7100'),
+(9, 'Colégio Guilherme Dumont Villares', '723', 'Av. Dr. Guilherme Dumont Villares', 'ativo', '3743-5531'),
+(10, 'Colégio Miguel de Cervantes', '905', 'Av. Jorge João Saad', 'ativo', '3779-1800'),
+(11, 'Colégio Modular', '378', 'R. Clementine Brenne', 'ativo', '3742-8194'),
+(12, 'Colégio Morumbi Sul', '351', 'Av. Nossa Senhora do Bom Conselho', 'ativo', '5818-0600'),
+(13, 'Colégio Nossa Senhora do Morumbi', '4000', 'Av. Giovanni Gronchi', 'ativo', '3742-5513'),
+(14, 'Colégio Pentágono', '1244', 'R. Nélson Gama de Oliveira', 'ativo', '3747-6277'),
+(15, 'Colégio Portal do Futuro', '164', 'R. Ministro Heitor Bastos Tigre', 'ativo', '3746-0356'),
+(16, 'Colégio Porto Seguro - Morumbi', '55', 'R. Floriano Peixoto Santos', 'ativo', '3749-3250'),
+(17, 'Colégio Porto Seguro - Panamby', '1355', 'R. Itapaiúna', 'ativo', '3746-1600'),
+(18, 'Colégio Porto Seguro - Portinho', '1350', 'R. Itapaiúna', 'ativo', '3501-8857'),
+(19, 'Colégio Saint Exupéry', '621', 'R. José Jannarelli', 'ativo', '3721-9466'),
+(20, 'Colégio Santo Américo', '275', 'R. Santo Américo', 'ativo', '2244-1888'),
+(21, 'Colégio São Domingos Sávio', '220', 'Av. Intercontinental', 'ativo', '3751-3286'),
+(22, 'Colégio São Luiz (Unidade Maracanã)', '200', 'R. Sta Archélia', 'ativo', '5513-5521'),
+(23, 'Colégio Universitário', '324', 'Rua Diogo Pereira', 'ativo', '3740-1000'),
+(24, 'CPV', '34', 'R. Domingos Lopes da Silva', 'ativo', '3742-4530'),
+(25, 'Doce Começo', '493', 'R. Regente Leon Kaniefsky', 'ativo', '3721-4340'),
+(26, 'El Miguelito', '786', 'Av. Jorge João Saad', 'ativo', '3772-6967'),
+(27, 'Escola Apoio', '106', 'R. Mal. Juarez Távora', 'ativo', '3744-3558'),
+(28, 'Escola Cidade Jardim/ Play Pen', '101', 'Pça. Prof. Américo de Moura', 'ativo', '3812-9122'),
+(29, 'Escola Copo de Leite', '55', 'R. Almadén', 'ativo', '3746-6567'),
+(30, 'Escola da Vila', '55', 'R. Alfredo Mendes da Silva', 'ativo', '3751-5255'),
+(31, 'Escola de Educação Infantil Fifó', '280', 'Rua Prof. Santiago Dantas', 'ativo', '3758-8086'),
+(32, 'Escola de Educação Infantil Pat Way', '488', 'R. Dr. Clóvis de Oliveira', 'ativo', '3721-4128'),
+(33, 'Escola Graduada - Graded School', '4710', 'Av. Giovanni Gronchi', 'ativo', '3747-4800'),
+(34, 'Escola Habitat', '145', 'R. Dr. Fonseca Brasil', 'ativo', '3749-0303'),
+(35, 'Escola José Bento Monteiro Lobato', '498', 'Av. Dr. Guilherme Dumont Villares', 'ativo', '3744-9242'),
+(36, 'Escola Soleil', '7', 'R. Delegado Moraes Novaes', 'ativo', '3773-5086'),
+(37, 'Escola Soletrar', '131', 'R. Francisco Preto', 'ativo', '3771-5308'),
+(38, 'Escola Stimulu Infantil', '425', 'R. Dr. Luiz Migliano', 'ativo', '3773-8160'),
+(39, 'Escola Ursinho Branco - Unidade Morumbi', '1052', 'Av. Jorge João Saad', 'ativo', '3742-7829'),
+(40, 'Escola Ursinho Branco - Unidade Real Parque', '251', 'R. Adalívia de Toledo', 'ativo', '3758-2039'),
+(41, 'Escola Submarino Amarelo', '149', 'R. Frei Bonifácio Dux', 'ativo', '3749-9760'),
+(42, 'Espaço Morumbi', '170', 'R. Panonia', 'ativo', '3507-0621'),
+(43, 'Integration School', '189', 'R. São Pedro Fourier', 'ativo', '3742-6100'),
+(44, 'Jardim Escola Equilíbrio', '60', 'R. Prof. Hilário Veiga de Carvalho', 'ativo', '3742-0521'),
+(45, 'Kampus School', '750', 'R. Dep. João Sussumu Hirata', 'ativo', '3501-4066'),
+(46, 'Kinder Kampus', '480', 'R. Dep. João Sussumu Hirata', 'ativo', '3743-7552'),
+(47, 'Objetivo', '262', 'Av. Duquesa de Goiás', 'ativo', '3758-0073'),
+(48, 'Pio XII - Colégio Franciscano', '233', 'R. Colégio Pio XII', 'ativo', '3759-5050'),
+(49, 'Piu-Piu Escola de Educação Infantil', '220', 'R. Mal. Juarez Távora', 'ativo', '3743-2449'),
+(50, 'Primetime', '30', 'R. José Gonçalves', 'ativo', '3739-4621'),
+(51, 'Quintal', '1234', 'R. Joaquim C. de Azevedo Marques', 'ativo', '3742-5899'),
+(52, 'Scuola Italiana Eugênio Montale', '75', 'R. José Gustavo Bush', 'ativo', '3759-5959'),
+(53, 'See-Saw/Panamby Bilingual School', '86', 'R. Visconde de Nacar', 'ativo', '3758-2241') [42102-224]
+2024-10-23 18:53:18.806905-03:00 jdbc[95]: null
+org.h2.message.DbException: The connection was not closed by the application and is garbage collected [90018-224]
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.message.DbException.get(DbException.java:188)
+	at org.h2.jdbc.JdbcConnection.closeOld(JdbcConnection.java:218)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:135)
+	at org.h2.Driver.connect(Driver.java:59)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:137)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:360)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:202)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:461)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:550)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:98)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:111)
+	at org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration.getConnectionUrl(H2ConsoleAutoConfiguration.java:94)
+	at java.base/java.util.stream.ReferencePipeline$3$1.accept(ReferencePipeline.java:215)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1597)
+	at java.base/java.util.stream.SortedOps$RefSortingSink.end(SortedOps.java:395)
+	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:261)
+	at java.base/java.util.stream.Sink$ChainedReference.end(Sink.java:261)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:636)
+	at java.base/java.util.stream.AbstractPipeline.evaluateToArrayNode(AbstractPipeline.java:291)
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:656)
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:662)
+	at java.base/java.util.stream.ReferencePipeline.toList(ReferencePipeline.java:667)
+	at org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration.logDataSources(H2ConsoleAutoConfiguration.java:86)
+	at org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration.lambda$h2Console$0(H2ConsoleAutoConfiguration.java:69)
+	at org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration.withThreadContextClassLoader(H2ConsoleAutoConfiguration.java:78)
+	at org.springframework.boot.autoconfigure.h2.H2ConsoleAutoConfiguration.h2Console(H2ConsoleAutoConfiguration.java:69)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:146)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:644)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:636)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1355)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1185)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:562)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:522)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:337)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:335)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:205)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:211)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:202)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addServletContextInitializerBeans(ServletContextInitializerBeans.java:97)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:86)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:266)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:240)
+	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:52)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:4414)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1203)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1193)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:148)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:749)
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:772)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1203)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1193)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.base/java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:148)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:749)
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:203)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:415)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:874)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:164)
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:437)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:128)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:107)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:516)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:222)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:188)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:162)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:619)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:146)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:754)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:456)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:335)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1352)
+	at com.example.backend.ServerApplication.main(ServerApplication.java:33)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:103)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:50)
+Caused by: org.h2.jdbc.JdbcSQLNonTransientConnectionException: The connection was not closed by the application and is garbage collected [90018-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:690)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	... 90 more

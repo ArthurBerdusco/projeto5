@@ -8,8 +8,8 @@ import config from "@/app/config";
 
 export default function LoginScreen() {
 
-    const [email, setEmail] = useState("mika@email.com.br");
-    const [senha, setSenha] = useState("1234");
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
 
     const router = useRouter();  // Adicione isso para usar o roteamento
 

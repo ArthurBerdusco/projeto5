@@ -1,4 +1,4 @@
-import { Link, Stack, useRouter } from "expo-router";
+import { router } from "expo-router";
 import { ScrollView, View, StyleSheet, Text, TextInput, Pressable, Alert, Platform } from "react-native";
 import DateTimePicker from "@react-native-community/datetimepicker"
 import { useState } from "react";
@@ -7,14 +7,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Picker } from "@react-native-picker/picker";
 
 export default function Cadastro() {
 
-    const router = useRouter();
-
     const [nome, setNome] = useState('');
     const [dataNascimento, setDataNascimento] = useState("");
-
+    const [periodo, setPeriodo] = useState(["Manha", "Tarde"]);
     const [date, setDate] = useState(new Date(2000, 0, 1))
     const [showPicker, setShowPicker] = useState(false);
 
@@ -55,11 +54,11 @@ export default function Cadastro() {
                     nome,
                     dataNascimento: formattedDateNascimento,
                     idResponsavel,
+                    periodo
                 }),
             });
 
             if (response.ok) {
-                Alert.alert("Success", "Criança cadastrada com sucesso!");
                 router.navigate('/screen/responsavel');
             } else {
                 Alert.alert("Error", "Não foi possível realizar o cadastro.");
@@ -103,6 +102,18 @@ export default function Cadastro() {
                             />
                         </Pressable>
                     )}
+
+                    {/* DropDownPicker para tipo de usuário */}
+                    <Text style={styles.text}>Tipo de usuário</Text>
+                    <Picker
+                        selectedValue={periodo}
+                        onValueChange={(itemValue) => setPeriodo(itemValue)}
+                        style={styles.picker}
+                    >
+                        <Picker.Item label="Selecione" value={null} />
+                        <Picker.Item label="Manhã" value="Manhã" />
+                        <Picker.Item label="Tarde" value="Tarde" />
+                    </Picker>
                 </View>
 
                 <Pressable style={styles.buttonSubmit} onPress={handleSubmit}>
@@ -193,5 +204,10 @@ const styles = StyleSheet.create({
         fontSize: 14,
         marginBottom: 5,
         color: "#666",
-    }
+    },
+    picker: {
+        backgroundColor: '#f9f9f9',
+        borderColor: '#ddd',
+        borderWidth: 1,
+    },
 });
