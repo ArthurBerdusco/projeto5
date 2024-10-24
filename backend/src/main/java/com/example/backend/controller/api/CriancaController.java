@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -13,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.dto.CriancaDTO;
+import com.example.backend.model.Ausencia;
 import com.example.backend.model.Crianca;
 import com.example.backend.model.Escola;
 import com.example.backend.model.Motorista;
 import com.example.backend.model.Responsavel;
+import com.example.backend.repository.AusenciaRepository;
 import com.example.backend.repository.CriancaRepository;
 import com.example.backend.repository.EscolaRepository;
 import com.example.backend.repository.ResponsavelRepository;
@@ -32,6 +35,9 @@ public class CriancaController {
 
     @Autowired
     CriancaRepository criancaRepository;
+
+    @Autowired
+    AusenciaRepository ausenciaRepository;
 
     @PostMapping
     public void salvar(@RequestBody Crianca crianca) {
@@ -132,5 +138,43 @@ public class CriancaController {
         Motorista motorista = crianca.getMotorista();
 
         return ResponseEntity.ok(motorista);
+    }
+
+    @PostMapping("/crianca/{id}/ausencias") // Endpoint para salvar ausências
+    public ResponseEntity<Void> registrarAusencias(@PathVariable Long id, @RequestBody List<Ausencia> ausencias) {
+        // Buscar a criança pelo ID
+        Crianca crianca = criancaRepository.findById(id).orElse(null);
+        if (crianca == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // Criança não encontrada
+        }
+
+        // Associar a criança com cada ausência e salvar
+        for (Ausencia ausencia : ausencias) {
+            ausencia.setCrianca(crianca);
+            ausenciaRepository.save(ausencia);
+        }
+
+        return ResponseEntity.status(HttpStatus.CREATED).build(); // Retorna 201 Created
+    }
+
+    @GetMapping("/ausencias/crianca/{id}")
+    public List<Ausencia> getAusenciasPorCrianca(@PathVariable Long id) {
+        return ausenciaRepository.findByCriancaId(id);
+    }
+
+    @DeleteMapping("/ausencias/{id}")
+    public ResponseEntity<String> deleteAusencia(@PathVariable Long id) {
+        try {
+            System.out.println("\n\n\n" + "ENTREI AQUI" + "\n\n\n");
+            if (!ausenciaRepository.existsById(id)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body("Ausência não encontrada com o ID: " + id);
+            }
+            ausenciaRepository.deleteById(id);
+            return ResponseEntity.ok("Ausência excluída com sucesso.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao excluir a ausência: " + e.getMessage());
+        }
     }
 }
