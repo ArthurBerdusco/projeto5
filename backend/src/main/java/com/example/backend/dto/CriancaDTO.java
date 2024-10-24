@@ -13,4 +13,5 @@ public class CriancaDTO {
     private LocalDate dataNascimento;
     private Integer idade;
     private Long idResponsavel;
+    private String periodo;
 }

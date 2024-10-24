@@ -73,6 +73,7 @@ public class CriancaController {
             Crianca crianca = new Crianca();
             crianca.setNome(dto.getNome());
             crianca.setDataNascimento(dto.getDataNascimento());
+            crianca.setPeriodo(dto.getPeriodo());
             crianca.setResponsavel(responsavelRepository.findById(dto.getIdResponsavel()).orElseThrow());
 
             criancaRepository.save(crianca);

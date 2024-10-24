@@ -67,17 +67,13 @@ export default function RootLayout() {
       />
 
       {/* NAVEGAÇÕES RESPONSÁVEL */}
-      <Stack.Screen
-        name="screen/responsavel/index"
-        options={{ title: 'Responsável - Início' }} 
-      />
+
+      <Stack.Screen name="screen/responsavel/(tabs)" options={{ headerShown: false }} />
+
+
       <Stack.Screen
         name="screen/responsavel/cadastro"
         options={{ title: 'Cadastro de Responsável' }} 
-      />
-      <Stack.Screen
-        name="screen/responsavel/perfil"
-        options={{ title: 'Perfil do Responsável' }} 
       />
 
       {/* NAVEGAÇÕES RESPONSÁVEL/CRIANÇA */}

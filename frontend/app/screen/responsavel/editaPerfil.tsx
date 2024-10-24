@@ -122,9 +122,6 @@ export default function Perfil() {
         }
     };
 
-
-
-
     return (
         <SafeAreaView style={styles.total}>
 
@@ -135,7 +132,6 @@ export default function Perfil() {
                     entidade={"Responsavel"}
                     initialImage={responsavel.imagem?.dados ? `data:image/jpeg;base64,${responsavel.imagem.dados}` : null}
                 />
-
 
                 <View style={styles.containerInputs}>
                     <Text style={styles.textTitle}>Dados Pessoais: </Text>
