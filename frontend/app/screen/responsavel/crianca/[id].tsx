@@ -44,7 +44,6 @@ export default function CadastroCrianca() {
     const fetchOfertas = async () => {
         try {
             const response = await fetch(`${config.IP_SERVER}/oferta/crianca/${id}`);
-            await response.json(); // Não armazena no estado, mas pode ser utilizado.
         } catch (error) {
             console.error('Erro ao buscar as ofertas:', error);
         }
@@ -230,24 +229,24 @@ export default function CadastroCrianca() {
                 <View style={styles.containerInputs}>
                     <Text style={styles.textTitle}>Perueiro</Text>
                     <Pressable
-                    style={styles.buttonSecondary}
-                            onPress={() =>
-                                router.push({
-                                    pathname: `/screen/responsavel/crianca/escola/listaEscolas`,
-                                    params: { crianca: JSON.stringify(crianca) },
-                                })}
-                        >
-                            <Text style={styles.buttonText}>Procurar perueiro</Text>
-                        </Pressable>
+                        style={styles.buttonSecondary}
+                        onPress={() =>
+                            router.push({
+                                pathname: `/screen/responsavel/crianca/escola/listaEscolas`,
+                                params: { crianca: JSON.stringify(crianca) },
+                            })}
+                    >
+                        <Text style={styles.buttonText}>Procurar perueiro</Text>
+                    </Pressable>
 
-                        <Link style={styles.buttonSecondary}
-                            href={{
-                                pathname: `/screen/responsavel/crianca/ofertas/listaOfertas`,
-                                params: { idCrianca: id }, // Passa a ID da oferta, não a ID da criança
-                            }}
-                        >
-                            <Text style={styles.buttonText}>Procurar ofertas</Text>
-                        </Link>
+                    <Link style={styles.buttonSecondary}
+                        href={{
+                            pathname: `/screen/responsavel/crianca/ofertas/listaOfertas`,
+                            params: { idCrianca: id }, // Passa a ID da oferta, não a ID da criança
+                        }}
+                    >
+                        <Text style={styles.buttonText}>Procurar ofertas</Text>
+                    </Link>
                 </View>
 
                 <View style={styles.containerCalendar}>

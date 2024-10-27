@@ -48,27 +48,30 @@ export default function Index() {
     try {
       const idMotorista = await AsyncStorage.getItem("idMotorista");
 
-      const response = await fetch(
-        `${config.IP_SERVER}/motorista/${idMotorista}`
-      );
-
+      const response = await fetch(`${config.IP_SERVER}/motorista/${idMotorista}`);
       const data = await response.json();
-
       setMotorista(data);
 
-      const escolasResponse = await fetch(
-        `${config.IP_SERVER}/api/escolas/atendidas`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ idMotorista }),
-        }
-      );
+      const escolasResponse = await fetch(`${config.IP_SERVER}/api/escolas/atendidas`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ idMotorista }),
+      });
 
       const escolasData = await escolasResponse.json();
-      setEscolasAtendidas(escolasData); // Atualiza o estado com as escolas atendidas
+      const escolasComQuantidades = await Promise.all(
+        escolasData.map(async (escola) => {
+          const criancasResponse = await fetch(
+            `${config.IP_SERVER}/api/escolas/${escola.id}/motorista/${idMotorista}/criancas/count`
+          );
+          const quantidadeCriancas = await criancasResponse.json();
+          return { ...escola, quantidadeCriancas }; // Adiciona o campo de quantidade de crianças
+        })
+      );
+
+      setEscolasAtendidas(escolasComQuantidades); // Atualiza o estado com as escolas e quantidades de crianças
     } catch (err) {
       console.error("Erro ao carregar o motorista ou escolas", err);
     }
@@ -119,8 +122,13 @@ export default function Index() {
                   )
                 } // Navega para a nova tela passando o ID da escola
               >
-                <Text>{escola.nome}</Text>
-                <Text>{escola.rua}</Text>
+                <Text style={styles.quantidadeCrianca}>{escola.quantidadeCriancas} Crianças</Text>
+
+                <View style={{ flexDirection: "row", justifyContent: "center" }}>
+                  <Image source={require('@/app/assets/icons/school.png')} />
+                  <Text style={styles.nomeEscola}>{escola.nome}</Text>
+                </View>
+
               </Pressable>
             ))
           )}
@@ -155,10 +163,12 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   cardsMotoristas: {
-    height: 150,
-    width: 150,
-    backgroundColor: "#a5a5a5",
+    height: 120,
+    width: 160,
+    backgroundColor: "#0EAFFF",
     borderRadius: 10,
+    padding: 10,
+    justifyContent: "space-between"
   },
 
   textoDados: {
@@ -209,5 +219,17 @@ const styles = StyleSheet.create({
     height: 60,
     width: 60,
     borderRadius: 50
+  },
+  nomeEscola: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 16,
+  },
+  quantidadeCrianca: {
+    fontWeight: "400",
+    color: "white",
+    fontSize: 15,
+    textAlign: "right"
   }
+
 });

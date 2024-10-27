@@ -158,4 +158,22 @@ public class EscolaController {
                     .body(new ArrayList<>());
         }
     }
+
+    @GetMapping("/escolas/{idEscola}/motorista/{idMotorista}/criancas/count")
+    public ResponseEntity<Integer> countCriancaMotoristaEscola(@PathVariable Long idEscola,
+            @PathVariable Long idMotorista) {
+        try {
+            List<MotoristaEscola> atendimentos = motoristaEscolaRepository.findByMotoristaIdAndEscolaId(idMotorista,
+                    idEscola);
+
+            if (atendimentos.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(0);
+            }
+
+            int count = criancaRepository.findByMotoristaIdAndEscolaId(idMotorista, idEscola).size();
+            return ResponseEntity.ok(count);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(0);
+        }
+    }
 }

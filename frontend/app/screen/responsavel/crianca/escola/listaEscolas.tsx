@@ -8,7 +8,7 @@ export default function ListaEscolas() {
     const [escolas, setEscolas] = useState([]);
     const [loading, setLoading] = useState(true);
     const { crianca } = useLocalSearchParams();
-    
+
     const [searchQuery, setSearchQuery] = useState('');
 
 
@@ -47,35 +47,35 @@ export default function ListaEscolas() {
         return nomeMatch || ruaMatch;
     });
 
-    const renderItem = ({ item }: any) => {
-        // Verifica se os dados da imagem estão disponíveis
-        const imagemUrl = item.imagem && item.imagem.dados ? `data:image/jpeg;base64,${item.imagem.dados}` : 'URL_IMAGEM_PADRAO'; // Substitua por uma URL de imagem padrão
+    const renderItem = ({ item }) => {
+        const imagemUrl = item.imagem && item.imagem.dados ? `data:image/jpeg;base64,${item.imagem.dados}` : 'URL_IMAGEM_PADRAO';
 
         return (
-            <ImageBackground 
-            source={{ uri: imagemUrl }} // Usar imagem padrão se a imagem não existir
-            style={styles.escolaAtendida}
-            imageStyle={styles.imageStyle} // Estilo da imagem
-        >
-            <Link
-                href={{
-                    pathname: `/screen/responsavel/crianca/escola/[id]`,
-                    params: { id: item.id, crianca},
-                }}
-                style={styles.buttonEscola}
+            <ImageBackground
+                source={{ uri: imagemUrl }}
+                style={styles.escolaAtendida}
+                imageStyle={styles.imageStyle}
             >
-               <View style={styles.textContainer}> {/* View para organizar os textos */}
-                <Text style={styles.textNome}>{item.nome}</Text>
-                <Text style={styles.textRua}>{item.rua}</Text>
-            </View>
-            </Link>
-        </ImageBackground>
+                <Link
+                    href={{
+                        pathname: `/screen/responsavel/crianca/escola/[id]`,
+                        params: { id: item.id, crianca },
+                    }}
+                    style={styles.buttonEscola}
+                >
+                    <View style={styles.textContainer}>
+                        <Text style={styles.textNome}>{item.nome}</Text>
+                        <Text style={styles.textRua}>{item.rua}</Text>
+                    </View>
+                </Link>
+            </ImageBackground>
         );
     };
 
+
     return (
         <View style={styles.container}>
-             <TextInput
+            <TextInput
                 style={styles.searchInput}
                 placeholder="Buscar por nome ou endereço"
                 value={searchQuery}
@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
         padding: 16,
         backgroundColor: '#f8f8f8',
     },
-    title:{
+    title: {
         fontSize: 16
     },
     searchInput: {
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
     textContainer: {
         flexDirection: 'column', // Organiza os textos em coluna
     },
-    
+
     imageStyle: {
         borderRadius: 10,
         opacity: 0.5, // Opacidade para melhorar a legibilidade do texto
