@@ -136,7 +136,7 @@ export default function Perfil() {
                         style={styles.image}
                     />
                 ) : (
-                    <Image source={require('@/app/assets/icons/perfil.png')} style={{ width: 120, height: 120 }} />
+                    <Image source={require('@/app/assets/icons/perfil.png')} style={styles.image} />
                 )}
 
                 <View style={styles.containerInfo}>

@@ -9,9 +9,6 @@ import { format } from 'date-fns'; // se você estiver usando date-fns
 import { ptBR } from 'date-fns/locale';
 import { Picker } from '@react-native-picker/picker'; // Importando o Picker
 
-
-
-
 interface Endereco {
     cep: string;
     rua: string;
@@ -107,7 +104,6 @@ export default function CadastroScreen() {
         }));
     };
 
-
     const [date, setDate] = useState(new Date(2000,0,1))
     const [showPicker, setShowPicker] = useState(false);
 
@@ -131,8 +127,6 @@ export default function CadastroScreen() {
             toggleDataPicker();
         }
     }
-
-
 
     const handleSubmit = async () => {
         try {
@@ -163,7 +157,7 @@ export default function CadastroScreen() {
                 if (role === "MOTORISTA") {
                     await AsyncStorage.setItem('motorista', JSON.stringify(resultado));
                     await AsyncStorage.setItem('idMotorista', resultado.id.toString());
-                    router.navigate('/screen/motorista/cadastro');
+                    router.navigate('/screen/motorista/vanForm');
                 } else if (role === "RESPONSAVEL") {
                     await AsyncStorage.setItem('responsavel', JSON.stringify(resultado));
                     await AsyncStorage.setItem('idResponsavel', resultado.id.toString());
@@ -185,7 +179,6 @@ export default function CadastroScreen() {
                 <View style={styles.header}>
                     <Text style={styles.title}>Cadastro de Usuário</Text>
                 </View>
-
 
                 <View style={styles.containerInputs}>
                     <Text style={styles.textTitle}>Dados pessoais:</Text>

@@ -20,5 +20,4 @@ public class Imagem {
     @Lob
     private byte[] dados;
 
-
 }

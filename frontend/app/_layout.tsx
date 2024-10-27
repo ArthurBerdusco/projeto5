@@ -23,7 +23,7 @@ export default function RootLayout() {
       />
       <Stack.Screen
         name="screen/auth/loginScreen"
-        options={{ title: 'Login' }} 
+        options={{ title: 'Login', headerBackVisible: false, }} 
       />
       <Stack.Screen
         name="screen/auth/registerScreen"
@@ -72,8 +72,8 @@ export default function RootLayout() {
 
 
       <Stack.Screen
-        name="screen/responsavel/cadastro"
-        options={{ title: 'Cadastro de Responsável' }} 
+        name="screen/responsavel/editaPerfil"
+        options={{ title: 'Editar perfil' }} 
       />
 
       {/* NAVEGAÇÕES RESPONSÁVEL/CRIANÇA */}
@@ -82,7 +82,7 @@ export default function RootLayout() {
         options={{ title: 'Detalhes da Criança' }} 
       />
       <Stack.Screen
-        name="screen/responsavel/crianca/cadastro"
+        name="screen/responsavel/crianca/form"
         options={{ title: 'Cadastro de Criança' }} 
       />
 
@@ -104,8 +104,12 @@ export default function RootLayout() {
 
       {/* NAVEGAÇÕES RESPONSÁVEL/CRIANÇA/OFERTAS */}
       <Stack.Screen
-        name="screen/responsavel/crianca/ofertas/aceitaOferta"
-        options={{ title: 'Aceitar Oferta' }} 
+        name="screen/responsavel/crianca/ofertas/listaOfertas"
+        options={{ title: 'Ofertas recebidas' }} 
+      />
+      <Stack.Screen
+        name="screen/responsavel/crianca/ofertas/[id]"
+        options={{ title: 'Ver oferta' }} 
       />
     </Stack>
   );

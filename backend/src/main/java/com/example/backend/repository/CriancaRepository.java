@@ -12,4 +12,6 @@ public interface CriancaRepository extends JpaRepository<Crianca, Long> {
 
     List<Crianca> findByMotoristaIdAndEscolaId(Long motoristaId, Long escolaId);
 
+    
+
 }

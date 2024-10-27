@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.dto.Login;
+import com.example.backend.model.Operador;
 import com.example.backend.repository.MotoristaRepository;
+import com.example.backend.repository.OperadorRepository;
 import com.example.backend.repository.ResponsavelRepository;
+import com.example.backend.security.Role;
 import com.example.backend.security.Usuario;
 import com.example.backend.security.UsuarioRepository;
 
@@ -25,6 +28,9 @@ public class LoginController {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
+    private OperadorRepository operadorRepository;
+
+    @Autowired
     private MotoristaRepository motoristaRepository;
 
     @Autowired
@@ -33,6 +39,8 @@ public class LoginController {
     @Autowired
     private PasswordEncoder encoder;
 
+
+
     @PostMapping
     public ResponseEntity<?> login(@RequestBody Login login) {
 
@@ -40,6 +48,7 @@ public class LoginController {
         Optional<Usuario> usuarioOptional = usuarioRepository.findByEmailIgnoreCase(login.getEmail());
 
         if (usuarioOptional.isEmpty()) {
+            System.out.println("Usuario não encontrado");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Usuário não encontrado");
         }
 
@@ -63,6 +72,20 @@ public class LoginController {
             default:
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Papel do usuário inválido");
         }
+    }
+
+    @PostMapping("/admin")
+    public void adminPost(){
+        Usuario u = new Usuario();
+            Operador o = new Operador();
+            u = new Usuario();
+            u.setEmail("bryan@email.com.br");
+            u.setSenha(encoder.encode("1234"));
+            u.setRole(Role.OPERADOR);
+            u.setStatus("ATIVO");
+            o.setUsuario(u);
+            usuarioRepository.save(u);
+            operadorRepository.save(o);
     }
 
 }

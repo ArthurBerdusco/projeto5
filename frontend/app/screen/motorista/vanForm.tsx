@@ -66,25 +66,42 @@ export default function VanForm() {
 
     const fetchVan = async () => {
         setLoading(true);
+
         try {
-            const motorista = (await AsyncStorage.getItem('idMotorista')) ?? "";
+            const motorista = await AsyncStorage.getItem('idMotorista');
+
+            if (!motorista) {
+                alert("ID do motorista não encontrado");
+                return; // Interrompe a execução se o motorista não for encontrado
+            }
+
             setIdMotorista(motorista);
 
             const resultado = await fetch(`${config.IP_SERVER}/motorista/van/${motorista}`);
-            const dados = await resultado.json();
 
+            if (resultado.status === 404) {
+                setIsEditing(false);
+                return;
+            } else if (!resultado.ok) {
+                throw new Error("Erro ao buscar dados da van"); // Lança erro para status diferentes de 200 e 404
+            }
+
+            const dados = await resultado.json();
             if (dados) {
-                setVan(dados); // Preenche o formulário com os dados da van existente
-                setIsEditing(true); // Sinaliza que estamos editando uma van existente
+                alert("EDIÇÃO"); // Indica que está editando uma van existente
+                setVan(dados);
+                setIsEditing(true);
             }
 
         } catch (err) {
             console.error("Erro ao buscar dados da van:", err);
-            alert(err);
+            alert("Erro ao buscar dados da van: " + err.message);
         } finally {
             setLoading(false);
         }
     };
+
+
 
     useEffect(() => {
         fetchVan(); // Busca os dados da van ao carregar a tela
@@ -169,14 +186,15 @@ export default function VanForm() {
             <ScrollView style={styles.scrollView}>
                 <Text style={{ fontWeight: '800', textAlign: 'center', fontSize: 20 }}>Cadastrar Perua escolar</Text>
                 <View style={styles.containerInputs}>
+                    <Text>Fabricante</Text>
                     <TextInput
-                        placeholder="Fabricante"
                         style={styles.textInputs}
                         value={van.fabricante}
                         onChangeText={(text) => handleChange('fabricante', text)}
                     />
+
+                    <Text>Modelo</Text>
                     <TextInput
-                        placeholder="Modelo"
                         style={styles.textInputs}
                         value={van.modelo}
                         onChangeText={(text) => handleChange('modelo', text)}
@@ -184,7 +202,6 @@ export default function VanForm() {
 
                     <Text style={styles.text}>Ano do veículo</Text>
                     <TextInput
-                        placeholder="Exemplo '2012'"
                         maxLength={4}
                         style={styles.textInputs}
                         value={van.anoFabricacao}
@@ -192,21 +209,22 @@ export default function VanForm() {
                         onChangeText={(text) => handleChange('anoFabricacao', text)}
                     />
 
-
+                    <Text>Cor</Text>
                     <TextInput
-                        placeholder="Cor"
                         style={styles.textInputs}
                         value={van.cor}
                         onChangeText={(text) => handleChange('cor', text)}
                     />
+
+                    <Text>Placa</Text>
                     <TextInput
-                        placeholder="Placa"
                         style={styles.textInputs}
                         value={van.placa}
                         onChangeText={(text) => handleChange('placa', text)}
                     />
+
+                    <Text>Renavam</Text>
                     <TextInput
-                        placeholder="Renavam"
                         style={styles.textInputs}
                         value={van.renavam}
                         onChangeText={(text) => handleChange('renavam', text)}
@@ -216,12 +234,14 @@ export default function VanForm() {
                 {/* {Capacidade e Conforto} */}
                 <View style={styles.containerInputs}>
                     <Text style={styles.textTitle}>Capacidade e Conforto</Text>
+
+                    <Text>Quantidade de acentos</Text>
                     <TextInput
-                        placeholder="Quantidade de Assentos"
                         style={styles.textInputs}
                         value={van.quantidadeAssentos}
                         onChangeText={(text) => handleChange('quantidadeAssentos', text)}
                     />
+
                     <View style={styles.switchContainer}>
                         <Text style={styles.text}>Acessibilidade</Text>
                         <Switch
@@ -229,6 +249,7 @@ export default function VanForm() {
                             onValueChange={(value) => handleChange('acessibilidade', value)}
                         />
                     </View>
+
                     <View style={styles.switchContainer}>
                         <Text style={styles.text}>Ar Condicionado</Text>
                         <Switch
@@ -236,6 +257,7 @@ export default function VanForm() {
                             onValueChange={(value) => handleChange('arCondicionado', value)}
                         />
                     </View>
+
                     <View style={styles.switchContainer}>
                         <Text style={styles.text}>Cortinas</Text>
                         <Switch
@@ -243,6 +265,7 @@ export default function VanForm() {
                             onValueChange={(value) => handleChange('cortinas', value)}
                         />
                     </View>
+
                     <View style={styles.switchContainer}>
                         <Text style={styles.text}>TV Entretenimento</Text>
                         <Switch
@@ -284,8 +307,9 @@ export default function VanForm() {
                 {/* Documentação do Motorista */}
                 <View style={styles.containerInputs}>
                     <Text style={styles.textTitle}>Documentação do Motorista</Text>
+
+                    <Text style={styles.text}>CNH</Text>
                     <TextInput
-                        placeholder="CNH"
                         style={styles.textInputs}
                         value={van.cnh}
                         onChangeText={(text) => handleChange('cnh', text)}
@@ -405,9 +429,9 @@ const styles = StyleSheet.create({
         marginVertical: 5,
     },
     loadingContainer: {
-        flex: 1,               
+        flex: 1,
         justifyContent: 'center',
-        alignItems: 'center', 
-        backgroundColor: '#fff', 
+        alignItems: 'center',
+        backgroundColor: '#fff',
     },
 });
