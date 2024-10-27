@@ -11,4 +11,6 @@ public interface OfertaRepository extends JpaRepository<Oferta, Long> {
 
     List<Oferta> findByCriancaId(Long criancaId);
 
+    boolean existsByCriancaId(Long criancaId);
+
 }

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, FlatList, ActivityIndicator, StyleSheet, Alert } from 'react-native';
-import { Link, Stack } from "expo-router";
+import { Text, View, FlatList, ActivityIndicator, StyleSheet, Alert, TextInput, ImageBackground } from 'react-native';
+import { Link } from "expo-router";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from '@/app/config';
 
 export default function ListaEscolas() {
     const [escolas, setEscolas] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [searchQuery, setSearchQuery] = useState('');
 
     const fetchEscolas = async () => {
         try {
@@ -25,31 +26,52 @@ export default function ListaEscolas() {
         fetchEscolas();
     }, []);
 
-    const renderItem = ({ item }) => {
+    const renderItem = ({ item }: any) => {
+        // Verifica se os dados da imagem estão disponíveis
+        const imagemUrl = item.imagem && item.imagem.dados ? `data:image/jpeg;base64,${item.imagem.dados}` : 'URL_IMAGEM_PADRAO'; // Substitua por uma URL de imagem padrão
 
         return (
-            <View style={styles.escolaAtendida}>
+            <ImageBackground 
+                source={{ uri: imagemUrl }} // Usar imagem padrão se a imagem não existir
+                style={styles.escolaAtendida}
+                imageStyle={styles.imageStyle} // Estilo da imagem
+            >
                 <Link
                     href={{
-                        pathname: `/screen/motorista/escola/[id]`,
+                        pathname: '/screen/motorista/escola/[id]',
                         params: { id: item.id },
                     }}
-                    style={styles.buttonEscola}>
+                    style={styles.buttonEscola}
+                >
+                   <View style={styles.textContainer}> {/* View para organizar os textos */}
+                    <Text style={styles.textNome}>{item.nome}</Text>
+                    <Text style={styles.textRua}>{item.rua}</Text>
+                </View>
                 </Link>
-                <Text style={styles.textNome}>{item.nome}</Text>
-                <Text style={styles.textRua}>{item.rua}</Text>
-            </View>
+            </ImageBackground>
         );
     };
 
+    // Filtra escolas com base na consulta de pesquisa
+    const filteredEscolas = escolas.filter(escola => {
+        const nomeMatch = escola.nome.toLowerCase().includes(searchQuery.toLowerCase());
+        const ruaMatch = escola.rua.toLowerCase().includes(searchQuery.toLowerCase());
+        return nomeMatch || ruaMatch;
+    });
+
     return (
         <View style={styles.container}>
-
+            <TextInput
+                style={styles.searchInput}
+                placeholder="Buscar por nome ou endereço"
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+            />
             {loading ? (
                 <ActivityIndicator size="large" color="#0000ff" />
             ) : (
                 <FlatList
-                    data={escolas}
+                    data={filteredEscolas}
                     keyExtractor={(item) => item.id.toString()}
                     renderItem={renderItem}
                     ListEmptyComponent={<Text>Nenhuma escola encontrada</Text>}
@@ -63,59 +85,54 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
+        backgroundColor: '#f8f8f8',
     },
-    title: {
-        fontSize: 25,
-        fontWeight: 'bold',
-        marginBottom: 20,
-        alignSelf: 'center',
-        color: "#FEA407"
-
-
-    },
-    itemContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        paddingVertical: 8,
-    },
-    link: {
-        flex: 1,
-    },
-    schoolName: {
-        fontSize: 18,
+    searchInput: {
+        backgroundColor: "#f9f9f9",
+        borderColor: "#ddd",
+        borderWidth: 1,
+        borderRadius: 8,
+        padding: 12,
+        marginBottom: 15,
+        fontSize: 16,
+        color: "#333",
     },
     escolaAtendida: {
+        flexDirection: 'column',
         marginTop: 10,
-        borderColor: 'black',
+        marginBottom: 10,
+        borderRadius: 10,
+        overflow: 'hidden', // Garante que a imagem não ultrapasse o limite
+        height: 150, // Define uma altura fixa para os itens
+        backgroundColor: 'black'
+    },
+    textContainer: {
+        flexDirection: 'column', // Organiza os textos em coluna
+    },
+    
+    imageStyle: {
+        borderRadius: 10,
+        opacity: 0.5, // Opacidade para melhorar a legibilidade do texto
     },
     buttonEscola: {
-        alignItems: 'center',
-        textAlign: 'center',
+        alignItems: 'flex-start',
         justifyContent: 'center',
-        paddingVertical: 12,
-        paddingHorizontal: 32,
-        borderRadius: 15,
-        elevation: 3,
-        backgroundColor: '#2b2b2b',
-        height: 120,
-
+        paddingVertical: 16,
+        paddingHorizontal: 20,
+        borderRadius: 10,
+        backgroundColor: 'transparent', // Fundo transparente para a área do link
     },
     textNome: {
         fontSize: 18,
-        lineHeight: 26,
+        lineHeight: 24,
         fontWeight: 'bold',
         letterSpacing: 0.25,
-        color: '#000000',
-
+        color: '#ffffff',
     },
-
     textRua: {
         fontSize: 14,
-        lineHeight: 21,
-        fontWeight: 'bold',
-        letterSpacing: 0.25,
-        color: '#6D6D6D',
-
+        lineHeight: 20,
+        color: '#ffffff',
+        marginTop: 4,
     },
 });

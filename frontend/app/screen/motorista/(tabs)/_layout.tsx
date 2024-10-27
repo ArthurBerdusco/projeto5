@@ -19,7 +19,7 @@ export default function Layout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Motorista - Início',
+          title: 'Home',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="home" color={color} />,
         }}
       />
@@ -43,7 +43,7 @@ export default function Layout() {
       <Tabs.Screen
         name="perfil"
         options={{
-          title: 'Perfil do Motorista',
+          title: 'Meu perfil',
           tabBarIcon: ({ color }) => <FontAwesome size={28} name="user" color={color} />,
         }}
       />

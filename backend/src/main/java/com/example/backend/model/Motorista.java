@@ -35,22 +35,6 @@ public class Motorista {
     private String experiencia;
     private String sobreMim;
 
-    public String getExperiencia() {
-        return experiencia;
-    }
-
-    public void setExperiencia(String experiencia) {
-        this.experiencia = experiencia;
-    }
-
-    public String getSobreMim() {
-        return sobreMim;
-    }
-
-    public void setSobreMim(String sobreMim) {
-        this.sobreMim = sobreMim;
-    }
-
     @OneToOne
     private Usuario usuario;
 
@@ -68,6 +52,22 @@ public class Motorista {
             inverseJoinColumns = @JoinColumn(name = "escola_id") // Coluna para a escola
     )
     private List<Escola> escolas;
+
+    public String getExperiencia() {
+        return experiencia;
+    }
+
+    public void setExperiencia(String experiencia) {
+        this.experiencia = experiencia;
+    }
+
+    public String getSobreMim() {
+        return sobreMim;
+    }
+
+    public void setSobreMim(String sobreMim) {
+        this.sobreMim = sobreMim;
+    }
 
     public Long getId() {
         return id;

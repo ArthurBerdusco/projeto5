@@ -94,7 +94,7 @@ export default function Perfil() {
         extintorIncendio: false,
         cnh: '',
         antecedentesCriminais: false,
-        fotosVeiculo: [] 
+        fotosVeiculo: []
     });
 
     const fetchData = async () => {
@@ -138,7 +138,7 @@ export default function Perfil() {
             </View>
         );
     }
-    
+
 
     return (
         <SafeAreaView style={styles.total}>
@@ -203,18 +203,19 @@ export default function Perfil() {
                 </View>
 
 
-                <View>
-                    <TouchableOpacity style={styles.button} onPress={() => router.navigate("/screen/motorista/editaPerfil")}>
+                <View style={styles.buttonContainer}>
+                    <TouchableOpacity style={styles.editButton} onPress={() => router.navigate("/screen/motorista/editaPerfil")}>
                         <Text style={styles.buttonText}>Editar Perfil</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={() => router.navigate("/screen/motorista/veiculo")}>
-                        <Text style={styles.buttonText}>Minha van</Text>
+                    <TouchableOpacity style={styles.vanButton} onPress={() => router.navigate("/screen/motorista/veiculo")}>
+                        <Text style={styles.buttonText}>Minha Van</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={() => router.navigate("/screen/auth/loginScreen")}>
+                    <TouchableOpacity style={styles.logoutButton} onPress={() => router.navigate("/screen/auth/loginScreen")}>
                         <Text style={styles.buttonText}>Sair</Text>
                     </TouchableOpacity>
                 </View>
-                
+
+
             </ScrollView>
         </SafeAreaView>
     )
@@ -271,32 +272,41 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         color: "#666",
     },
-    containerButton: {
-        alignItems: 'center',
+    
+    buttonContainer: {
         marginTop: 20,
+        alignItems: 'center', // Centraliza os botões
     },
-    buttonSubmit: {
-        backgroundColor: '#007bff',
+    editButton: {
+        backgroundColor: '#4CAF50', // Cor verde para ação primária
         paddingVertical: 15,
         paddingHorizontal: 30,
         borderRadius: 10,
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%',
+        marginVertical: 10, // Espaçamento vertical entre os botões
+        width: '80%', // Largura para que o botão não fique muito largo
     },
-    button: {
-        marginTop: 30,
-        backgroundColor: '#ffbf00',
-        padding: 10,
-        borderRadius: 55,
-        alignItems: 'center',
+    vanButton: {
+        backgroundColor: '#2196F3', // Cor azul para ação secundária
+        paddingVertical: 15,
+        paddingHorizontal: 30,
+        borderRadius: 10,
+        marginVertical: 10,
+        width: '80%',
+    },
+    logoutButton: {
+        backgroundColor: '#f44336', // Cor vermelha para sair
+        paddingVertical: 15,
+        paddingHorizontal: 30,
+        borderRadius: 10,
+        marginVertical: 10,
+        width: '80%',
     },
     buttonText: {
-        color: '#fff',
+        color: '#FFFFFF',
         fontSize: 16,
         fontWeight: 'bold',
+        textAlign: 'center', // Centraliza o texto dentro do botão
     },
-
 
     container: {
         padding: 20,
@@ -329,9 +339,9 @@ const styles = StyleSheet.create({
         marginBottom: 20,
     },
     loadingContainer: {
-        flex: 1,       
+        flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',  
+        alignItems: 'center',
         backgroundColor: '#fff',
     },
     parteSuperiorPerfil: {

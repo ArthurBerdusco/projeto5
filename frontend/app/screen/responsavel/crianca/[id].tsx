@@ -13,9 +13,12 @@ import {
 } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 import config from '@/app/config';
-import { useLocalSearchParams } from 'expo-router';
+import { Link, router, useLocalSearchParams, useNavigation } from 'expo-router';
 
 export default function CadastroCrianca() {
+
+    const navigation = useNavigation();
+
     const [ausenciaDetalhes, setAusenciaDetalhes] = useState(null);
     const [crianca, setCrianca] = useState({ id: 0, nome: '', idade: '', periodo: '' });
     const [loading, setLoading] = useState(true);
@@ -27,7 +30,7 @@ export default function CadastroCrianca() {
     const [motivo, setMotivo] = useState('');
     const { id } = useLocalSearchParams();
 
-    
+
     const fetchCrianca = async () => {
         try {
             const response = await fetch(`${config.IP_SERVER}/criancas/${id}`);
@@ -61,8 +64,8 @@ export default function CadastroCrianca() {
         }
     };
 
-    
-    
+
+
     const handleDayPress = (day) => {
         const date = day.dateString;
         const ausencia = markedDates[date]; // Verifica se a data possui uma ausência marcada
@@ -70,7 +73,7 @@ export default function CadastroCrianca() {
         if (ausencia && ausencia.marked) {
             // Se já houver ausência, mostra detalhes
             setAusenciaDetalhes(ausencia);
-           
+
             setModalExcluirVisible(true); // Mostra o modal
         } else {
             setSelectedDates((prev) => {
@@ -85,7 +88,7 @@ export default function CadastroCrianca() {
         }
     };
 
-    
+
 
     const handleAlertPress = () => {
         if (selectedDates.size === 0) {
@@ -95,37 +98,45 @@ export default function CadastroCrianca() {
         setModalVisible(true);
     };
 
+    const carregarDados = async () => {
+        setLoading(true);
+        await Promise.all([fetchCrianca(), fetchOfertas(), fetchMotorista()]);
+        setLoading(false);
+    };
+
+
     useEffect(() => {
-        const carregarDados = async () => {
-            setLoading(true);
-            await Promise.all([fetchCrianca(), fetchOfertas(), fetchMotorista()]);
-            setLoading(false);
+        const unsubscribeFocus = navigation.addListener("focus", () => {
+            carregarDados();
+        });
+
+        return () => {
+            unsubscribeFocus();
         };
-        carregarDados();
-    }, []);
-    
+    }, [navigation]);
+
     useEffect(() => {
         const fetchAusencias = async () => {
             if (!crianca.id) return; // Previne chamada sem ID
-    
+
             try {
                 const response = await fetch(`${config.IP_SERVER}/ausencias/crianca/${crianca.id}`);
                 if (!response.ok) {
                     throw new Error('Erro ao buscar ausências');
                 }
                 const ausencias = await response.json();
-    
+
                 const newMarkedDates = {};
                 ausencias.forEach((ausencia) => {
-                    newMarkedDates[ausencia.data] = { marked: true, dotColor: 'red', motivo: ausencia.motivo, id: ausencia.id };
+                    newMarkedDates[ausencia.data] = { marked: true, dotColor: 'red', motivo: ausencia.motivo, id: ausencia.id, data: ausencia.data };
                 });
-    
+
                 setMarkedDates(newMarkedDates);
             } catch (error) {
                 console.error('Erro ao buscar ausências:', error);
             }
         };
-    
+
         fetchAusencias();
     }, [crianca.id]);
 
@@ -133,22 +144,23 @@ export default function CadastroCrianca() {
     // Função para buscar as ausências
     const fetchAusencias = async () => {
         try {
+
             const response = await fetch(`${config.IP_SERVER}/ausencias/crianca/${crianca.id}`);
             if (!response.ok) {
                 throw new Error('Erro ao buscar ausências');
             }
             const ausencias = await response.json();
-            
+
             // Reinicia o estado de markedDates
             const newMarkedDates = {};
-    
+
             ausencias.forEach((ausencia) => {
                 // Certifique-se de que a data está no formato correto
-                newMarkedDates[ausencia.data] = { marked: true, dotColor: 'red', motivo: ausencia.motivo, id: ausencia.id };
+                newMarkedDates[ausencia.data] = { marked: true, dotColor: 'red', motivo: ausencia.motivo, id: ausencia.id, data: ausencia.data };
             });
-    
+
             setMarkedDates(newMarkedDates); // Atualiza o estado com as ausências
-    
+
         } catch (error) {
             console.error('Erro ao buscar ausências:', error);
         }
@@ -181,19 +193,19 @@ export default function CadastroCrianca() {
             await fetch(`${config.IP_SERVER}/ausencias/${ausenciaDetalhes.id}`, { // Corrigido para DELETE
                 method: 'DELETE',
             });
-            
+
             Alert.alert("Ausência excluída com sucesso!");
             // Atualiza as ausências novamente após exclusão
             await fetchAusencias();
             setModalExcluirVisible(false); // Fecha o modal
             setAusenciaDetalhes(null); // Limpa detalhes da ausência
-    
+
         } catch (error) {
             console.error('Erro ao excluir ausência:', error);
             Alert.alert("Erro ao excluir ausência.");
         }
     };
-    
+
 
     if (loading) {
         return <ActivityIndicator size="large" color="#0d99ff" />;
@@ -203,15 +215,44 @@ export default function CadastroCrianca() {
         <SafeAreaView style={styles.total}>
             <ScrollView contentContainerStyle={styles.scrollView}>
                 <View style={styles.containerInputs}>
+                    <Text style={styles.textTitle}>Dados Pessoais</Text>
                     <Text style={styles.textLabel}>Nome</Text>
                     <Text style={styles.textValue}>{crianca.nome}</Text>
                     <Text style={styles.textLabel}>Idade</Text>
                     <Text style={styles.textValue}>{crianca.idade}</Text>
                     <Text style={styles.textLabel}>Período</Text>
                     <Text style={styles.textValue}>{crianca.periodo || 'Não definido'}</Text>
+                    <Link style={styles.buttonSecondary} href={`/screen/responsavel/crianca/form?id=${crianca.id}`}>
+                        <Text style={styles.buttonText}>Editar Informações</Text>
+                    </Link>
+                </View>
+
+                <View style={styles.containerInputs}>
+                    <Text style={styles.textTitle}>Perueiro</Text>
+                    <Pressable
+                    style={styles.buttonSecondary}
+                            onPress={() =>
+                                router.push({
+                                    pathname: `/screen/responsavel/crianca/escola/listaEscolas`,
+                                    params: { crianca: JSON.stringify(crianca) },
+                                })}
+                        >
+                            <Text style={styles.buttonText}>Procurar perueiro</Text>
+                        </Pressable>
+
+                        <Link style={styles.buttonSecondary}
+                            href={{
+                                pathname: `/screen/responsavel/crianca/ofertas/listaOfertas`,
+                                params: { idCrianca: id }, // Passa a ID da oferta, não a ID da criança
+                            }}
+                        >
+                            <Text style={styles.buttonText}>Procurar ofertas</Text>
+                        </Link>
                 </View>
 
                 <View style={styles.containerCalendar}>
+                    <Text style={styles.textTitle}>Ausência</Text>
+
                     <Calendar
                         onDayPress={handleDayPress}
                         markedDates={{
@@ -227,13 +268,15 @@ export default function CadastroCrianca() {
                             arrowColor: '#0d99ff',
                         }}
                     />
+
+                    <View style={styles.containerButton}>
+                        <Pressable style={styles.buttonAlert} onPress={handleAlertPress}>
+                            <Text style={styles.buttonText}>Alertar Ausência</Text>
+                        </Pressable>
+                    </View>
                 </View>
 
-                <View style={styles.containerButton}>
-                    <Pressable style={styles.buttonAlert} onPress={handleAlertPress}>
-                        <Text style={styles.buttonText}>Alertar Ausência</Text>
-                    </Pressable>
-                </View>
+
 
                 {/* Modal de confirmação */}
                 <Modal
@@ -261,6 +304,8 @@ export default function CadastroCrianca() {
                     </View>
                 </Modal>
 
+
+                {/* Modal para excluir ausencia */}
                 <Modal
                     animationType="slide"
                     transparent={true}
@@ -269,10 +314,11 @@ export default function CadastroCrianca() {
                 >
                     <View style={styles.modalContainer}>
                         <View style={styles.modalContent}>
-                            <Text style={styles.modalTitle}>Motivo da Ausência</Text>
-                            <Text style={styles.modalText}>{ausenciaDetalhes?.motivo || ''}</Text>
+                            <Text style={styles.modalTitle}>Ausência</Text>
+                            <Text style={styles.modalText}>Motivo: {ausenciaDetalhes?.motivo || ''}</Text>
+                            <Text style={styles.modalText}>Data: {ausenciaDetalhes?.data || ''}</Text>
                             <Pressable style={styles.buttonConfirm} onPress={excluirAusencia}>
-                                <Text style={styles.buttonText}>Excluir Ausência</Text>
+                                <Text style={styles.buttonText}>Excluir</Text>
                             </Pressable>
                             <Pressable style={styles.buttonCancel} onPress={() => setModalExcluirVisible(false)}>
                                 <Text style={styles.buttonText}>Cancelar</Text>
@@ -291,7 +337,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#f5f5f5',
     },
     scrollView: {
-        marginTop:10,
+        marginTop: 10,
         paddingHorizontal: 20,
     },
     containerInputs: {
@@ -304,6 +350,12 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 2 },
         shadowRadius: 4,
         elevation: 3,
+    },
+    textTitle: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+        color: '#333',
     },
     textLabel: {
         fontSize: 16,
@@ -331,6 +383,7 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
     containerButton: {
+        marginVertical: 10,
         alignItems: 'center',
         justifyContent: 'flex-end',
         paddingBottom: 20,
@@ -393,4 +446,17 @@ const styles = StyleSheet.create({
         width: '100%',
         alignItems: 'center',
     },
+    buttonSecondary: {
+        backgroundColor: '#0d99ff',
+        paddingVertical: 12,
+        paddingHorizontal: 40,
+        borderRadius: 10,
+        alignItems: 'center',
+        marginBottom: 10,
+        textAlign: 'center'
+    },
+    modalText: {
+        fontSize: 16,
+        margin: 5
+    }
 });

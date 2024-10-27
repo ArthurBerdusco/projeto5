@@ -1,4 +1,4 @@
-import { Link, Stack, useRouter } from "expo-router";
+import { Link, Stack, useRouter, useNavigation } from "expo-router";
 import { ScrollView, View, StyleSheet, Text, ActivityIndicator, TouchableOpacity, Alert, Pressable } from "react-native";
 import { useState, useEffect } from "react";
 import config from "@/app/config";
@@ -12,6 +12,7 @@ interface Crianca {
   }
 
 export default function Index() {
+    const navigation = useNavigation();
    
     const [criancas, setCriancas] = useState<Crianca[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
@@ -24,8 +25,8 @@ export default function Index() {
         const responsavelId = await AsyncStorage.getItem('idResponsavel');
         if (responsavelId) {
           const response = await fetch(`${config.IP_SERVER}/crianca/responsavel/${responsavelId}`);
-          if (!response.ok) {
-            throw new Error('Erro ao carregar as crianças.');
+          if (response.status === 404) {
+            throw new Error('Nenhuma criança cadastrada');
           }
           const data = await response.json();
           setCriancas(data);
@@ -34,7 +35,7 @@ export default function Index() {
           setError('Nenhum ID de responsável encontrado.');
         }
       } catch (err) {
-        setError('Erro ao carregar as crianças.');
+        setError(err.message);
         console.error(err);
       } finally {
         setLoading(false); // Desativa o indicador de carregamento após a requisição
@@ -42,8 +43,15 @@ export default function Index() {
     };
   
     useEffect(() => {
-      fetchCriancas();
-    }, []);
+        
+        const unsubscribeFocus = navigation.addListener("focus", () => {
+            fetchCriancas();
+        });
+
+        return () => {
+            unsubscribeFocus();
+        };
+    }, [navigation]);
   
     if (loading) {
       return (
@@ -63,7 +71,7 @@ export default function Index() {
 
                     {error && <Text style={styles.errorText}>{error}</Text>}
 
-                    {criancas.length > 0 ? (
+                   
                         <View style={styles.containerCards}>
                             {criancas.map(crianca => (
                                 <Pressable
@@ -84,20 +92,13 @@ export default function Index() {
 
                             ))}
                         </View>
-                    ) : (
-                        <View style={styles.noDataContainer}>
-                            <Text style={styles.noDataText}>Nenhuma criança cadastrada.</Text>
-                            <Link href={"/screen/responsavel/crianca/cadastro"} style={styles.cadastrarLink}>
-                                <Text style={styles.cadastrarTexto}>Cadastrar Criança</Text>
-                            </Link>
-                        </View>
-                    )}
+                    
 
-                    {criancas.length > 0 && (
-                        <Pressable onPress={() => router.navigate(`/screen/responsavel/crianca/cadastro`)}>
+                   
+                        <Pressable onPress={() => router.navigate(`/screen/responsavel/crianca/form`)}>
                             <Text style={styles.cadastrarTexto}>Cadastrar Criança</Text>
                         </Pressable>
-                    )}
+                    
 
 
                 </View>

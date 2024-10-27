@@ -39,7 +39,7 @@ export default function LoginScreen() {
                     if (resultado.status === "Pendente ativação") {
                         router.navigate('/screen/motorista/vanForm');
                     } else {
-                        router.navigate('/screen/motorista');
+                        router.navigate('/screen/motorista/(tabs)');
                     }
                 }
 
@@ -54,6 +54,7 @@ export default function LoginScreen() {
                 }
 
             } else {
+                console.error(response.text)
                 Alert.alert("Error", "Não foi possível fazer login.");
             }
         } catch (error) {

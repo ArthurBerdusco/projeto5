@@ -4,6 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Escolas</title>
+    <style>
+        /* Estilos para a tabela */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+
+        /* Indicadores de status de imagem */
+        .status-sim {
+            background-color: #4CAF50; /* Verde */
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .status-nao {
+            background-color: #f44336; /* Vermelho */
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .btn-editar {
+            background-color: #365ff4; /* Vermelho */
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+
+        /* Estilo para o botão de upload de arquivo */
+        .file-upload {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+        .file-upload input[type="file"] {
+            font-size: 100px;
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+        }
+        .file-upload-label {
+            background-color: #4CAF50;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            display: inline-block;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
     <h1>Escolas</h1>
@@ -14,6 +75,8 @@
                 <th>Nome</th>
                 <th>Endereço</th>
                 <th>Status</th>
+                <th>Imagem Cadastrada</th>
+                <th>Imagem</th>
                 <th>Gerenciar</th>
             </tr>
         </thead>
@@ -24,7 +87,21 @@
                 <td th:text="${escola.nome}">Nome</td>
                 <td th:text="${escola.rua} + ', ' + ${escola.numero}">Endereço</td>
                 <td th:text="${escola.status}">Status</td>
-                <td><a th:href="'/escolas/' + ${escola.id}">Editar</a></td>
+                <td>
+                    <span th:classappend="${escola.imagem != null ? 'status-sim' : 'status-nao'}"
+                          th:text="${escola.imagem != null ? 'Sim' : 'Não'}">
+                        Status
+                    </span>
+                </td>
+                <td>
+                    <form th:action="@{/escolas/{id}/upload(id=${escola.id})}" method="post" enctype="multipart/form-data">
+                        <label class="file-upload">
+                            <span class="file-upload-label">Selecionar Imagem</span>
+                            <input type="file" name="imagem" accept="image/*" onchange="this.form.submit()"/>
+                        </label>
+                    </form>
+                </td>
+                <td><a class="btn-editar" th:href="'/escolas/' + ${escola.id}">Editar</a></td>
             </tr>
         </tbody>
     </table>

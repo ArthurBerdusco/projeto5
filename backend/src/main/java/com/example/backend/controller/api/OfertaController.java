@@ -48,26 +48,12 @@ public class OfertaController {
     private EscolaRepository escolaRepository;
 
     @GetMapping("/{id}")
-    public ResponseEntity<OfertaDTO> getOfertaPorId(@PathVariable Long id) {
+    public ResponseEntity<Oferta> getOfertaPorId(@PathVariable Long id) {
         Optional<Oferta> ofertaOptional = ofertaRepository.findById(id);
         if (ofertaOptional.isPresent()) {
             Oferta oferta = ofertaOptional.get();
-            OfertaDTO dto = new OfertaDTO();
-            dto.setMotoristaId(oferta.getMotorista().getId());
-            dto.setEscolaId(oferta.getEscola().getId());
-            dto.setEscolaNome(oferta.getEscola().getNome());
-            dto.setCriancaId(oferta.getCrianca().getId());
-            dto.setCriancaNome(oferta.getCrianca().getNome());
-            dto.setResponsavelId(oferta.getResponsavel().getId());
-            dto.setResponsavelNome(oferta.getResponsavel().getNome());
-            dto.setMensagem(oferta.getMensagem());
-            dto.setMotoristaNome(oferta.getMotorista().getNome());
-            dto.setEscolaNome(oferta.getEscola().getNome());
 
-            dto.setValor(oferta.getValor());
-            ;
-            dto.setId(oferta.getId());
-            return ResponseEntity.ok(dto);
+            return ResponseEntity.ok(oferta);
         }
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
     }
@@ -124,7 +110,7 @@ public class OfertaController {
             ofertaRepository.save(oferta);
 
             String mensagem = "Oferta recebida: " + ofertaDTO.getMensagem();
-            
+
             Map<String, String> response = new HashMap<>();
             response.put("message", "Mensagem enviada com sucesso para o motorista");
 
@@ -138,27 +124,26 @@ public class OfertaController {
     }
 
     @GetMapping("/crianca/{criancaId}")
-    public ResponseEntity<List<OfertaDTO>> getOfertasPorCrianca(@PathVariable Long criancaId) {
-        List<Oferta> ofertas = ofertaRepository.findByCriancaId(criancaId); // Método que você deve implementar no
-                                                                            // repositório
+    public ResponseEntity<List<Oferta>> getOfertasPorCrianca(@PathVariable Long criancaId) {
+        try {
+            // Verifica se a criança existe
+            if (!criancaRepository.existsById(criancaId)) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            }
 
-        // Converte a lista de Ofertas para OfertaDTO
-        List<OfertaDTO> ofertasDTO = ofertas.stream().map(oferta -> {
-            OfertaDTO dto = new OfertaDTO();
-            dto.setMotoristaId(oferta.getMotorista().getId());
-            dto.setEscolaId(oferta.getEscola().getId());
-            dto.setEscolaNome(oferta.getEscola().getNome());
-            dto.setCriancaId(oferta.getCrianca().getId());
-            dto.setCriancaNome(oferta.getCrianca().getNome());
-            dto.setResponsavelId(oferta.getResponsavel().getId());
-            dto.setResponsavelNome(oferta.getResponsavel().getNome());
-            dto.setStatus(oferta.getStatus());
-            dto.setMensagem(oferta.getMensagem());
-            dto.setId(oferta.getId());
-            return dto;
-        }).collect(Collectors.toList());
+            List<Oferta> ofertas = ofertaRepository.findByCriancaId(criancaId);
 
-        return ResponseEntity.ok(ofertasDTO);
+            // Verifica se há ofertas disponíveis
+            if (ofertas.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null); 
+
+            }
+            return ResponseEntity.ok(ofertas); // Retorna 200 com a lista de ofertas
+        } catch (Exception e) {
+            // Loga a exceção (opcional)
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null); // Retorna 400 em caso de erro inesperado
+        }
     }
 
     @PostMapping("/responder/{id}")
