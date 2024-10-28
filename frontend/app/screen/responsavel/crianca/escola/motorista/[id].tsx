@@ -27,8 +27,8 @@ export default function Motorista() {
 
     const [loading, setLoading] = useState(true);
     const [mensagem, setMensagem] = useState("");
-    const { id, escolaId, crianca: criancaString, responsavelId } = useLocalSearchParams();
-    const crianca = JSON.parse(criancaString); // Fazendo o parse corretamente
+    const { id, idEscola, idCrianca, idResponsavel } = useLocalSearchParams();
+
     // console.log("Dados da Criança na envia oferta:", JSON.stringify(crianca)); // Log do objeto completo
     // console.log("ID da Criança na envia oferta:", crianca?.id); // Acessando o ID diretamente
 
@@ -69,26 +69,39 @@ export default function Motorista() {
     // Função para enviar a oferta
     const enviarOferta = async () => {
         try {
+            const objeto = {
+                idMotorista: id,
+                idEscola: idEscola,
+                idCrianca: idCrianca,
+                idResponsavel: idResponsavel,
+                mensagem
+            }
+            alert("Motorista: " + objeto.idMotorista + ", " +
+                "Escola: " + objeto.idEscola + ", " + 
+                "Crianca: " + objeto.idCrianca + ", " + 
+                "Responsavel: " + objeto.idResponsavel
+            )
             const response = await fetch(`${config.IP_SERVER}/oferta/enviar`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    motoristaId: id,
-                    escolaId: escolaId,
-                    criancaId: crianca?.id, // Adicionando ID da criança no corpo da requisição
-                    mensagem,
-                    responsavelId: responsavelId
-
+                    idMotorista: id,
+                    idEscola: idEscola,
+                    idCrianca: idCrianca,
+                    idResponsavel: idResponsavel,
+                    mensagem
                 }),
             });
 
-            const data = await response.json();
+
             if (response.ok) {
+
                 Alert.alert('Oferta enviada com sucesso');
             } else {
-                Alert.alert('Erro ao enviar a oferta');
+                alert("Erro ao enviar oferta")
+
                 console.log(response);
             }
         } catch (error) {
@@ -117,7 +130,7 @@ export default function Motorista() {
 
     return (
         <View style={styles.container}>
-            
+
             <View style={styles.parteSuperiorPerfil}>
                 <Image source={require('@/app/assets/icons/motorista.png')} style={{ width: 120, height: 120 }} />
                 <View style={styles.containerInformacoes}>
@@ -169,11 +182,16 @@ export default function Motorista() {
                 </View>
             </View>
 
+
+
             <View>
                 <TouchableOpacity style={styles.button} onPress={enviarOferta}>
                     <Text style={styles.buttonText}>Solicitar orçamento</Text>
                 </TouchableOpacity>
             </View>
+
+
+
 
         </View>
     );

@@ -2,6 +2,7 @@ package com.example.backend.controller.api;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.backend.dto.AusenciaDTO;
 import com.example.backend.dto.CriancaDTO;
 import com.example.backend.model.Ausencia;
 import com.example.backend.model.Crianca;
@@ -48,19 +50,28 @@ public class CriancaController {
 
     // Exemplo de endpoint no Spring Boot
     @GetMapping("/crianca/responsavel/{id}")
-    public ResponseEntity<List<Crianca>> getCriancasByResponsavel(@PathVariable Long id) {
+    public ResponseEntity<List<CriancaDTO>> getCriancasByResponsavel(@PathVariable Long id) {
         List<Crianca> criancas = criancaRepository.findByResponsavelId(id);
 
         if (criancas == null || criancas.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(java.util.Collections.emptyList());
         }
 
-        return ResponseEntity.ok(criancas);
+        // Mapeia cada Crianca para CriancaDTO
+        List<CriancaDTO> criancasDTO = criancas.stream().map(crianca -> {
+            CriancaDTO criancaDTO = new CriancaDTO();
+            criancaDTO.setId(crianca.getId());
+            criancaDTO.setIdade(crianca.getIdade());
+            criancaDTO.setNome(crianca.getNome());
+            // Adicione outros campos conforme necessário
+            return criancaDTO;
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(criancasDTO);
     }
 
     @GetMapping("/criancas/{id}")
-    public ResponseEntity<Crianca> getCrianca(@PathVariable Long id) {
-
+    public ResponseEntity<CriancaDTO> getCrianca(@PathVariable Long id) {
         // Usando Optional para verificar se a criança existe
         Optional<Crianca> criancaOptional = criancaRepository.findById(id);
 
@@ -69,9 +80,26 @@ public class CriancaController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
 
-        // Se a criança existir, retorna o objeto encontrado
         Crianca crianca = criancaOptional.get();
-        return ResponseEntity.ok(crianca);
+        CriancaDTO criancaDTO = new CriancaDTO();
+        criancaDTO.setId(crianca.getId());
+        criancaDTO.setIdade(crianca.getIdade());
+        criancaDTO.setNome(crianca.getNome());
+        criancaDTO.setIdResponsavel(crianca.getResponsavel().getId());
+
+        // Verifica se o motorista está presente, caso contrário, atribui null
+        if (crianca.getMotorista() != null) {
+            criancaDTO.setIdMotorista(crianca.getMotorista().getId());
+            criancaDTO.setNomeMotorista(crianca.getMotorista().getNome());
+
+        } else {
+            criancaDTO.setIdMotorista(null); // Explicitamente define como null se não houver motorista
+        }
+
+        // Aqui você pode definir o periodo se necessário, por exemplo:
+        criancaDTO.setPeriodo(crianca.getPeriodo());
+
+        return ResponseEntity.ok(criancaDTO);
     }
 
     @PostMapping("/crianca")
@@ -91,10 +119,15 @@ public class CriancaController {
     }
 
     @GetMapping("/crianca/{id}")
-    public ResponseEntity<Crianca> buscarCriancaPorId(@PathVariable Long id) {
+    public ResponseEntity<CriancaDTO> buscarCriancaPorId(@PathVariable Long id) {
         try {
             Crianca crianca = criancaRepository.findById(id).get();
-            return ResponseEntity.ok(crianca);
+            CriancaDTO criancaDTO = new CriancaDTO();
+            criancaDTO.setId(crianca.getId());
+            criancaDTO.setIdade(crianca.getIdade());
+            criancaDTO.setNome(crianca.getNome());
+
+            return ResponseEntity.ok(criancaDTO);
         } catch (ResponseStatusException ex) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Criança não encontrada", ex);
         }
@@ -191,8 +224,23 @@ public class CriancaController {
     }
 
     @GetMapping("/ausencias/crianca/{id}")
-    public List<Ausencia> getAusenciasPorCrianca(@PathVariable Long id) {
-        return ausenciaRepository.findByCriancaId(id);
+    public ResponseEntity<List<AusenciaDTO>> getAusenciasPorCrianca(@PathVariable Long id) {
+        List<Ausencia> ausencias = ausenciaRepository.findByCriancaId(id);
+
+        if (ausencias == null || ausencias.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(java.util.Collections.emptyList());
+        }
+
+        // Mapeia cada Ausencia para AusenciaDTO
+        List<AusenciaDTO> ausenciasDTO = ausencias.stream().map(ausencia -> {
+            AusenciaDTO dto = new AusenciaDTO();
+            dto.setId(ausencia.getId());
+            dto.setData(ausencia.getData());
+            dto.setMotivo(ausencia.getMotivo());
+            return dto;
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(ausenciasDTO);
     }
 
     @DeleteMapping("/ausencias/{id}")

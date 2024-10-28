@@ -8,15 +8,15 @@ import config from '@/app/config';
 const fetchAtendidas = async (idMotorista, setEscolasAtendidas, setLoading) => {
     setLoading(true);
     try {
-        const atendidasResponse = await fetch(`${config.IP_SERVER}/api/escolas/atendidas`, {
-            method: 'POST',
+        
+        const response = await fetch(`${config.IP_SERVER}/api/escolas/atendidas/${idMotorista}`, {
+            method: 'GET',
             headers: {
-                'Content-Type': 'application/json',
+              'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ idMotorista }),
-        });
+          });
 
-        const atendidasData = await atendidasResponse.json();
+        const atendidasData = await response.json();
         setEscolasAtendidas(atendidasData);
 
     } catch (error) {

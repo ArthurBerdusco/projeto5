@@ -20,51 +20,25 @@ export default function CadastroCrianca() {
     const navigation = useNavigation();
 
     const [ausenciaDetalhes, setAusenciaDetalhes] = useState(null);
-    const [crianca, setCrianca] = useState({ id: 0, nome: '', idade: '', periodo: '' });
+    const [crianca, setCrianca] = useState({ id: 0, nome: '', idade: '', periodo: '', idResponsavel: '', idMotorista: '', nomeMotorista: '' });
     const [loading, setLoading] = useState(true);
     const [markedDates, setMarkedDates] = useState({});
     const [selectedDates, setSelectedDates] = useState(new Set());
     const [modalVisible, setModalVisible] = useState(false);
     const [modalExcluirVisible, setModalExcluirVisible] = useState(false);
-
     const [motivo, setMotivo] = useState('');
     const { id } = useLocalSearchParams();
-
 
     const fetchCrianca = async () => {
         try {
             const response = await fetch(`${config.IP_SERVER}/criancas/${id}`);
             const data = await response.json();
             setCrianca(data);
+            
         } catch (error) {
             console.error('Erro ao buscar os detalhes da criança:', error);
         }
     };
-
-    const fetchOfertas = async () => {
-        try {
-            const response = await fetch(`${config.IP_SERVER}/oferta/crianca/${id}`);
-            await response.json(); // Não armazena no estado, mas pode ser utilizado.
-        } catch (error) {
-            console.error('Erro ao buscar as ofertas:', error);
-        }
-    };
-
-    const fetchMotorista = async () => {
-        try {
-            const response = await fetch(`${config.IP_SERVER}/crianca/${id}/motorista`);
-            if (response.ok) {
-                const data = await response.json();
-                // Processar dados do motorista, se necessário
-            } else {
-                console.log("Motorista não encontrado");
-            }
-        } catch (error) {
-            console.error('Erro ao buscar motorista:', error);
-        }
-    };
-
-
 
     const handleDayPress = (day) => {
         const date = day.dateString;
@@ -88,8 +62,6 @@ export default function CadastroCrianca() {
         }
     };
 
-
-
     const handleAlertPress = () => {
         if (selectedDates.size === 0) {
             Alert.alert("Nenhuma data selecionada", "Por favor, selecione pelo menos uma data.");
@@ -100,7 +72,7 @@ export default function CadastroCrianca() {
 
     const carregarDados = async () => {
         setLoading(true);
-        await Promise.all([fetchCrianca(), fetchOfertas(), fetchMotorista()]);
+        await Promise.all([fetchCrianca()]);
         setLoading(false);
     };
 
@@ -229,54 +201,85 @@ export default function CadastroCrianca() {
 
                 <View style={styles.containerInputs}>
                     <Text style={styles.textTitle}>Perueiro</Text>
-                    <Pressable
-                    style={styles.buttonSecondary}
-                            onPress={() =>
-                                router.push({
-                                    pathname: `/screen/responsavel/crianca/escola/listaEscolas`,
-                                    params: { crianca: JSON.stringify(crianca) },
-                                })}
-                        >
-                            <Text style={styles.buttonText}>Procurar perueiro</Text>
-                        </Pressable>
+                    {crianca.idMotorista ? (
+                        // Se idMotorista não for nulo, mostra as informações do motorista
+                        <View style={styles.motoristaInfo}>
+                            <Text style={styles.motoristaName}>{crianca.nomeMotorista}</Text>
+                            <Pressable
+                                style={styles.buttonSecondary}
+                                onPress={() =>
+                                    router.push({
+                                        pathname: `/screen/responsavel/crianca/escola/motorista/${crianca.idMotorista}`,
+                                        params: {
+                                            idCrianca: crianca.id,
+                                            idMotorista: crianca.idMotorista,
+                                            idEscola: id,
+                                            idResponsavel: crianca.idResponsavel,
+                                        }
+                                    })
+                                }
+                            >
+                                <Text style={styles.buttonText}>Ver perueiro</Text>
+                            </Pressable>
+                        </View>
+                    ) : (
+                        // Se não tiver motorista, exibe os botões
+                        <>
+                            <Pressable
+                                style={styles.buttonSecondary}
+                                onPress={() =>
+                                    router.push({
+                                        pathname: `/screen/responsavel/crianca/escola/listaEscolas`,
+                                        params: {
+                                            idCrianca: crianca.id,
+                                            idMotorista: crianca.idMotorista,
+                                            idResponsavel: crianca.idResponsavel,
+                                        }
+                                    })
+                                }
+                            >
+                                <Text style={styles.buttonText}>Procurar perueiro</Text>
+                            </Pressable>
 
-                        <Link style={styles.buttonSecondary}
-                            href={{
-                                pathname: `/screen/responsavel/crianca/ofertas/listaOfertas`,
-                                params: { idCrianca: id }, // Passa a ID da oferta, não a ID da criança
+                            <Link style={styles.buttonSecondary}
+                                href={{
+                                    pathname: `/screen/responsavel/crianca/ofertas/listaOfertas`,
+                                    params: { idCrianca: crianca.id }, // Passa a ID da criança
+                                }}
+                            >
+                                <Text style={styles.buttonText}>Procurar ofertas</Text>
+                            </Link>
+                        </>
+                    )}
+                </View>
+
+                {crianca.idMotorista && (
+                    <View style={styles.containerCalendar}>
+                        <Text style={styles.textTitle}>Ausência</Text>
+
+                        <Calendar
+                            onDayPress={handleDayPress}
+                            markedDates={{
+                                ...markedDates, // Aqui você adiciona as ausências marcadas
+                                ...[...selectedDates].reduce((acc, date) => {
+                                    acc[date] = { selected: true, selectedColor: '#ff4d4d' };
+                                    return acc;
+                                }, {})
                             }}
-                        >
-                            <Text style={styles.buttonText}>Procurar ofertas</Text>
-                        </Link>
-                </View>
+                            theme={{
+                                selectedDayBackgroundColor: '#0d99ff',
+                                todayTextColor: '#ffbf00',
+                                arrowColor: '#0d99ff',
+                            }}
+                        />
 
-                <View style={styles.containerCalendar}>
-                    <Text style={styles.textTitle}>Ausência</Text>
-
-                    <Calendar
-                        onDayPress={handleDayPress}
-                        markedDates={{
-                            ...markedDates, // Aqui você adiciona as ausências marcadas
-                            ...[...selectedDates].reduce((acc, date) => {
-                                acc[date] = { selected: true, selectedColor: '#ff4d4d' };
-                                return acc;
-                            }, {})
-                        }}
-                        theme={{
-                            selectedDayBackgroundColor: '#0d99ff',
-                            todayTextColor: '#ffbf00',
-                            arrowColor: '#0d99ff',
-                        }}
-                    />
-
-                    <View style={styles.containerButton}>
-                        <Pressable style={styles.buttonAlert} onPress={handleAlertPress}>
-                            <Text style={styles.buttonText}>Alertar Ausência</Text>
-                        </Pressable>
+                        <View style={styles.containerButton}>
+                            <Pressable style={styles.buttonAlert} onPress={handleAlertPress}>
+                                <Text style={styles.buttonText}>Alertar Ausência</Text>
+                            </Pressable>
+                        </View>
                     </View>
-                </View>
-
-
+                )}
 
                 {/* Modal de confirmação */}
                 <Modal
@@ -458,5 +461,8 @@ const styles = StyleSheet.create({
     modalText: {
         fontSize: 16,
         margin: 5
+    },
+    motoristaName: {
+        fontSize: 16,
     }
 });

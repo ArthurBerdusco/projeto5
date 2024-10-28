@@ -25,70 +25,45 @@ interface Motorista {
   idade: number;
   imagem: Imagem;
 }
-
 export default function Index() {
 
   const router = useRouter();
-
   const [loading, setLoading] = useState(false);
+  const [escolasAtendidas, setEscolasAtendidas] = useState([]);
 
-  const [motorista, setMotorista] = useState<Motorista>({
-    nome: "",
-    telefone: "",
-    idade: 0,
-    imagem: {
-      id: 0,
-      nome: "",
-      dados: null,
+  const fetchEscolasAtendidas = async (idMotorista) => {
+    const response = await fetch(`${config.IP_SERVER}/api/escolas/atendidas/${idMotorista}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+  
+    if (!response.ok) {
+      throw new Error('Erro ao buscar escolas atendidas');
     }
-  });
-  const [escolasAtendidas, setEscolasAtendidas] = useState([]); // Novo estado para armazenar as escolas atendidas
-
-  const fetchMotorista = async () => {
-    try {
-      const idMotorista = await AsyncStorage.getItem("idMotorista");
-
-      const response = await fetch(
-        `${config.IP_SERVER}/motorista/${idMotorista}`
-      );
-
-      const data = await response.json();
-
-      setMotorista(data);
-
-      const escolasResponse = await fetch(
-        `${config.IP_SERVER}/api/escolas/atendidas`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ idMotorista }),
-        }
-      );
-
-      const escolasData = await escolasResponse.json();
-      setEscolasAtendidas(escolasData); // Atualiza o estado com as escolas atendidas
-    } catch (err) {
-      console.error("Erro ao carregar o motorista ou escolas", err);
-    }
+  
+    return response.json();
   };
+  
+
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true); // Inicia o carregamento
+      setLoading(true);
       try {
-        await fetchMotorista(); // Chama a função para buscar os dados
+        const idMotorista = await AsyncStorage.getItem('idMotorista');
+        const escolasData = await fetchEscolasAtendidas(idMotorista);
+        setEscolasAtendidas(escolasData);
       } catch (error) {
-        console.error("Erro ao carregar dados:", error);
+        console.error('Erro ao carregar dados:', error);
       } finally {
-        setLoading(false); // Finaliza o carregamento independentemente do resultado
+        setLoading(false);
       }
     };
 
-    fetchData(); // Chama a função de busca
+    fetchData();
   }, []);
-
 
   if (loading) {
     return (

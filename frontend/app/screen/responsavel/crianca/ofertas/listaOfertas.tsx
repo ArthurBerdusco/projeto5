@@ -4,7 +4,7 @@ import config from '@/app/config';
 import { Link, useLocalSearchParams } from 'expo-router';
 
 export default function ListaOfertas() {
-    const { idCrianca } = useLocalSearchParams(); // Obter o ID da criança
+    const { id, idCrianca } = useLocalSearchParams(); // Obter o ID da criança
     const [ofertas, setOfertas] = useState([]);
     const [loading, setLoading] = useState(true);
 
@@ -34,7 +34,7 @@ export default function ListaOfertas() {
             style={styles.offerItem}
         >
             <View style={styles.offerContent}>
-                <Text style={styles.offerMotorista}>Motorista: {item.motorista.nome}</Text>
+                <Text style={styles.offerMotorista}>Motorista: {item.motoristaNome}</Text>
                 <Text style={styles.offerValue}>R$ {item.valor.toFixed(2)}</Text>
                 <Text style={styles.offerStatus}>Status: {item.status}</Text>
                 <Text style={styles.offerMessage}>{item.mensagem || 'Sem mensagem'}</Text>
@@ -56,7 +56,7 @@ export default function ListaOfertas() {
             <FlatList
                 data={ofertas}
                 renderItem={renderItem}
-                keyExtractor={(item) => item.id.toString()} // Supondo que cada oferta tenha um ID único
+                keyExtractor={(item) => item.id} // Supondo que cada oferta tenha um ID único
                 showsVerticalScrollIndicator={false}
             />
         </View>

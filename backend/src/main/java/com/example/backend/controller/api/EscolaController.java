@@ -2,6 +2,7 @@ package com.example.backend.controller.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.backend.dto.EscolaDTO;
 import com.example.backend.dto.MotoristaEscolaDTO;
 import com.example.backend.model.Crianca;
 import com.example.backend.model.Escola;
@@ -43,23 +45,30 @@ public class EscolaController {
     CriancaRepository criancaRepository;
 
     @GetMapping("escolas")
-    public List<Escola> getAllEscolas() {
+    public List<EscolaDTO> getAllEscolas() {
         List<Escola> escolas = escolaRepository.findAll();
-        return escolas;
+        return escolas.stream()
+                .map(escola -> {
+                    EscolaDTO dto = new EscolaDTO();
+                    dto.setId(escola.getId());
+                    dto.setNome(escola.getNome());
+                    dto.setRua(escola.getRua());
+                    dto.setNumero(escola.getNumero());
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 
-    @PostMapping("escolas/atendidas")
-    public List<Escola> getEscolasAtendidas(@RequestBody MotoristaEscolaDTO motoristaDTO) {
+    @GetMapping("escolas/atendidas/{idMotorista}")
+    public List<Escola> getEscolasAtendidas(@PathVariable Long idMotorista) {
         // Buscar o motorista pelo ID do usuário
-        Motorista motorista = motoristaRepository.findById(motoristaDTO.getIdMotorista())
+        Motorista motorista = motoristaRepository.findById(idMotorista)
                 .orElseThrow(() -> new RuntimeException("Motorista não encontrado"));
 
-        // Buscar as associações MotoristaEscola (que contém os IDs das escolas
-        // atendidas)
+        // Buscar as associações MotoristaEscola (que contém os IDs das escolas atendidas)
         List<MotoristaEscola> motoristaIdEscolas = motoristaEscolaRepository.findByMotoristaId(motorista.getId());
 
         List<Long> idsEscolasAtendidas = new ArrayList<>();
-
         for (MotoristaEscola motoristaIdEsc : motoristaIdEscolas) {
             idsEscolasAtendidas.add(motoristaIdEsc.getEscola().getId());
         }

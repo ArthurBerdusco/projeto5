@@ -1,5 +1,5 @@
 import { Link, Stack, useRouter, useNavigation } from "expo-router";
-import { ScrollView, View, StyleSheet, Text, ActivityIndicator, TouchableOpacity, Alert, Pressable } from "react-native";
+import { ScrollView, View, StyleSheet, Text, ActivityIndicator, Pressable } from "react-native";
 import { useState, useEffect } from "react";
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -30,7 +30,6 @@ export default function Index() {
           }
           const data = await response.json();
           setCriancas(data);
-          console.log(criancas)
         } else {
           setError('Nenhum ID de responsável encontrado.');
         }

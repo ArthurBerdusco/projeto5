@@ -9,17 +9,12 @@ export default function Escola() {
     const [loading, setLoading] = useState(true);
     const router = useRouter();
 
-    const { id, crianca: criancaString } = useLocalSearchParams();
-    const crianca = JSON.parse(criancaString); // Parseando a string para objeto
-    // console.log("ID da criança na lisa de motorista", crianca?.id); // Usando optional chaining
-
-    const responsavelId = crianca.responsavel.id;
-    // console.log("ID da criança:", crianca?.id);
-    // console.log("ID do responsável:", responsavelId); // Exibindo o ID do responsável
-
+    const { idEscola, idResponsavel, idCrianca, idMotorista } = useLocalSearchParams();
+    
     const fetchEscola = async () => {
         try {
-            const response = await fetch(`${config.IP_SERVER}/api/escolas/${id}`);
+           alert(idMotorista)
+            const response = await fetch(`${config.IP_SERVER}/api/escolas/${idEscola}`);
             const data = await response.json();
             setEscola(data);
         } catch (error) {
@@ -30,7 +25,7 @@ export default function Escola() {
     // Função para buscar os motoristas que atendem a escola
     const fetchMotoristas = async () => {
         try {
-            const response = await fetch(`${config.IP_SERVER}/api/motoristas/escola/${id}`);
+            const response = await fetch(`${config.IP_SERVER}/api/motoristas/escola/${idEscola}`);
             const data = await response.json();
             setMotoristas(data);
         } catch (error) {
@@ -46,7 +41,7 @@ export default function Escola() {
             await fetchMotoristas();
             setLoading(false);
         })();
-    }, [id]);
+    }, [idEscola]);
 
     if (loading) {
         return <ActivityIndicator size="large" />;
@@ -80,7 +75,7 @@ export default function Escola() {
 
                 <FlatList
                     data={motoristas}
-                    keyExtractor={(item) => item.id.toString()}
+                    keyExtractor={(item) => item.id}
                     renderItem={({ item }) => (
                         <View style={{ marginVertical: 10 }}>
 
@@ -90,9 +85,10 @@ export default function Escola() {
                                     router.push({
                                         pathname: `/screen/responsavel/crianca/escola/motorista/${item.id}`,
                                         params: {
-                                            crianca: JSON.stringify(crianca),
-                                            escolaId: id,
-                                            responsavelId: responsavelId,
+                                            idCrianca: idCrianca,
+                                            idEscola: idEscola,
+                                            idResponsavel: idResponsavel,
+                                            idMotorista: idMotorista
                                         }
                                     })
                                 }
