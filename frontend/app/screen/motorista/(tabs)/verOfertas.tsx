@@ -46,8 +46,6 @@ export default function MostraOfertas() {
         }
 
         try {
-            const idMotorista = await AsyncStorage.getItem('idMotorista');
-
             const response = await fetch(`${config.IP_SERVER}/oferta/responder/${id}`, {
                 method: 'POST',
                 headers: {
@@ -82,14 +80,14 @@ export default function MostraOfertas() {
             <FlatList
                 style={styles.flatList}
                 data={ofertas}
-                keyExtractor={(item) => item.criancaId.toString()}
+                keyExtractor={(item) => item.idCrianca.toString()}
                 renderItem={({ item }) => (
                     <View style={styles.containerInputs}>
 
                         <View style={{ marginVertical: 10 }}>
-                            <Text>Nome da criança: {item.criancaNome}</Text>
-                            <Text>Escola: {item.escolaNome}</Text>
-                            <Text>Responsável: {item.responsavelNome}</Text>
+                            <Text>Nome da criança: {item.nomeCrianca}</Text>
+                            <Text>Escola: {item.nomeEscola}</Text>
+                            <Text>Responsável: {item.nomeResposnavel}</Text>
                             <Text>Endereço: {item.endereco}</Text>
                             <Text>Mensagem: {item.mensagem}</Text>
                             <Text>Status: {item.status}</Text>
