@@ -31,21 +31,32 @@ export default function Index() {
   const [loading, setLoading] = useState(false);
   const [escolasAtendidas, setEscolasAtendidas] = useState([]);
 
-  const fetchEscolasAtendidas = async (idMotorista) => {
-    const response = await fetch(`${config.IP_SERVER}/api/escolas/atendidas/${idMotorista}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-  
-    if (!response.ok) {
-      throw new Error('Erro ao buscar escolas atendidas');
-    }
-  
-    return response.json();
-  };
-  
+const fetchEscolasAtendidas = async (idMotorista) => {
+  const response = await fetch(`${config.IP_SERVER}/api/escolas/atendidas/${idMotorista}`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error('Erro ao buscar escolas atendidas');
+  }
+
+  const escolasData = await response.json();
+
+  // Adicionar a quantidade de crianças a cada escola
+  const escolasComQuantidade = await Promise.all(
+    escolasData.map(async (escola) => {
+      const countResponse = await fetch(`${config.IP_SERVER}/api/escolas/${escola.id}/motorista/${idMotorista}/criancas/count`);
+      const quantidadeCriancas = await countResponse.json();
+      return { ...escola, quantidadeCriancas };
+    })
+  );
+
+  return escolasComQuantidade;
+};
+
 
 
   useEffect(() => {
@@ -92,10 +103,15 @@ export default function Index() {
                   router.navigate(
                     `/screen/motorista/escola/detalhesEscola?escolaId=${escola.id}`
                   )
-                } // Navega para a nova tela passando o ID da escola
+                }
               >
-                <Text>{escola.nome}</Text>
-                <Text>{escola.rua}</Text>
+                <Text style={styles.quantidadeCrianca}>{escola.quantidadeCriancas} Crianças</Text>
+
+                <View style={{ flexDirection: "row", justifyContent: "flex-right" }}>
+                  <Image source={require('@/app/assets/icons/school.png')} />
+                  <Text style={styles.nomeEscola}>{escola.nome}</Text>
+                </View>
+
               </Pressable>
             ))
           )}
@@ -130,10 +146,12 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   cardsMotoristas: {
-    height: 150,
-    width: 150,
-    backgroundColor: "#a5a5a5",
+    height: 120,
+    width: 160,
+    backgroundColor: "#0EAFFF",
     borderRadius: 10,
+    padding: 10,
+    justifyContent: "space-between"
   },
 
   textoDados: {
@@ -184,5 +202,17 @@ const styles = StyleSheet.create({
     height: 60,
     width: 60,
     borderRadius: 50
+  },
+  nomeEscola: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 16,
+  },
+  quantidadeCrianca: {
+    fontWeight: "400",
+    color: "white",
+    fontSize: 15,
+    textAlign: "right"
   }
+
 });

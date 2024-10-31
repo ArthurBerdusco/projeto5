@@ -65,7 +65,8 @@ public class EscolaController {
         Motorista motorista = motoristaRepository.findById(idMotorista)
                 .orElseThrow(() -> new RuntimeException("Motorista não encontrado"));
 
-        // Buscar as associações MotoristaEscola (que contém os IDs das escolas atendidas)
+        // Buscar as associações MotoristaEscola (que contém os IDs das escolas
+        // atendidas)
         List<MotoristaEscola> motoristaIdEscolas = motoristaEscolaRepository.findByMotoristaId(motorista.getId());
 
         List<Long> idsEscolasAtendidas = new ArrayList<>();
@@ -165,6 +166,24 @@ public class EscolaController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(new ArrayList<>());
+        }
+    }
+
+    @GetMapping("/escolas/{idEscola}/motorista/{idMotorista}/criancas/count")
+    public ResponseEntity<Integer> countCriancaMotoristaEscola(@PathVariable Long idEscola,
+            @PathVariable Long idMotorista) {
+        try {
+            List<MotoristaEscola> atendimentos = motoristaEscolaRepository.findByMotoristaIdAndEscolaId(idMotorista,
+                    idEscola);
+
+            if (atendimentos.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(0);
+            }
+
+            int count = criancaRepository.findByMotoristaIdAndEscolaId(idMotorista, idEscola).size();
+            return ResponseEntity.ok(count);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(0);
         }
     }
 }
