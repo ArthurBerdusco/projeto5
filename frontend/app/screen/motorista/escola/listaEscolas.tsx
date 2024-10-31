@@ -31,7 +31,7 @@ export default function ListaEscolas() {
         const imagemUrl = item.imagem && item.imagem.dados ? `data:image/jpeg;base64,${item.imagem.dados}` : 'URL_IMAGEM_PADRAO'; // Substitua por uma URL de imagem padrão
 
         return (
-            <ImageBackground 
+            <ImageBackground
                 source={{ uri: imagemUrl }} // Usar imagem padrão se a imagem não existir
                 style={styles.escolaAtendida}
                 imageStyle={styles.imageStyle} // Estilo da imagem
@@ -43,10 +43,10 @@ export default function ListaEscolas() {
                     }}
                     style={styles.buttonEscola}
                 >
-                   <View style={styles.textContainer}> {/* View para organizar os textos */}
-                    <Text style={styles.textNome}>{item.nome}</Text>
-                    <Text style={styles.textRua}>{item.rua}</Text>
-                </View>
+                    <View style={styles.textContainer}>
+                        <Text style={styles.textNome}>{item.nome}</Text>
+                        <Text style={styles.textRua}>{item.rua}</Text>
+                    </View>
                 </Link>
             </ImageBackground>
         );
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     textContainer: {
         flexDirection: 'column', // Organiza os textos em coluna
     },
-    
+
     imageStyle: {
         borderRadius: 10,
         opacity: 0.5, // Opacidade para melhorar a legibilidade do texto
