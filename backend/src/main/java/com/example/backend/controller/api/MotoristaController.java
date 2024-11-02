@@ -2,6 +2,7 @@ package com.example.backend.controller.api;
 
 import java.io.IOException;
 import java.util.Optional;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,10 +17,16 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.backend.model.Crianca;
+import com.example.backend.model.Escola;
 import com.example.backend.model.Imagem;
 import com.example.backend.model.Motorista;
+import com.example.backend.model.MotoristaEscola;
 import com.example.backend.model.Van;
+import com.example.backend.repository.CriancaRepository;
+import com.example.backend.repository.EscolaRepository;
 import com.example.backend.repository.ImagemRepository;
+import com.example.backend.repository.MotoristaEscolaRepository;
 import com.example.backend.repository.MotoristaRepository;
 import com.example.backend.repository.VanRepository;
 import com.example.backend.security.Usuario;
@@ -41,6 +48,12 @@ public class MotoristaController {
     @Autowired
     ImagemRepository imagemRepository;
 
+    @Autowired
+    private MotoristaEscolaRepository motoristaEscolaRepository;
+
+    @Autowired
+    private CriancaRepository criancaRepository;
+
     @PostMapping
     public void salvar(@RequestBody Motorista motorista) {
         motorista.setStatus("Pendente ativação");
@@ -55,7 +68,6 @@ public class MotoristaController {
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
                             "Van não encontrada para o motorista com ID: " + idMotorista));
 
- 
             // Retorna status OK (200) com a van encontrada
             return ResponseEntity.ok(van);
 
@@ -146,7 +158,6 @@ public class MotoristaController {
         }
     }
 
-    
     @PostMapping("/atualizar/{id}")
     public ResponseEntity<Motorista> atualizarmotorista(@PathVariable Long id,
             @RequestBody Motorista motoristaAtualizado) {
@@ -207,4 +218,17 @@ public class MotoristaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao salvar a imagem.");
         }
     }
+
+    @GetMapping("/{idMotorista}/criancas")
+    public ResponseEntity<?> obterCriancasPorMotorista(@PathVariable Long idMotorista) {
+        try {
+            List<Crianca> criancas = criancaRepository.findByMotoristaId(idMotorista);
+            return ResponseEntity.ok(criancas);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erro ao buscar crianças: " + e.getMessage());
+        }
+    }
+
 }
