@@ -1,8 +1,11 @@
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
+
 import {
+  Animated,
+  PanResponder,
   ScrollView,
   View,
   StyleSheet,
@@ -12,6 +15,10 @@ import {
   ActivityIndicator,
 } from "react-native";
 
+// Importa GestureHandlerRootView
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
+import DraggableFlatList from 'react-native-draggable-flatlist';
 
 interface Imagem {
   id: number;
@@ -25,54 +32,95 @@ interface Motorista {
   idade: number;
   imagem: Imagem;
 }
-export default function Index() {
 
+import { Dimensions } from "react-native";
+
+const windowWidth = Dimensions.get("window").width;
+
+export default function Index() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [escolasAtendidas, setEscolasAtendidas] = useState([]);
+  const [criancas, setCriancas] = useState([]);
+  const [page, setPage] = useState(0);
 
-const fetchEscolasAtendidas = async (idMotorista) => {
-  const response = await fetch(`${config.IP_SERVER}/api/escolas/atendidas/${idMotorista}`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
+  const translateX = useRef(new Animated.Value(0)).current;
+
+  const panResponder = PanResponder.create({
+    onMoveShouldSetPanResponder: (evt, gestureState) => Math.abs(gestureState.dx) > 20,
+    onPanResponderMove: (evt, gestureState) => {
+      translateX.setValue(-page * windowWidth + gestureState.dx);
+    },
+    onPanResponderRelease: (evt, gestureState) => {
+      if (gestureState.dx > 50 && page > 0) {
+        setPage(page - 1);
+      } else if (gestureState.dx < -50 && page < 1) {
+        setPage(page + 1);
+      } else {
+        Animated.spring(translateX, {
+          toValue: -page * windowWidth,
+          useNativeDriver: true,
+        }).start();
+      }
     },
   });
 
-  if (!response.ok) {
-    throw new Error('Erro ao buscar escolas atendidas');
-  }
+  useEffect(() => {
+    Animated.spring(translateX, {
+      toValue: -page * windowWidth,
+      useNativeDriver: true,
+    }).start();
+  }, [page]);
 
-  const escolasData = await response.json();
+  const fetchEscolasAtendidas = async (idMotorista: string | null) => {
+    if (!idMotorista) return [];
+    try {
+      const response = await fetch(`${config.IP_SERVER}/api/escolas/atendidas/${idMotorista}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+      if (!response.ok) throw new Error('Erro ao buscar escolas atendidas');
+      const escolasData = await response.json();
+      return await Promise.all(
+        escolasData.map(async (escola: any) => {
+          const countResponse = await fetch(`${config.IP_SERVER}/api/escolas/${escola.id}/motorista/${idMotorista}/criancas/count`);
+          const quantidadeCriancas = await countResponse.json();
+          return { ...escola, quantidadeCriancas };
+        })
+      );
+    } catch (error) {
+      console.error(error);
+      return [];
+    }
+  };
 
-  // Adicionar a quantidade de crianças a cada escola
-  const escolasComQuantidade = await Promise.all(
-    escolasData.map(async (escola) => {
-      const countResponse = await fetch(`${config.IP_SERVER}/api/escolas/${escola.id}/motorista/${idMotorista}/criancas/count`);
-      const quantidadeCriancas = await countResponse.json();
-      return { ...escola, quantidadeCriancas };
-    })
-  );
-
-  return escolasComQuantidade;
-};
-
-
+  const fetchCriancas = async (idMotorista: string | null) => {
+    if (!idMotorista) return [];
+    try {
+      const response = await fetch(`${config.IP_SERVER}/motorista/${idMotorista}/criancas`);
+      if (!response.ok) throw new Error(`Erro: ${response.status} - ${response.statusText}`);
+      return await response.json();
+    } catch (error) {
+      console.error("Erro ao carregar as crianças", error);
+      return [];
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const idMotorista = await AsyncStorage.getItem('idMotorista');
+        const idMotorista = await AsyncStorage.getItem("idMotorista");
         const escolasData = await fetchEscolasAtendidas(idMotorista);
+        const criancasData = await fetchCriancas(idMotorista);
         setEscolasAtendidas(escolasData);
+        setCriancas(criancasData);
       } catch (error) {
-        console.error('Erro ao carregar dados:', error);
+        console.error("Erro ao carregar dados:", error);
       } finally {
         setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
@@ -85,58 +133,75 @@ const fetchEscolasAtendidas = async (idMotorista) => {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: "white" }}>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: "white" }} {...panResponder.panHandlers}>
+        <Animated.View style={[styles.slideContainer, { transform: [{ translateX }] }]}>
+          <View style={[styles.page, { width: windowWidth }]}>
+            <Text style={styles.title}>Escolas de atuação</Text>
+            <View style={styles.containerCards}>
+              {escolasAtendidas.length === 0 ? (
+                <Text>Nenhuma escola atendida</Text>
+              ) : (
+                escolasAtendidas.map((escola) => (
+                  <Pressable
+                    key={escola.id}
+                    style={styles.cardsMotoristas}
+                    onPress={() =>
+                      router.navigate(`/screen/motorista/escola/detalhesEscola?escolaId=${escola.id}`)
+                    }
+                  >
+                    <Text style={styles.quantidadeCrianca}>{escola.quantidadeCriancas} Crianças</Text>
+                    <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
+                      <Image source={require('@/app/assets/icons/school.png')} />
+                      <Text style={styles.nomeEscola}>{escola.nome}</Text>
+                    </View>
+                  </Pressable>
+                ))
+              )}
+            </View>
+          </View>
 
-      <ScrollView style={styles.container}>
 
-        <Text style={{ fontSize: 20, marginLeft: 20 }}>Escolas de atuação</Text>
+          <View style={[styles.page, { width: windowWidth }]}>
+            <Text style={styles.title}>Organize as crianças</Text>
+            <View style={styles.containerCards}>
 
-        <View style={styles.containerCards}>
-          {escolasAtendidas.length === 0 ? (
-            <Text>Nenhuma escola atendida</Text>
-          ) : (
-            escolasAtendidas.map((escola) => (
-              <Pressable
-                key={escola.id}
-                style={styles.cardsMotoristas}
-                onPress={() =>
-                  router.navigate(
-                    `/screen/motorista/escola/detalhesEscola?escolaId=${escola.id}`
-                  )
-                }
-              >
-                <Text style={styles.quantidadeCrianca}>{escola.quantidadeCriancas} Crianças</Text>
+              <DraggableFlatList
+                data={criancas}
+                onDragEnd={({ data }) => setCriancas(data)}
+                keyExtractor={(item) => item.id.toString()}
+                renderItem={({ item, drag, isActive }) => (
+                  <Pressable
+                    style={[styles.cardsCriancas, isActive && { backgroundColor: '#007bff' }]}
+                    onLongPress={drag}
+                  >
+                    <Text style={styles.nomeEscola}>{item.nome}</Text>
+                  </Pressable>
+                )}
+              />
+            </View>
+          </View>
 
-                <View style={{ flexDirection: "row", justifyContent: "flex-right" }}>
-                  <Image source={require('@/app/assets/icons/school.png')} />
-                  <Text style={styles.nomeEscola}>{escola.nome}</Text>
-                </View>
 
-              </Pressable>
-            ))
-          )}
-        </View>
-      </ScrollView>
-
-    </View>
+        </Animated.View>
+      </View>
+    </GestureHandlerRootView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#ffffff",
-  },
-  cardDados: {
-    backgroundColor: "#ffbf00",
-    padding: 20,
-    margin: 20,
-    borderRadius: 20,
-    height: 120,
-    justifyContent: "center",
+  slideContainer: {
     flexDirection: "row",
-    alignItems: "center",
-    gap: 20,
+    width: "200%",
+  },
+  page: {
+    width: windowWidth,
+    padding: 10,
+  },
+  title: {
+    fontSize: 20,
+    marginLeft: 20,
+    fontWeight: "bold",
   },
   containerCards: {
     marginTop: 20,
@@ -151,57 +216,16 @@ const styles = StyleSheet.create({
     backgroundColor: "#0EAFFF",
     borderRadius: 10,
     padding: 10,
-    justifyContent: "space-between"
+    justifyContent: "space-between",
   },
-
-  textoDados: {
-    fontSize: 15,
-    fontWeight: "600",
-  },
-
-  buttonText: {
-    color: "black",
-    fontWeight: "700",
-  },
-
-  botaoMenu: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    height: 40,
-    width: 40,
+  cardsCriancas: {
+    height: 100,
+    width: 320,
+    backgroundColor: "#0EAFFF",
     borderRadius: 10,
-  },
-  loadingContainer: {
-    flex: 1,
+    padding: 10,
     justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#ffffff",
-  },
-
-  fixedFooter: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: 100,
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-  },
-
-  image: {
-    borderRadius: 75,
-    borderColor: "#ff0000",
-    borderWidth: 2,
-    width: 100,
-    height: 100,
-    alignSelf: 'center'
-  },
-  icon: {
-    height: 60,
-    width: 60,
-    borderRadius: 50
+    margin: '1%',
   },
   nomeEscola: {
     fontWeight: "bold",
@@ -212,7 +236,12 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     color: "white",
     fontSize: 15,
-    textAlign: "right"
-  }
-
+    textAlign: "right",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#ffffff",
+  },
 });
