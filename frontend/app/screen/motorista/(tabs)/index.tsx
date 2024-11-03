@@ -2,6 +2,8 @@ import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useRouter } from "expo-router";
 import { useEffect, useState, useRef } from "react";
+import { FontAwesome } from '@expo/vector-icons';
+
 
 import {
   Animated,
@@ -15,7 +17,6 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-// Importa GestureHandlerRootView
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import DraggableFlatList from 'react-native-draggable-flatlist';
@@ -33,6 +34,13 @@ interface Motorista {
   imagem: Imagem;
 }
 
+interface Crianca {
+  id: number;
+  nome: string;
+  confirmado: boolean;
+}
+
+
 import { Dimensions } from "react-native";
 
 const windowWidth = Dimensions.get("window").width;
@@ -41,7 +49,9 @@ export default function Index() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [escolasAtendidas, setEscolasAtendidas] = useState([]);
-  const [criancas, setCriancas] = useState([]);
+  const [criancas, setCriancas] = useState<Crianca[]>([]);
+  const [criancaAtual, setCriancaAtual] = useState(0);
+
   const [page, setPage] = useState(0);
 
   const translateX = useRef(new Animated.Value(0)).current;
@@ -71,6 +81,19 @@ export default function Index() {
       useNativeDriver: true,
     }).start();
   }, [page]);
+
+
+  const confirmarEmbarque = () => {
+    if (criancaAtual < criancas.length) {
+      setCriancas(prevCriancas =>
+        prevCriancas.map((crianca, index) =>
+          index === criancaAtual ? { ...crianca, confirmado: true } : crianca
+        )
+      );
+      setCriancaAtual(prev => prev + 1);
+    }
+  };
+
 
   const fetchEscolasAtendidas = async (idMotorista: string | null) => {
     if (!idMotorista) return [];
@@ -106,6 +129,8 @@ export default function Index() {
     }
   };
 
+
+
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -115,8 +140,10 @@ export default function Index() {
         const criancasData = await fetchCriancas(idMotorista);
         setEscolasAtendidas(escolasData);
         setCriancas(criancasData);
+
       } catch (error) {
         console.error("Erro ao carregar dados:", error);
+
       } finally {
         setLoading(false);
       }
@@ -135,9 +162,39 @@ export default function Index() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={{ flex: 1, backgroundColor: "white" }} {...panResponder.panHandlers}>
+
+        <Pressable style={styles.cardControle} onPress={confirmarEmbarque}>
+          <Text style={styles.title}>Buscar</Text>
+          <Text style={styles.schoolName}>(ENDERECO DA CRIANÇA)</Text>
+
+          <View style={styles.progressContainer}>
+            {criancas.map((crianca, index) => (
+              <View
+                key={crianca.id}
+                style={[
+                  styles.progressBar,
+                  crianca.confirmado ? styles.confirmed : styles.notConfirmed,
+                ]}
+              />
+            ))}
+          </View>
+
+          <View style={styles.childContainer}>
+            <Text style={styles.childName}>
+              {criancaAtual < criancas.length ? criancas[criancaAtual].nome : "Todas confirmadas"}
+            </Text>
+            {criancaAtual < criancas.length && criancas[criancaAtual].confirmado && (
+              <View style={styles.confirmedContainer}>
+                <FontAwesome name="check-square" size={16} color="green" />
+                <Text style={styles.confirmedText}>Confirmado</Text>
+              </View>
+            )}
+          </View>
+        </Pressable>
+
         <Animated.View style={[styles.slideContainer, { transform: [{ translateX }] }]}>
           <View style={[styles.page, { width: windowWidth }]}>
-            <Text style={styles.title}>Escolas de atuação</Text>
+            <Text style={styles.titulo}>Escolas de atuação</Text>
             <View style={styles.containerCards}>
               {escolasAtendidas.length === 0 ? (
                 <Text>Nenhuma escola atendida</Text>
@@ -163,7 +220,7 @@ export default function Index() {
 
 
           <View style={[styles.page, { width: windowWidth }]}>
-            <Text style={styles.title}>Organize as crianças</Text>
+            <Text style={styles.titulo}>Organize as crianças</Text>
             <View style={styles.containerCards}>
 
               <DraggableFlatList
@@ -198,7 +255,7 @@ const styles = StyleSheet.create({
     width: windowWidth,
     padding: 10,
   },
-  title: {
+  titulo: {
     fontSize: 20,
     marginLeft: 20,
     fontWeight: "bold",
@@ -209,6 +266,14 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flexWrap: "wrap",
     gap: 10,
+  },
+
+  cardControle: {
+    backgroundColor: "#0EAFFF",
+    margin: 10,
+    padding: 10,
+    borderRadius: 15,
+    justifyContent: "center",
   },
   cardsMotoristas: {
     height: 120,
@@ -237,6 +302,54 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: 15,
     textAlign: "right",
+  },
+
+
+  title: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 20,
+  },
+  schoolName: {
+    fontWeight: "300",
+    color: "white",
+    marginBottom: 10,
+  },
+  progressContainer: {
+    flexDirection: "row",
+    marginVertical: 10,
+  },
+  progressBar: {
+    flex: 1,
+    height: 8,
+    borderRadius: 4,
+    marginHorizontal: 2,
+  },
+  confirmed: {
+    backgroundColor: "orange",
+  },
+  notConfirmed: {
+    backgroundColor: "white",
+  },
+  childContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 10,
+  },
+  childName: {
+    fontWeight: "bold",
+    color: "white",
+    fontSize: 16,
+  },
+  confirmedContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginLeft: 10,
+  },
+  confirmedText: {
+    color: "green",
+    fontSize: 14,
+    marginLeft: 4,
   },
   loadingContainer: {
     flex: 1,
