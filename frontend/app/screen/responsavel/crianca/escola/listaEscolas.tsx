@@ -15,11 +15,11 @@ export default function ListaEscolas() {
         alert("ID CRIANÇA: " + idCrianca)
         setLoading(true);
         try {
-            
+
             const escolasResponse = await fetch(`${config.IP_SERVER}/api/escolas`);
             const escolasData = await escolasResponse.json();
             setEscolas(escolasData);
-         
+
         } catch (error) {
             console.error('Erro ao buscar dados:', error);
             Alert.alert('Erro', 'Ocorreu um erro ao buscar os dados.');
@@ -63,7 +63,7 @@ export default function ListaEscolas() {
                 }}
                 style={styles.buttonEscola}
             >
-                <View style={styles.textContainer}> {/* View para organizar os textos */}
+                <View style={styles.textContainer}>
                     <Text style={styles.textNome}>{item.nome}</Text>
                     <Text style={styles.textRua}>{item.rua}</Text>
                 </View>
