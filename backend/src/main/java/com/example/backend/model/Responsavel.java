@@ -36,10 +36,6 @@ public class Responsavel {
     @JoinColumn(name = "endereco_id")
     private Endereco endereco;
 
-    @OneToOne(cascade= CascadeType.ALL)
-    @JoinColumn(name = "imagem_id")
-    private Imagem imagem;
-
     public Integer getIdade(){
        if (dataNascimento != null) {
             LocalDate today = LocalDate.now();
@@ -123,14 +119,5 @@ public class Responsavel {
     public void setEndereco(Endereco endereco) {
         this.endereco = endereco;
     }
-
-    public Imagem getImagem() {
-        return imagem;
-    }
-
-    public void setImagem(Imagem imagem) {
-        this.imagem = imagem;
-    }
-
     
 }

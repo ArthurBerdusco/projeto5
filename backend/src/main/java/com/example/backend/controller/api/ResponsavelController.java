@@ -16,10 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.backend.model.Endereco;
-import com.example.backend.model.Imagem;
 import com.example.backend.model.Responsavel;
 import com.example.backend.repository.EnderecoRepository;
-import com.example.backend.repository.ImagemRepository;
 import com.example.backend.repository.ResponsavelRepository;
 import com.example.backend.security.Usuario;
 import com.example.backend.security.UsuarioRepository;
@@ -37,8 +35,7 @@ public class ResponsavelController {
     @Autowired
     UsuarioRepository usuarioRepository;
 
-    @Autowired
-    ImagemRepository imagemRepository;
+    
 
     @PostMapping
     public void salvar(@RequestBody Responsavel responsavel) {
@@ -109,48 +106,6 @@ public class ResponsavelController {
         }
     }
 
-    @PostMapping("/{id}/upload")
-    public ResponseEntity<String> uploadImagem(@RequestParam("file") MultipartFile file, @PathVariable Long id) {
-        try {
-            // Busca o responsavel pelo ID
-            Optional<Responsavel> responsavelOptional = responsavelRepository.findById(id);
-
-            if (responsavelOptional.isPresent()) {
-                Responsavel responsavel = responsavelOptional.get();
-
-                // Verifica se já existe uma imagem com o mesmo nome
-                Optional<Imagem> imagemExistente = imagemRepository.findByNome(file.getOriginalFilename());
-
-                if (imagemExistente.isPresent()) {
-                    // Atualiza os dados da imagem existente
-                    Imagem imagem = imagemExistente.get();
-                    imagem.setDados(file.getBytes()); // Atualiza os dados da imagem
-
-                    responsavel.setImagem(imagem);
-
-                    imagemRepository.save(imagem); // Salva a imagem atualizada
-
-                    return ResponseEntity.ok("Imagem atualizada com sucesso! ID da imagem: " + imagem.getId());
-                } else {
-                    // Cria uma nova imagem, caso não exista
-                    Imagem imagem = new Imagem();
-                    imagem.setNome(file.getOriginalFilename());
-                    imagem.setDados(file.getBytes()); // Converte para array de bytes
-
-                    // Associa a nova imagem ao responsavel
-                    responsavel.setImagem(imagem);
-
-                    // Salva o responsavel com a nova imagem associada (a imagem será salva automaticamente)
-                    responsavelRepository.save(responsavel);
-
-                    return ResponseEntity.ok("Imagem enviada e associada ao responsavel com sucesso! ID da imagem: " + imagem.getId());
-                }
-            } else {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("responsavel não encontrado.");
-            }
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao salvar a imagem.");
-        }
-    }
+    
 
 }

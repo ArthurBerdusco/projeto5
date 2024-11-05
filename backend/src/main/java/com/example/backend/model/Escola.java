@@ -4,14 +4,11 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToOne;
 
 @Entity
 public class Escola {
@@ -25,10 +22,6 @@ public class Escola {
     private String numero;
     private String telefone;
     private String status;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "imagem_id")
-    private Imagem imagem;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "escolas")
@@ -95,14 +88,5 @@ public class Escola {
         return "Escola [id=" + id + ", nome=" + nome + ", rua=" + rua + ", numero=" + numero + ", telefone=" + telefone
                 + ", status=" + status + "]";
     }
-
-    public Imagem getImagem() {
-        return imagem;
-    }
-
-    public void setImagem(Imagem imagem) {
-        this.imagem = imagem;
-    }
-
     
 }

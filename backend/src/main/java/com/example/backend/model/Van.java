@@ -2,7 +2,6 @@ package com.example.backend.model;
 
 import java.time.Year;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -35,10 +34,6 @@ public class Van {
 
     private String cnh;
     private boolean antecedentesCriminais;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "imagem_id")
-    private Imagem imagem;
 
     @OneToOne
     @JoinColumn(name = "motorista_id", referencedColumnName = "id")
@@ -180,14 +175,6 @@ public class Van {
         this.antecedentesCriminais = antecedentesCriminais;
     }
 
-    public Imagem getImagem() {
-        return imagem;
-    }
-
-    public void setImagem(Imagem imagem) {
-        this.imagem = imagem;
-    }
-
     public Motorista getMotorista() {
         return motorista;
     }
@@ -203,7 +190,7 @@ public class Van {
                 + quantidadeAssentos + ", acessibilidade=" + acessibilidade + ", arCondicionado=" + arCondicionado
                 + ", cortinas=" + cortinas + ", tvEntretenimento=" + tvEntretenimento + ", camerasSeguranca="
                 + camerasSeguranca + ", cintoSeguranca=" + cintoSeguranca + ", extintorIncendio=" + extintorIncendio
-                + ", cnh=" + cnh + ", antecedentesCriminais=" + antecedentesCriminais + ", imagem=" + imagem + "]";
+                + ", cnh=" + cnh + ", antecedentesCriminais=" + antecedentesCriminais + "]";
     }
 
     

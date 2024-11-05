@@ -10,15 +10,6 @@ import com.example.backend.security.UsuarioRepository;
 
 @SpringBootApplication
 public class ServerApplication {
-
-    @Autowired
-    private UsuarioRepository usuarioRepository;
-    
-    @Autowired
-    private OperadorRepository operadorRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
     
     public static void main(String[] args) {
         SpringApplication.run(ServerApplication.class, args);
