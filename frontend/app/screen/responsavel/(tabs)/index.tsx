@@ -1,48 +1,50 @@
 import { Link, Stack, useRouter, useNavigation } from "expo-router";
-import { ScrollView, View, StyleSheet, Text, ActivityIndicator, Pressable } from "react-native";
+import { ScrollView, View, StyleSheet, Text, ActivityIndicator, Pressable, Image } from "react-native";
 import { useState, useEffect } from "react";
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { UserRoundPlus } from 'lucide-react-native';
 
 interface Crianca {
     id: number;
     nome: string;
     idade: number;
-  }
+    periodo: string;
+}
 
 export default function Index() {
     const navigation = useNavigation();
-   
+
     const [criancas, setCriancas] = useState<Crianca[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
-  
+
     const fetchCriancas = async () => {
-      setLoading(true); // Ativa o indicador de carregamento antes da requisição
-      try {
-        const responsavelId = await AsyncStorage.getItem('idResponsavel');
-        if (responsavelId) {
-          const response = await fetch(`${config.IP_SERVER}/crianca/responsavel/${responsavelId}`);
-          if (response.status === 404) {
-            throw new Error('Nenhuma criança cadastrada');
-          }
-          const data = await response.json();
-          setCriancas(data);
-        } else {
-          setError('Nenhum ID de responsável encontrado.');
+        setLoading(true); // Ativa o indicador de carregamento antes da requisição
+        try {
+            const responsavelId = await AsyncStorage.getItem('idResponsavel');
+            if (responsavelId) {
+                const response = await fetch(`${config.IP_SERVER}/crianca/responsavel/${responsavelId}`);
+                if (response.status === 404) {
+                    throw new Error('Nenhuma criança cadastrada');
+                }
+                const data = await response.json();
+                setCriancas(data);
+            } else {
+                setError('Nenhum ID de responsável encontrado.');
+            }
+        } catch (err) {
+            setError(err.message);
+            console.error(err);
+        } finally {
+            setLoading(false); // Desativa o indicador de carregamento após a requisição
         }
-      } catch (err) {
-        setError(err.message);
-        console.error(err);
-      } finally {
-        setLoading(false); // Desativa o indicador de carregamento após a requisição
-      }
     };
-  
+
     useEffect(() => {
-        
+
         const unsubscribeFocus = navigation.addListener("focus", () => {
             fetchCriancas();
         });
@@ -51,13 +53,13 @@ export default function Index() {
             unsubscribeFocus();
         };
     }, [navigation]);
-  
+
     if (loading) {
-      return (
-        <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#0d99ff" />
-        </View>
-      );
+        return (
+            <View style={styles.loadingContainer}>
+                <ActivityIndicator size="large" color="#0d99ff" />
+            </View>
+        );
     }
 
     return (
@@ -70,56 +72,61 @@ export default function Index() {
 
                     {error && <Text style={styles.errorText}>{error}</Text>}
 
-                   
-                        <View style={styles.containerCards}>
-                            {criancas.map(crianca => (
-                                <Pressable
-                                    onPress={() =>
-                                        router.navigate({
-                                            pathname: `/screen/responsavel/crianca/[id]`,
-                                            params: { id: crianca.id }
-                                        })
-                                    }
-                                    style={styles.cardsCriancas}
-                                    key={crianca.id}
-                                >
-                                    <View style={{}}>
-                                        <Text style={styles.cardText}>{crianca.nome}</Text>
-                                        <Text style={styles.cardText}>{crianca.idade} anos</Text>
-                                    </View>
-                                </Pressable>
 
-                            ))}
-                        </View>
-                    
+                    <View style={styles.containerCards}>
+                        {criancas.map(crianca => (
+                            <Pressable
+                                onPress={() =>
+                                    router.navigate({
+                                        pathname: `/screen/responsavel/crianca/[id]`,
+                                        params: { id: crianca.id }
+                                    })
+                                }
+                                style={styles.cardsCriancas}
+                                key={crianca.id}
+                            >
+                                <View style={{ flexDirection: "column" }}>
+                                    <Text style={styles.cardText}>Nome: {crianca.nome}</Text>
+                                    <Text style={styles.cardText}>Idade: {crianca.idade} anos</Text>
+                                    <Text style={styles.cardTextsegundo}>{crianca.periodo}</Text>
 
-                   
-                        <Pressable onPress={() => router.navigate(`/screen/responsavel/crianca/form`)}>
-                            <Text style={styles.cadastrarTexto}>Cadastrar Criança</Text>
+                                </View>
+                            </Pressable>
+
+                        ))}
+                    </View>
+
+
+                    <View style={{ alignItems: "center", marginTop: 130 }}>
+                        <Pressable onPress={() => router.navigate(`/screen/responsavel/crianca/form`)} style={{ backgroundColor: "#0d99ff", alignItems: "center", borderRadius: 100, width: 70, height: 70, justifyContent: "center", }}>
+                            <Image source={require('@/app/assets/icons/add.png')} />
                         </Pressable>
-                    
+                    </View>
+
+
 
 
                 </View>
             </ScrollView >
-        </SafeAreaView>
+        </SafeAreaView >
     );
 }
 
 const styles = StyleSheet.create({
     total: {
-        marginTop: 10,
         flex: 1,
-        backgroundColor: "#f5f5f5",
+        backgroundColor: "white",
     },
     scrollView: {
         backgroundColor: 'white',
-        paddingHorizontal: 20,
         paddingBottom: 50,
     },
     container: {
-        flex: 1,
         padding: 20,
+        justifyContent: "space-between",
+        flexDirection: "column",
+
+
 
     },
     cardDados: {
@@ -160,8 +167,8 @@ const styles = StyleSheet.create({
         width: "48%",
         backgroundColor: "#0d99ff",
         borderRadius: 15,
-        justifyContent: "center",
-        alignItems: "center",
+        justifyContent: "flex-start",
+        alignItems: "flex-start",
         padding: 15,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
@@ -172,8 +179,22 @@ const styles = StyleSheet.create({
     cardText: {
         color: "#ffffff",
         fontWeight: "700",
-        fontSize: 16,
-        textAlign: "center"
+        fontSize: 15,
+        textAlign: "left",
+        margin: 2
+    },
+
+    cardTextsegundo: {
+
+        color: "black",
+        fontWeight: "700",
+        fontSize: 13,
+        textAlign: "center",
+        margin: 2,
+        backgroundColor: "#ffbf00",
+        borderRadius: 50,
+        marginTop: 50,
+        width: 60
     },
     cadastrarTexto: {
         textAlign: "center",
