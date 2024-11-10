@@ -63,6 +63,8 @@ public class CriancaController {
             criancaDTO.setId(crianca.getId());
             criancaDTO.setIdade(crianca.getIdade());
             criancaDTO.setNome(crianca.getNome());
+            criancaDTO.setPeriodo(crianca.getPeriodo());
+
             // Adicione outros campos conforme necessário
             return criancaDTO;
         }).collect(Collectors.toList());
