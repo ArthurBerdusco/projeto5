@@ -12,12 +12,12 @@ import { Picker } from "@react-native-picker/picker";
 export default function Form() {
 
     const router = useRouter();
-    const { id } = useLocalSearchParams(); // Obter o ID dos parâmetros
-    const [isEditing, setIsEditing] = useState(!!id); // Estado para controlar edição
+    const { id } = useLocalSearchParams();
+    const [isEditing, setIsEditing] = useState(!!id);
     const [nome, setNome] = useState('');
     const [dataNascimento, setDataNascimento] = useState("");
     const [periodo, setPeriodo] = useState("Manha");
-    const [date, setDate] = useState(new Date(2015, 0, 1));
+    const [date, setDate] = useState(new Date(2015, 0, 1)); // Garantir uma data válida no início
     const [showPicker, setShowPicker] = useState(false);
     const [loading, setLoading] = useState(false);
 
@@ -25,22 +25,23 @@ export default function Form() {
         if (isEditing && id) {
             fetchCrianca(id);
         }
+
     }, [isEditing, id]);
 
     const fetchCrianca = async (id) => {
         setLoading(true);
         try {
-           
+
             const resultado = await fetch(`${config.IP_SERVER}/crianca/${id}`);
-            
+
             if (resultado.ok) {
-               
+
                 const dados = await resultado.json();
                 setNome(dados.nome);
                 setDataNascimento(dados.dataNascimento);
                 setPeriodo(dados.periodo);
                 setIsEditing(true);
-                
+
             }
         } catch (err) {
             console.error("Erro ao buscar dados da criança:", err);
@@ -104,7 +105,7 @@ export default function Form() {
         try {
             const formattedDateNascimento = format(date, "dd/MM/yyyy");
             const idResponsavel = await AsyncStorage.getItem('idResponsavel');
-            
+
 
             if (!idResponsavel) {
                 Alert.alert("Error", "ID do motorista não encontrado.");
@@ -112,7 +113,7 @@ export default function Form() {
             }
 
             const response = await fetch(`${config.IP_SERVER}/crianca/${id}`, {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                 },
@@ -163,18 +164,19 @@ export default function Form() {
                         <Pressable onPress={toggleDataPicker}>
                             <TextInput
                                 style={styles.textInputs}
-                                value={dataNascimento}
+                                value={dataNascimento || ""} // Garantir que o valor seja uma string
                                 onChangeText={setDataNascimento}
                                 placeholder='Selecione'
                                 editable={false}
                             />
+
                         </Pressable>
                     )}
 
                     {/* DropDownPicker para tipo de usuário */}
                     <Text style={styles.text}>Tipo de usuário</Text>
                     <Picker
-                        selectedValue={periodo}
+                        selectedValue={periodo || "Manha"} // Garantir que o valor seja sempre uma string válida
                         onValueChange={(itemValue) => setPeriodo(itemValue)}
                         style={styles.picker}
                     >

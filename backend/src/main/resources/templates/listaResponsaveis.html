@@ -13,7 +13,9 @@
                 <th>ID</th>
                 <th>Nome</th>
                 <th>Idade</th>
+                <th>Status</th>
                 <th>Editar</th>
+                <th>Remover</th>
             </tr>
         </thead>
         <tbody>
@@ -24,6 +26,12 @@
                 <td th:text="${responsavel.idade}">Idade</td>
                 <td th:text="${responsavel.status}">Status</td>
                 <td><a th:href="'/responsaveis/' + ${responsavel.id}">Editar</a></td>
+                <td>
+                    <form th:action="@{'/responsaveis/' + ${responsavel.id}}" method="post">
+                        <input type="hidden" name="_method" value="delete" />
+                        <button type="submit">Remover</button>
+                    </form>
+                </td>
             </tr>
         </tbody>
     </table>

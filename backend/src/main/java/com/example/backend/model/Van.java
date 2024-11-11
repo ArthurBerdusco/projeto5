@@ -40,8 +40,7 @@ public class Van {
     @JoinColumn(name = "imagem_id")
     private Imagem imagem;
 
-    @OneToOne
-    @JoinColumn(name = "motorista_id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "van")
     private Motorista motorista;
 
     public Long getId() {

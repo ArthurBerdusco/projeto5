@@ -7,12 +7,6 @@ import config from '@/app/config';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import FotoPerfil from '@/app/components/Foto/FotoPerfil';
 
-interface Imagem {
-    id: number;
-    nome: string;
-    dados: string | null;
-}
-
 interface Van {
     placa: string;
     renavam: string;
@@ -30,7 +24,7 @@ interface Van {
     extintorIncendio: boolean;
     cnh: string;
     antecedentesCriminais: boolean;
-    imagem: Imagem;
+    imagem: string;
 }
 
 export default function VanForm() {
@@ -52,11 +46,7 @@ export default function VanForm() {
         extintorIncendio: false,
         cnh: '',
         antecedentesCriminais: false,
-        imagem: {
-            id: 0,
-            nome: '',
-            dados: null,
-        },
+        imagem: ''
     });
 
     const [isEditing, setIsEditing] = useState(false); // Estado para controlar se é edição ou criação
@@ -88,19 +78,17 @@ export default function VanForm() {
 
             const dados = await resultado.json();
             if (dados) {
-                alert("EDIÇÃO"); // Indica que está editando uma van existente
                 setVan(dados);
                 setIsEditing(true);
             }
 
-        } catch (err) {
+        } catch (err: any) {
             console.error("Erro ao buscar dados da van:", err);
             alert("Erro ao buscar dados da van: " + err.message);
         } finally {
             setLoading(false);
         }
     };
-
 
 
     useEffect(() => {
@@ -146,32 +134,38 @@ export default function VanForm() {
 
     const handleAlterar = async () => {
         try {
+            // Obtém o id do motorista do AsyncStorage
             const idMotorista = await AsyncStorage.getItem('idMotorista');
-
+    
             if (!idMotorista) {
                 Alert.alert("Error", "ID do motorista não encontrado.");
                 return;
             }
-
+    
+            // Chama a API para atualizar a van
             const response = await fetch(`${config.IP_SERVER}/motorista/van/atualizar/${idMotorista}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(van),
+                body: JSON.stringify(van),  // Verifique se 'van' contém os dados corretos
             });
-
+    
+            // Verifica a resposta da API
             if (response.ok) {
                 Alert.alert('Sucesso', 'Dados alterados com sucesso!');
+                // Redireciona o usuário após sucesso
                 router.navigate('/screen/motorista/veiculo');
             } else {
-                Alert.alert('Erro', 'Erro ao atualizar dados.');
+                const errorMessage = await response.text();
+                Alert.alert('Erro', errorMessage || 'Erro ao atualizar dados.');
             }
         } catch (error) {
             console.error(error);
             Alert.alert('Erro', 'Ocorreu um erro ao enviar os dados.');
         }
     };
+    
 
     if (loading) {
         return (
@@ -326,7 +320,7 @@ export default function VanForm() {
                 <FotoPerfil
                     idEntidade={idMotorista}
                     entidade={"Van"}
-                    initialImage={van.imagem?.dados ? `data:image/jpeg;base64,${van.imagem.dados}` : null}
+                    imagemInicial={van.imagem ? `data:image/jpeg;base64,${van.imagem}` : null}
                 />
 
                 <Pressable

@@ -1,20 +1,31 @@
-import { useEffect, useState } from "react";
-import { View, Text, FlatList, Alert, StyleSheet } from "react-native";
-import config from '@/app/config';
+import { useEffect, useState } from 'react';
+import { View, Text, FlatList, Alert, StyleSheet, ActivityIndicator, Image } from 'react-native';
 import { Link, useLocalSearchParams } from 'expo-router';
+import config from '@/app/config';
+
+// Definindo o tipo da oferta
+interface Oferta {
+    id: number;
+    nomeMotorista: string;
+    nomeEscola: string;
+    valor: number;
+    mensagem: string;
+    imagemMotorista: string;
+}
 
 export default function ListaOfertas() {
-    const { id, idCrianca } = useLocalSearchParams(); // Obter o ID da criança
-    const [ofertas, setOfertas] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const { id, idCrianca } = useLocalSearchParams();
+    const [ofertas, setOfertas] = useState<Oferta[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
 
+    // Função para buscar ofertas
     const fetchOfertas = async () => {
         try {
             const response = await fetch(`${config.IP_SERVER}/oferta/crianca/${idCrianca}`);
-            const data = await response.json();
+            const data: Oferta[] = await response.json();
             setOfertas(data);
         } catch (error) {
-            console.error('Erro ao buscar a oferta:', error);
+            console.error('Erro ao buscar ofertas:', error);
             Alert.alert('Erro', 'Não foi possível carregar as ofertas.');
         } finally {
             setLoading(false);
@@ -22,41 +33,57 @@ export default function ListaOfertas() {
     };
 
     useEffect(() => {
-        fetchOfertas(); // Chama a função quando o componente é montado
-    }, []);
+        fetchOfertas();
+    }, [idCrianca]);
 
-    const renderItem = ({ item }) => (
+    // Função para renderizar cada item
+    const renderItem = ({ item }: { item: Oferta }) => (
         <Link
             href={{
                 pathname: '/screen/responsavel/crianca/ofertas/[id]',
                 params: { id: item.id },
             }}
-            style={styles.offerItem}
+            style={styles.link} asChild
         >
-            <View style={styles.offerContent}>
-                <Text style={styles.offerMotorista}>Motorista: {item.motoristaNome}</Text>
-                <Text style={styles.offerValue}>R$ {item.valor.toFixed(2)}</Text>
-                <Text style={styles.offerStatus}>Status: {item.status}</Text>
-                <Text style={styles.offerMessage}>{item.mensagem || 'Sem mensagem'}</Text>
+            <View style={styles.row}>
+
+                {item.imagemMotorista ? (
+                    <Image source={{ uri: `data:image/jpeg;base64,${item.imagemMotorista}` }} style={styles.pic} />
+                ) : (
+                    <View>
+                        <Image source={require("@/app/assets/icons/perfil.png")} style={styles.pic} />
+                    </View>
+                )}
+
+                <View >
+                    <Text style={styles.cardTitle}>{item.nomeMotorista}</Text>
+                    <Text style={styles.cardText}>{item.nomeEscola}</Text>
+                </View>
+
+
+                <View style={styles.cardValue}>
+                    <Text style={styles.cardTitle}>R$ {item.valor.toFixed(2)}</Text>
+                </View>
+
+
             </View>
         </Link>
     );
 
     if (loading) {
         return (
-            <View style={styles.container}>
-                <Text style={styles.loadingText}>Carregando ofertas...</Text>
+            <View>
+                <ActivityIndicator size="large" />
             </View>
         );
     }
 
     return (
         <View style={styles.container}>
-            <Text style={styles.title}>Lista de Ofertas</Text>
             <FlatList
                 data={ofertas}
                 renderItem={renderItem}
-                keyExtractor={(item) => item.id} // Supondo que cada oferta tenha um ID único
+                keyExtractor={(item) => item.id.toString()}
                 showsVerticalScrollIndicator={false}
             />
         </View>
@@ -66,56 +93,56 @@ export default function ListaOfertas() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 20,
-        backgroundColor: '#f8f8f8',
     },
-    title: {
-        fontSize: 24,
+    link: {
+        margin: 10
+    },
+    row: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderColor: '#bcbcbc',
+        backgroundColor: '#fff',
+        borderBottomWidth: 1,
+        padding: 10,
+        justifyContent: 'space-between',
+    },
+    cardCenter: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    pic: {
+        borderRadius: 25,
+        width: 50,
+        height: 50,
+    },
+    textContainer: {
+        flex: 1,
+    },
+    cardTitle: {
+        fontSize: 18,
         fontWeight: 'bold',
-        marginBottom: 20,
         color: '#333',
     },
-    loadingText: {
-        fontSize: 18,
-        textAlign: 'center',
-        marginTop: 20,
-    },
-    offerItem: {
-        backgroundColor: '#fff',
-        padding: 15,
-        borderRadius: 8,
-        marginVertical: 10,
-        elevation: 2, // Sombra
-        shadowColor: '#000',
+    cardValue: {
+        borderWidth: 0.5,
+        borderRadius: 5,
+        padding: 5,
+        borderColor: '#a5a5a5',
+        shadowColor: "#000",
         shadowOffset: {
             width: 0,
             height: 2,
         },
-        shadowOpacity: 0.3,
-        shadowRadius: 4,
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+
+        elevation: 5,
+
     },
-    offerContent: {
-        flexDirection: 'column', // Define que os itens devem ser dispostos em coluna
-    },
-    offerMotorista: {
+    cardText: {
         fontSize: 16,
-        fontWeight: 'bold',
-        color: '#2c3e50',
-        marginBottom: 3,
-    },
-    offerValue: {
-        fontSize: 16,
-        color: '#27ae60',
-        marginBottom: 5,
-    },
-    offerStatus: {
-        fontSize: 14,
-        color: '#e67e22',
-        marginBottom: 3,
-    },
-    offerMessage: {
-        fontSize: 14,
-        color: '#7f8c8d',
+        color: '#555',
         marginTop: 5,
     },
+
 });

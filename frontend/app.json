@@ -8,7 +8,7 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
-      "image": "../assets/logo/logovan.png",
+      "image": "app/assets/logo/logovan.png",
       "resizeMode": "contain"
     },
     "ios": {
@@ -16,14 +16,14 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "../assets/logo/logovan.png",
+        "foregroundImage": "app/assets/logo/logovan.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "../assets/logo/logovan.png"
+      "favicon": "app/assets/logo/logovan.png"
     },
     "plugins": [
       "expo-router"

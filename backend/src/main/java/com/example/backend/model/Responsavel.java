@@ -2,6 +2,7 @@ package com.example.backend.model;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.List;
 
 import com.example.backend.security.Usuario;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -12,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 
 @Entity
@@ -39,6 +41,9 @@ public class Responsavel {
     @OneToOne(cascade= CascadeType.ALL)
     @JoinColumn(name = "imagem_id")
     private Imagem imagem;
+
+    @OneToMany(mappedBy = "responsavel", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Crianca> criancas;
 
     public Integer getIdade(){
        if (dataNascimento != null) {

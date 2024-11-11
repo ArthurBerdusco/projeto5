@@ -369,3 +369,9 @@ INSERT INTO escolas (id, nome, numero, rua, status, telefone) VALUES
 (51, 'Quintal', '1234', 'R. Joaquim C. de Azevedo Marques', 'ativo', '3742-5899'),
 (52, 'Scuola Italiana Eugênio Montale', '75', 'R. José Gustavo Bush', 'ativo', '3759-5959'),
 (53, 'See-Saw/Panamby Bilingual School', '86', 'R. Visconde de Nacar', 'ativo', '3758-2241') [42102-224]
+2024-11-11 02:04:33.205626-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'' (VAN: ""IMAGEM_ID"" BIGINT)"; SQL statement:
+UPDATE "PUBLIC"."VAN" SET "ID"=? ,"ACESSIBILIDADE"=? ,"ANO_FABRICACAO"=? ,"ANTECEDENTES_CRIMINAIS"=? ,"AR_CONDICIONADO"=? ,"CAMERAS_SEGURANCA"=? ,"CINTO_SEGURANCA"=? ,"CNH"=? ,"COR"=? ,"CORTINAS"=? ,"EXTINTOR_INCENDIO"=? ,"FABRICANTE"=? ,"MODELO"=? ,"PLACA"=? ,"QUANTIDADE_ASSENTOS"=? ,"RENAVAM"=? ,"TV_ENTRETENIMENTO"=? ,"IMAGEM_ID"=? ,"MOTORISTA_ID"=?  WHERE "ID"=? [22018-224]
+2024-11-11 02:04:33.207624-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'' (VAN: ""IMAGEM_ID"" BIGINT)"; SQL statement:
+UPDATE "PUBLIC"."VAN" SET "ID"=? ,"ACESSIBILIDADE"=? ,"ANO_FABRICACAO"=? ,"ANTECEDENTES_CRIMINAIS"=? ,"AR_CONDICIONADO"=? ,"CAMERAS_SEGURANCA"=? ,"CINTO_SEGURANCA"=? ,"CNH"=? ,"COR"=? ,"CORTINAS"=? ,"EXTINTOR_INCENDIO"=? ,"FABRICANTE"=? ,"MODELO"=? ,"PLACA"=? ,"QUANTIDADE_ASSENTOS"=? ,"RENAVAM"=? ,"TV_ENTRETENIMENTO"=? ,"IMAGEM_ID"=? ,"MOTORISTA_ID"=?  WHERE "ID"=? [22018-224]

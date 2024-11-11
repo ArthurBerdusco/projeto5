@@ -1,21 +1,22 @@
-import { Link, Stack, useRouter } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import { Text, View, SafeAreaView, StyleSheet, Image, TextInput, Pressable, Alert, KeyboardAvoidingView, Platform } from "react-native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import config from "@/app/config";
-
-
+import { ActivityIndicator } from "react-native-paper";
 
 export default function LoginScreen() {
 
     const [email, setEmail] = useState("arthur@gmail.com");
     const [senha, setSenha] = useState("1234");
 
-    const router = useRouter();  // Adicione isso para usar o roteamento
+    const [loading, setLoading] = useState(false);
 
+    const router = useRouter();
 
     const handleSubmit = async () => {
         try {
+            setLoading(true);
             const response = await fetch(`${config.IP_SERVER}/loginapi`, {
 
                 method: "POST",
@@ -33,7 +34,7 @@ export default function LoginScreen() {
 
                 const resultado = await response.json();
 
-                if (resultado.usuario.role === "MOTORISTA") {
+                if (resultado.role === "MOTORISTA") {
                     await AsyncStorage.setItem('motorista', resultado.toString());
                     await AsyncStorage.setItem('idMotorista', resultado.id.toString());
                     if (resultado.status === "Pendente ativação") {
@@ -47,7 +48,7 @@ export default function LoginScreen() {
                     await AsyncStorage.setItem('responsavel', resultado.toString());
                     await AsyncStorage.setItem('idResponsavel', resultado.id.toString());
                     if (resultado.status === "DESATIVADO") {
-                        router.navigate('/screen/responsavel/cadastro');
+                        console.log("Tratar")
                     } else {
                         router.navigate('/screen/responsavel');
                     }
@@ -59,6 +60,8 @@ export default function LoginScreen() {
             }
         } catch (error) {
             Alert.alert("Error", "Erro de conexão com o backend.");
+        } finally {
+            setLoading(false)
         }
     };
 
@@ -92,7 +95,12 @@ export default function LoginScreen() {
                     <Text style={{ color: "white", fontWeight: "700" }}>
                         Entrar
                     </Text>
+
                 </Pressable>
+                {loading && (
+                    <ActivityIndicator size="large" style={{ marginLeft: 10 }} />
+                )}
+
 
             </View>
 

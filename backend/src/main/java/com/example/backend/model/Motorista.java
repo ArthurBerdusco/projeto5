@@ -53,6 +53,10 @@ public class Motorista {
     )
     private List<Escola> escolas;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "van_id")
+    private Van van;
+
     public String getExperiencia() {
         return experiencia;
     }
@@ -176,5 +180,15 @@ public class Motorista {
     public void setImagem(Imagem imagem) {
         this.imagem = imagem;
     }
+
+    public Van getVan() {
+        return van;
+    }
+
+    public void setVan(Van van) {
+        this.van = van;
+    }
+
+    
 
 }

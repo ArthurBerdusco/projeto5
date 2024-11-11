@@ -12,7 +12,6 @@ export default function ListaEscolas() {
     const [searchQuery, setSearchQuery] = useState('');
 
     const fetchEscolas = async () => {
-        alert("ID CRIANÇA: " + idCrianca)
         setLoading(true);
         try {
 

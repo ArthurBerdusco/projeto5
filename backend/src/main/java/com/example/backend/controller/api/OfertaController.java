@@ -1,5 +1,6 @@
 package com.example.backend.controller.api;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -66,7 +67,13 @@ public class OfertaController {
             ofertaDTO.setNomeResponsavel(oferta.getResponsavel().getNome());
             ofertaDTO.setMensagem(oferta.getMensagem());
             ofertaDTO.setStatus(oferta.getStatus());
-            ofertaDTO.setValor(oferta.getValor()); 
+            ofertaDTO.setValor(oferta.getValor());
+            ofertaDTO.setDataPedido(oferta.getDataPedido());
+            ofertaDTO.setImagemVan(oferta.getMotorista().getVan().getImagem().getDados());
+            ofertaDTO.setImagemMotorista(oferta.getMotorista().getImagem().getDados());
+            ofertaDTO.setSobreMimMotorista(oferta.getMotorista().getSobreMim());
+            ofertaDTO.setExperienciaMotorista(oferta.getMotorista().getExperiencia());
+            
 
             return ResponseEntity.ok(ofertaDTO);
         }
@@ -75,10 +82,11 @@ public class OfertaController {
 
     @GetMapping("/motorista/{motoristaId}")
     public ResponseEntity<List<OfertaDTO>> getOfertasPorMotorista(@PathVariable Long motoristaId) {
-        List<Oferta> ofertas = ofertaRepository.findByMotoristaId(motoristaId);
+        List<Oferta> ofertas = ofertaRepository.findByMotoristaIdOrderByIdDesc(motoristaId);
 
         // Converte a lista de Ofertas para OfertaDTO
         List<OfertaDTO> ofertasDTO = ofertas.stream().map(oferta -> {
+
             OfertaDTO dto = new OfertaDTO();
             dto.setIdMotorista(oferta.getMotorista().getId());
             dto.setIdEscola(oferta.getEscola().getId());
@@ -90,7 +98,16 @@ public class OfertaController {
             dto.setStatus(oferta.getStatus());
             dto.setEndereco(oferta.getResponsavel().getEndereco().getRua() + ", " + oferta.getResponsavel().getEndereco().getNumero());
             dto.setMensagem(oferta.getMensagem());
+            dto.setDataPedido(oferta.getDataPedido());
             dto.setId(oferta.getId());
+            dto.setSobreMimMotorista(oferta.getMotorista().getSobreMim());
+            dto.setExperienciaMotorista(oferta.getMotorista().getExperiencia());
+            
+            if (oferta.getMotorista().getVan() != null && oferta.getMotorista().getVan().getImagem() != null) {
+                dto.setImagemVan(oferta.getMotorista().getVan().getImagem().getDados());
+            } else {
+                dto.setImagemVan(null);
+            }
             return dto;
         }).collect(Collectors.toList());
 
@@ -161,10 +178,20 @@ public class OfertaController {
                     .map(oferta -> {
                         OfertaDTO dto = new OfertaDTO();
                         dto.setId(oferta.getId());
-                        dto.setNomeMotorista(oferta.getMotorista().getNome()); // Define o nome do motorista
+                        dto.setNomeMotorista(oferta.getMotorista().getNome());
+                        dto.setNomeEscola(oferta.getEscola().getNome());
                         dto.setMensagem(oferta.getMensagem());
                         dto.setStatus(oferta.getStatus());
                         dto.setValor(oferta.getValor()); // Adiciona o valor, caso este campo exista em Oferta
+                        dto.setDataPedido(oferta.getDataPedido()); // Adiciona a data do pedido, caso este campo exista em Oferta
+
+                        // Configura a imagem do motorista se existir
+                        if (oferta.getMotorista().getImagem() != null) {
+                            dto.setImagemMotorista(oferta.getMotorista().getImagem().getDados());
+                        } else {
+                            dto.setImagemMotorista(null);
+                        }
+
                         return dto;
                     })
                     .collect(Collectors.toList());
@@ -179,7 +206,7 @@ public class OfertaController {
     }
 
     @PostMapping("/responder/{id}")
-    public ResponseEntity<String> responderOferta(@PathVariable Long id, @RequestBody Double valor) {
+    public ResponseEntity<String> responderOferta(@PathVariable Long id, @RequestBody BigDecimal valor) {
         if (id == null) {
             return ResponseEntity.badRequest().body("ID não pode ser nulo");
         }

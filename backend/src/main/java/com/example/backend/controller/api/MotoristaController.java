@@ -1,8 +1,9 @@
 package com.example.backend.controller.api;
 
 import java.io.IOException;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,14 +18,14 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.example.backend.dto.CriancaDTO;
+import com.example.backend.dto.MotoristaDTO;
+import com.example.backend.dto.VanDTO;
 import com.example.backend.model.Crianca;
-import com.example.backend.model.Escola;
 import com.example.backend.model.Imagem;
 import com.example.backend.model.Motorista;
-import com.example.backend.model.MotoristaEscola;
 import com.example.backend.model.Van;
 import com.example.backend.repository.CriancaRepository;
-import com.example.backend.repository.EscolaRepository;
 import com.example.backend.repository.ImagemRepository;
 import com.example.backend.repository.MotoristaEscolaRepository;
 import com.example.backend.repository.MotoristaRepository;
@@ -60,23 +61,49 @@ public class MotoristaController {
         motoristaRepository.save(motorista);
     }
 
+// VanController.java
     @GetMapping("/van/{idMotorista}")
     public ResponseEntity<?> obterVanMotoristaId(@PathVariable Long idMotorista) {
         try {
             // Busca a van pelo id do motorista
             Van van = vanRepository.findByMotoristaId(idMotorista)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "Van não encontrada para o motorista com ID: " + idMotorista));
+                    "Van não encontrada para o motorista com ID: " + idMotorista));
 
-            // Retorna status OK (200) com a van encontrada
-            return ResponseEntity.ok(van);
+            // Mapeia os dados de Van para VanDTO
+            VanDTO vanDTO = new VanDTO();
+            vanDTO.setId(van.getId());
+            vanDTO.setPlaca(van.getPlaca());
+            vanDTO.setRenavam(van.getRenavam());
+            vanDTO.setAnoFabricacao(van.getAnoFabricacao());
+            vanDTO.setModelo(van.getModelo());
+            vanDTO.setFabricante(van.getFabricante());
+            vanDTO.setCor(van.getCor());
+            vanDTO.setQuantidadeAssentos(van.getQuantidadeAssentos());
+            vanDTO.setAcessibilidade(van.isAcessibilidade());
+            vanDTO.setArCondicionado(van.isArCondicionado());
+            vanDTO.setCortinas(van.isCortinas());
+            vanDTO.setTvEntretenimento(van.isTvEntretenimento());
+            vanDTO.setCamerasSeguranca(van.isCamerasSeguranca());
+            vanDTO.setCintoSeguranca(van.isCintoSeguranca());
+            vanDTO.setExtintorIncendio(van.isExtintorIncendio());
+            vanDTO.setCnh(van.getCnh());
+            vanDTO.setAntecedentesCriminais(van.isAntecedentesCriminais());
+
+            // Mapear imagens se existirem
+            if (van.getImagem() != null) {
+                vanDTO.setImagem(van.getImagem().getDados());
+            }
+
+            // Retorna o DTO com status OK (200)
+            return ResponseEntity.ok(vanDTO);
 
         } catch (ResponseStatusException e) {
             // Retorna status NOT_FOUND (404) quando a van não for encontrada
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 
         } catch (Exception e) {
-            // Loga a exceção no console e retorna um erro interno do servidor (500)
+            // Erro interno do servidor (500)
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro ao obter van: " + e.getMessage());
@@ -88,6 +115,10 @@ public class MotoristaController {
         try {
             Motorista motorista = motoristaRepository.findById(idMotorista)
                     .orElseThrow(() -> new Exception("Motorista não encontrado"));
+
+            if (van.getImagem().getNome().isEmpty()) {
+                van.setImagem(null);
+            }
 
             van.setMotorista(motorista);
 
@@ -107,49 +138,63 @@ public class MotoristaController {
         }
     }
 
-    @PostMapping("/van/atualizar/{id}")
-    public ResponseEntity<?> atualizarVan(@PathVariable Long id, @RequestBody Van vanAtualizada) {
+    @PostMapping("/van/atualizar/{idMotorista}")
+    public ResponseEntity<?> attVan(@PathVariable Long idMotorista, @RequestBody VanDTO vanAtualizada) {
         try {
-
             // Verifica se a van com o ID fornecido existe
-            Van vanExistente = vanRepository.findById(id)
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
-                            "Van não encontrada com ID: " + id));
+            Van vanExistente = vanRepository.findByMotoristaId(idMotorista)
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Van não encontrada com ID: " + idMotorista));
 
-            // Verifica se o ID no corpo da requisição corresponde ao ID na URL
-            if (!vanAtualizada.getId().equals(id)) {
+            // Atualiza os campos da van existente com os dados do DTO
+            vanExistente.setPlaca(vanAtualizada.getPlaca());
+            vanExistente.setRenavam(vanAtualizada.getRenavam());
+            vanExistente.setAnoFabricacao(vanAtualizada.getAnoFabricacao());
+            vanExistente.setModelo(vanAtualizada.getModelo());
+            vanExistente.setFabricante(vanAtualizada.getFabricante());
+            vanExistente.setCor(vanAtualizada.getCor());
+            vanExistente.setQuantidadeAssentos(vanAtualizada.getQuantidadeAssentos());
+            vanExistente.setAcessibilidade(vanAtualizada.isAcessibilidade());
+            vanExistente.setArCondicionado(vanAtualizada.isArCondicionado());
+            vanExistente.setCortinas(vanAtualizada.isCortinas());
+            vanExistente.setTvEntretenimento(vanAtualizada.isTvEntretenimento());
+            vanExistente.setCamerasSeguranca(vanAtualizada.isCamerasSeguranca());
+            vanExistente.setCintoSeguranca(vanAtualizada.isCintoSeguranca());
+            vanExistente.setExtintorIncendio(vanAtualizada.isExtintorIncendio());
+            vanExistente.setCnh(vanAtualizada.getCnh());
+            vanExistente.setAntecedentesCriminais(vanAtualizada.isAntecedentesCriminais());
 
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ID da van inconsistente com a URL");
-            }
-
-            // Atualiza os dados da van existente
-            vanExistente = vanAtualizada;
-
-            // Atualize outros campos conforme necessário...
             // Salva a van atualizada no banco de dados
             vanRepository.save(vanExistente);
 
-            // Retorna status OK (200) com os dados da van atualizada
-            return ResponseEntity.ok(vanExistente);
-
-        } catch (ResponseStatusException e) {
-            // Retorna o status apropriado e a mensagem da exceção
-            return ResponseEntity.status(e.getStatusCode()).body(e.getReason());
-
+            // Retorna uma resposta de sucesso
+            return ResponseEntity.ok().body("Van atualizada com sucesso");
         } catch (Exception e) {
-            // Loga a exceção no console e retorna um erro interno do servidor (500)
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erro ao atualizar a van: " + e.getMessage());
+            // Trata outros erros
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao atualizar a van");
         }
     }
 
+    // MotoristaController.java
     @GetMapping("{id}")
     public ResponseEntity<?> getMotoristaById(@PathVariable Long id) {
         try {
-            Optional<Motorista> motorista = motoristaRepository.findById(id);
-            if (motorista.isPresent()) {
-                return ResponseEntity.ok(motorista.get());
+            Optional<Motorista> motoristaOptional = motoristaRepository.findById(id);
+            if (motoristaOptional.isPresent()) {
+                Motorista motorista = motoristaOptional.get();
+
+                // Cria um DTO a partir dos dados do motorista
+                MotoristaDTO motoristaDTO = new MotoristaDTO();
+                motoristaDTO.setId(motorista.getId());
+                motoristaDTO.setNome(motorista.getNome());
+                motoristaDTO.setEmail(motorista.getEmail());
+                motoristaDTO.setTelefone(motorista.getTelefone());
+                motoristaDTO.setExperiencia(motorista.getExperiencia());
+                motoristaDTO.setImagem(motorista.getImagem().getDados());
+                motoristaDTO.setSobreMim(motorista.getSobreMim());
+                motoristaDTO.setCpf(motorista.getCpf());
+                motoristaDTO.setEndereco(motorista.getEndereco());
+
+                return ResponseEntity.ok(motoristaDTO);
             } else {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Motorista não encontrado.");
             }
@@ -223,7 +268,18 @@ public class MotoristaController {
     public ResponseEntity<?> obterCriancasPorMotorista(@PathVariable Long idMotorista) {
         try {
             List<Crianca> criancas = criancaRepository.findByMotoristaId(idMotorista);
-            return ResponseEntity.ok(criancas);
+
+            // Converte a lista de Crianca para CriancaDTO com apenas id e nome
+            List<CriancaDTO> criancasDTO = criancas.stream()
+                    .map(crianca -> {
+                        CriancaDTO dto = new CriancaDTO();
+                        dto.setId(crianca.getId());
+                        dto.setNome(crianca.getNome());
+                        return dto;
+                    })
+                    .collect(Collectors.toList());
+
+            return ResponseEntity.ok(criancasDTO);
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)

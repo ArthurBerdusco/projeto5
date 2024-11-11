@@ -1,7 +1,7 @@
 import FotoPerfil from "@/app/components/Foto/FotoPerfil";
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { router } from "expo-router";
+import { router, useNavigation } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Image, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
 
@@ -31,9 +31,9 @@ interface Imagem {
 
 export default function Perfil() {
 
-    const [idResponsavel, setIdResponsavel] = useState('');
-    const [loading, setLoading] = useState(false);
+    const navigation = useNavigation();
 
+    const [loading, setLoading] = useState(false);
 
     const [responsavel, setResponsavel] = useState<Responsavel>({
         nome: '',
@@ -51,7 +51,7 @@ export default function Perfil() {
             id: 0,
             nome: '',
             dados: '',
-        } // Adicione esta linha
+        }
     });
 
 
@@ -59,7 +59,6 @@ export default function Perfil() {
         setLoading(true);
         try {
             const responsavel = (await AsyncStorage.getItem('idResponsavel')) ?? "";
-            setIdResponsavel(responsavel);
 
             const resultado = await fetch(`${config.IP_SERVER}/responsavel/${responsavel}`);
             const dados = await resultado.json();
@@ -73,8 +72,16 @@ export default function Perfil() {
     }
 
     useEffect(() => {
-        fetchResponsavel();
-    }, []);
+
+        const unsubscribeFocus = navigation.addListener("focus", () => {
+            fetchResponsavel();
+        });
+
+        return () => {
+            unsubscribeFocus();
+        };
+    }, [navigation]);
+
 
     if (loading) {
         return (
@@ -84,55 +91,12 @@ export default function Perfil() {
         );
     }
 
-    const handleDadosPessoaisChange = (field: keyof Omit<Responsavel, 'endereco'>, value: string) => {
-        setResponsavel(prevState => ({
-            ...prevState,
-            [field]: value
-        }));
-    };
-
-    const handleEnderecoChange = (field: keyof Endereco, value: string) => {
-        setResponsavel(prevState => ({
-            ...prevState,
-            endereco: {
-                ...prevState.endereco,
-                [field]: value
-            }
-        }));
-    };
-
-    const handleSubmit = async () => {
-        try {
-            const idResponsavel = await AsyncStorage.getItem('idResponsavel')
-            const response = await fetch(`${config.IP_SERVER}/responsavel/atualizar/${idResponsavel}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(responsavel),
-            });
-
-            if (response.ok) {
-                alert('Responsável atualizado com sucesso!');
-            } else {
-                alert('Erro ao atualizar o responsável.');
-            }
-        } catch (error) {
-            console.error(error);
-            alert('Ocorreu um erro ao enviar os dados.');
-        }
-    };
-
     return (
         <SafeAreaView style={styles.total}>
             <ScrollView contentContainerStyle={styles.scrollView}>
                 {responsavel.imagem && responsavel.imagem.dados ? (
                     <Image
-                        source={{
-                            uri: responsavel.imagem.dados.startsWith('data:image/')
-                                ? responsavel.imagem.dados
-                                : `data:image/jpeg;base64,${responsavel.imagem.dados}`
-                        }}
+                        source={responsavel.imagem ? { uri: `data:image/jpeg;base64,${responsavel.imagem.dados}` } : require('@/app/assets/icons/take-a-picture.png')}
                         style={styles.image}
                     />
                 ) : (

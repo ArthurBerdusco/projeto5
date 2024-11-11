@@ -40,6 +40,7 @@ public class Crianca {
     @ManyToOne
     @JoinColumn(name = "id_motorista")
     private Motorista motorista;
+    
 
     public Long getId() {
         return id;
