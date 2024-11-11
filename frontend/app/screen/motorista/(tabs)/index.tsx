@@ -95,6 +95,7 @@ export default function Index() {
   };
 
 
+  //5MB escolas atendidas (3 imagens) // 4Byte count
   const fetchEscolasAtendidas = async (idMotorista: string | null) => {
     if (!idMotorista) return [];
     try {
@@ -116,7 +117,7 @@ export default function Index() {
       return [];
     }
   };
-
+  
   const fetchCriancas = async (idMotorista: string | null) => {
     if (!idMotorista) return [];
     try {
@@ -128,8 +129,6 @@ export default function Index() {
       return [];
     }
   };
-
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -204,7 +203,10 @@ export default function Index() {
                     key={escola.id}
                     style={styles.cardsMotoristas}
                     onPress={() =>
-                      router.navigate(`/screen/motorista/escola/detalhesEscola?escolaId=${escola.id}`)
+                      router.navigate({
+                        pathname: `/screen/motorista/escola/detalhesEscola`,
+                        params: { nomeEscola: escola.nome, escolaId: escola.id }
+                      })
                     }
                   >
                     <Text style={styles.quantidadeCrianca}>{escola.quantidadeCriancas} Crianças</Text>
@@ -213,11 +215,11 @@ export default function Index() {
                       <Text style={styles.nomeEscola}>{escola.nome}</Text>
                     </View>
                   </Pressable>
+
                 ))
               )}
             </View>
           </View>
-
 
           <View style={[styles.page, { width: windowWidth }]}>
             <Text style={styles.titulo}>Organize as crianças</Text>

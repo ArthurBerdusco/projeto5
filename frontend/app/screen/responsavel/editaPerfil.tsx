@@ -1,6 +1,7 @@
 import FotoPerfil from "@/app/components/Foto/FotoPerfil";
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
@@ -28,7 +29,10 @@ interface Imagem {
 }
 
 
-export default function Perfil() {
+export default function EditaPerfil() {
+
+    const router = useRouter();
+
 
     const [idResponsavel, setIdResponsavel] = useState('');
     const [loading, setLoading] = useState(false);
@@ -111,11 +115,8 @@ export default function Perfil() {
                 body: JSON.stringify(responsavel),
             });
 
-            if (response.ok) {
-                alert('Responsável atualizado com sucesso!');
-            } else {
-                alert('Erro ao atualizar o responsável.');
-            }
+            router.navigate("/screen/responsavel/(tabs)/perfil");
+
         } catch (error) {
             console.error(error);
             alert('Ocorreu um erro ao enviar os dados.');
@@ -130,7 +131,7 @@ export default function Perfil() {
                 <FotoPerfil
                     idEntidade={idResponsavel}
                     entidade={"Responsavel"}
-                    initialImage={responsavel.imagem?.dados ? `data:image/jpeg;base64,${responsavel.imagem.dados}` : null}
+                    imagemInicial={responsavel.imagem?.dados ? `data:image/jpeg;base64,${responsavel.imagem.dados}` : null}
                 />
 
                 <View style={styles.containerInputs}>
@@ -149,6 +150,7 @@ export default function Perfil() {
                             style={styles.textInputs}
                             value={responsavel.cpf}
                             onChangeText={(text) => handleDadosPessoaisChange('cpf', text)}
+                            editable={false}
                         />
                     </View>
                     <View>

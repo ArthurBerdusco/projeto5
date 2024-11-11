@@ -13,7 +13,6 @@ export default function Escola() {
     
     const fetchEscola = async () => {
         try {
-           alert(idMotorista)
             const response = await fetch(`${config.IP_SERVER}/api/escolas/${idEscola}`);
             const data = await response.json();
             setEscola(data);

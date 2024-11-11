@@ -12,12 +12,6 @@ interface Endereco {
     complemento: string;
 }
 
-interface Imagem {
-    id: number;
-    nome: string;
-    dados: string | null;
-}
-
 interface Motorista {
     nome: string;
     cpf: string;
@@ -26,7 +20,7 @@ interface Motorista {
     endereco: Endereco;
     experiencia: string;
     sobreMim: string;
-    imagem: Imagem;
+    imagem: string;
 }
 
 interface Van {
@@ -70,11 +64,7 @@ export default function Perfil() {
         },
         experiencia: '',
         sobreMim: '',
-        imagem: {
-            id: 0,
-            nome: '',
-            dados: '',
-        }
+        imagem: ''
     });
 
     const [van, setVan] = useState<Van>({
@@ -146,12 +136,12 @@ export default function Perfil() {
             <ScrollView style={styles.scrollView}>
 
                 <View style={styles.parteSuperiorPerfil}>
-                    {motorista.imagem && motorista.imagem.dados ? (
+                    {motorista.imagem && motorista.imagem ? (
                         <Image
                             source={{
-                                uri: motorista.imagem.dados.startsWith('data:image/')
-                                    ? motorista.imagem.dados
-                                    : `data:image/jpeg;base64,${motorista.imagem.dados}`
+                                uri: motorista.imagem.startsWith('data:image/')
+                                    ? motorista.imagem
+                                    : `data:image/jpeg;base64,${motorista.imagem}`
                             }}
                             style={{ width: 120, height: 120, borderRadius: 60 }} // Estilize a imagem conforme necessário
                         />

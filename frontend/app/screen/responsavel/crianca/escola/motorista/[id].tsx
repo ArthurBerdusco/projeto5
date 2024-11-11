@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, Alert, StyleSheet, TouchableOpacity, TextInput, Image } from 'react-native';
 import { useRouter, useLocalSearchParams } from "expo-router";
 import config from '@/app/config';
+
 interface Van {
     placa: string;
     renavam: string;
@@ -19,21 +20,33 @@ interface Van {
     extintorIncendio: boolean;
     cnh: string;
     antecedentesCriminais: boolean;
-    fotosVeiculo: string[]; // Array para armazenar URLs ou paths das fotos do veículo
+    imagem?: string; // Array para armazenar URLs ou paths das fotos do veículo
 }
 export default function Motorista() {
     const [motorista, setMotorista] = useState(null);
-    const [van, setVan] = useState<Van | null>(null); // Inicializa o estado da van
+    const [van, setVan] = useState<Van>({
+        placa: '',
+        renavam: '',
+        anoFabricacao: '',
+        modelo: '',
+        fabricante: '',
+        cor: '',
+        quantidadeAssentos: '',
+        acessibilidade: false,
+        arCondicionado: false,
+        cortinas: false,
+        tvEntretenimento: false,
+        camerasSeguranca: false,
+        cintoSeguranca: false,
+        extintorIncendio: false,
+        cnh: '',
+        antecedentesCriminais: false,
+        imagem: '',
+    })
 
     const [loading, setLoading] = useState(true);
     const [mensagem, setMensagem] = useState("");
     const { id, idEscola, idCrianca, idResponsavel } = useLocalSearchParams();
-
-    // console.log("Dados da Criança na envia oferta:", JSON.stringify(crianca)); // Log do objeto completo
-    // console.log("ID da Criança na envia oferta:", crianca?.id); // Acessando o ID diretamente
-
-    // console.log("ID do Responsável:", responsavelId); // Agora você pode ver o ID do responsável
-
 
     const buscarVan = async () => {
         try {
@@ -66,7 +79,6 @@ export default function Motorista() {
 
     }, [id]);
 
-    // Função para enviar a oferta
     const enviarOferta = async () => {
         try {
             const objeto = {
@@ -76,11 +88,7 @@ export default function Motorista() {
                 idResponsavel: idResponsavel,
                 mensagem
             }
-            alert("Motorista: " + objeto.idMotorista + ", " +
-                "Escola: " + objeto.idEscola + ", " + 
-                "Crianca: " + objeto.idCrianca + ", " + 
-                "Responsavel: " + objeto.idResponsavel
-            )
+
             const response = await fetch(`${config.IP_SERVER}/oferta/enviar`, {
                 method: 'POST',
                 headers: {
@@ -132,7 +140,8 @@ export default function Motorista() {
         <View style={styles.container}>
 
             <View style={styles.parteSuperiorPerfil}>
-                <Image source={require('@/app/assets/icons/motorista.png')} style={{ width: 120, height: 120 }} />
+                <Image
+                    source={motorista.imagem ? { uri: `data:image/jpeg;base64,${motorista.imagem}` } : require('@/app/assets/icons/motorista.png')} style={{ width: 120, height: 120, borderRadius: 60 }}/>
                 <View style={styles.containerInformacoes}>
                     <Text style={styles.name}>{motorista.nome}</Text>
                     <Text style={styles.info}>Idade: {motorista.idade} anos</Text>
@@ -182,16 +191,11 @@ export default function Motorista() {
                 </View>
             </View>
 
-
-
             <View>
                 <TouchableOpacity style={styles.button} onPress={enviarOferta}>
                     <Text style={styles.buttonText}>Solicitar orçamento</Text>
                 </TouchableOpacity>
             </View>
-
-
-
 
         </View>
     );

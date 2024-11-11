@@ -13,12 +13,6 @@ interface Endereco {
     complemento: string;
 }
 
-interface Imagem {
-    id: number;
-    nome: string;
-    dados: string | null;
-}
-
 interface Motorista {
     nome: string;
     cpf: string;
@@ -27,7 +21,7 @@ interface Motorista {
     endereco: Endereco;
     experiencia: string;
     sobreMim: string;
-    imagem: Imagem;
+    imagem: string;
 }
 
 export default function Perfil() {
@@ -45,11 +39,7 @@ export default function Perfil() {
         },
         experiencia: '',
         sobreMim: '',
-        imagem: {
-            id: 0,
-            nome: '',
-            dados: '',
-        }
+        imagem: ''
     });
 
     const [loading, setLoading] = useState(false);
@@ -69,7 +59,7 @@ export default function Perfil() {
             const dados = await resultado.json();
             setMotorista(dados);
 
-        } catch (err) {
+        } catch (err: any) {
             Alert.alert(`Erro: ${err.message}`);
         } finally {
             setLoading(false);
@@ -135,7 +125,7 @@ export default function Perfil() {
                 <FotoPerfil
                     idEntidade={idMotorista}
                     entidade={"Motorista"}
-                    initialImage={motorista.imagem?.dados ? `data:image/jpeg;base64,${motorista.imagem.dados}` : null}
+                    imagemInicial={motorista.imagem ? `data:image/jpeg;base64,${motorista.imagem}` : null}
                 />
                 <View style={styles.containerInputs}>
                     <Text style={styles.textTitle}>Dados Pessoais:</Text>
@@ -149,6 +139,7 @@ export default function Perfil() {
                     <TextInput
                         style={styles.textInputs}
                         value={motorista.cpf}
+                        editable={false}
                         onChangeText={(text) => handleDadosPessoaisChange('cpf', text)}
                     />
                     <Text style={styles.text}>Email</Text>

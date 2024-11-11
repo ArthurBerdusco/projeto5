@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import config from "@/app/config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { UserRoundPlus } from 'lucide-react-native';
 
 interface Crianca {
     id: number;
@@ -27,9 +26,6 @@ export default function Index() {
             const responsavelId = await AsyncStorage.getItem('idResponsavel');
             if (responsavelId) {
                 const response = await fetch(`${config.IP_SERVER}/crianca/responsavel/${responsavelId}`);
-                if (response.status === 404) {
-                    throw new Error('Nenhuma criança cadastrada');
-                }
                 const data = await response.json();
                 setCriancas(data);
             } else {

@@ -6,12 +6,6 @@ import { useNavigation, useRouter } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, Switch, Button, Image, ScrollView, TouchableOpacity, SafeAreaView, Pressable, StyleSheet, ActivityIndicator } from 'react-native';
 
-interface Imagem {
-    id: number;
-    nome: string;
-    dados: string | null;
-}
-
 interface Van {
     placa: string;
     renavam: string;
@@ -29,7 +23,7 @@ interface Van {
     extintorIncendio: boolean;
     cnh: string;
     antecedentesCriminais: boolean;
-    imagem: Imagem;
+    imagem: string;
 }
 
 
@@ -57,11 +51,7 @@ export default function Index() {
         extintorIncendio: false,
         cnh: '',
         antecedentesCriminais: false,
-        imagem: {
-            id: 0,
-            nome: '',
-            dados: null,
-        },
+        imagem: '',
     });
 
     const fetchVan = async () => {
@@ -73,7 +63,6 @@ export default function Index() {
             const resultado = await fetch(`${config.IP_SERVER}/motorista/van/${motorista}`);
             const dados = await resultado.json();
             setVan(dados);
-            console.log("IMAGEM VAN INFO: " + dados.imagem)
 
         } catch (err) {
             alert(err);
@@ -97,7 +86,7 @@ export default function Index() {
 
     if (loading) {
         return (
-            <View style={styles.loadingContainer}>
+            <View>
                 <ActivityIndicator size="large" color="#0d99ff" />
             </View>
         );
@@ -155,7 +144,7 @@ export default function Index() {
                 </View>
 
                 <Image
-                    source={van.imagem?.dados ? { uri: `data:image/jpeg;base64,${van.imagem.dados}` } : require('@/app/assets/icons/take-a-picture.png')}
+                    source={van.imagem ? { uri: `data:image/jpeg;base64,${van.imagem}` } : require('@/app/assets/icons/take-a-picture.png')}
                     style={styles.image}
                 />
 

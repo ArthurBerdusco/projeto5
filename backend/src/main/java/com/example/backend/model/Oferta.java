@@ -1,5 +1,8 @@
 package com.example.backend.model;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -8,6 +11,10 @@ import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Oferta {
+
+    public Oferta(){
+        this.dataPedido = LocalDateTime.now();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,9 +34,11 @@ public class Oferta {
 
     private String status;
 
-    private Double valor;
+    private BigDecimal valor;
 
     private String mensagem;
+
+    private LocalDateTime dataPedido;
 
     public Long getId() {
         return id;
@@ -79,11 +88,11 @@ public class Oferta {
         this.status = status;
     }
 
-    public Double getValor() {
+    public BigDecimal getValor() {
         return valor;
     }
 
-    public void setValor(Double valor) {
+    public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
 
@@ -93,6 +102,14 @@ public class Oferta {
 
     public void setMensagem(String mensagem) {
         this.mensagem = mensagem;
+    }
+
+    public LocalDateTime getDataPedido() {
+        return dataPedido;
+    }
+
+    public void setDataPedido(LocalDateTime dataPedido) {
+        this.dataPedido = dataPedido;
     }
 
 }

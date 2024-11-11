@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.example.backend.model.Oferta;
 
 public interface OfertaRepository extends JpaRepository<Oferta, Long> {
-    List<Oferta> findByMotoristaId(Long motoristaId);
+    List<Oferta> findByMotoristaIdOrderByIdDesc(Long motoristaId);
 
     List<Oferta> findByCriancaId(Long criancaId);
 
