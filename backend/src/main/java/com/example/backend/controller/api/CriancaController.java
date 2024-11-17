@@ -9,10 +9,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -65,6 +67,7 @@ public class CriancaController {
             criancaDTO.setIdade(crianca.getIdade());
             criancaDTO.setNome(crianca.getNome());
             criancaDTO.setPeriodo(crianca.getPeriodo());
+            criancaDTO.setStatus(crianca.getStatus());
 
             // Adicione outros campos conforme necessário
             return criancaDTO;
@@ -135,7 +138,6 @@ public class CriancaController {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Criança não encontrada", ex);
         }
     }
-    
 
     @PutMapping("/crianca/{id}")
     public ResponseEntity<Crianca> atualizarCrianca(@PathVariable Long id, @RequestBody Crianca criancaAtualizada) {
@@ -261,5 +263,16 @@ public class CriancaController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erro ao excluir a ausência: " + e.getMessage());
         }
+    }
+
+    @PatchMapping("/crianca/{id}/status")
+    public ResponseEntity<Void> atualizarStatus(@PathVariable Long id, @RequestParam String status) {
+        Crianca crianca = criancaRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Criança não encontrada"));
+
+        crianca.setStatus(status);
+        criancaRepository.save(crianca);
+
+        return ResponseEntity.ok().build();
     }
 }

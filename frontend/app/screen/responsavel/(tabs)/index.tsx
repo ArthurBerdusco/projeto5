@@ -10,6 +10,7 @@ interface Crianca {
     nome: string;
     idade: number;
     periodo: string;
+    status: string;
 }
 
 export default function Index() {
@@ -81,10 +82,12 @@ export default function Index() {
                                 style={styles.cardsCriancas}
                                 key={crianca.id}
                             >
-                                <View style={{ flexDirection: "column" }}>
-                                    <Text style={styles.cardText}>Nome: {crianca.nome}</Text>
-                                    <Text style={styles.cardText}>Idade: {crianca.idade} anos</Text>
-                                    <Text style={styles.cardTextsegundo}>{crianca.periodo}</Text>
+                                <View style={{ flexDirection: "column", gap: 5 }}>
+                                    <Text style={styles.cardText}>{crianca.nome}</Text>
+                                    <Text style={styles.cardText}>{crianca.idade} anos</Text>
+                                    <Text style={styles.cardPeriodo}>{crianca.periodo}</Text>
+                                    <Text style={styles.cardTextsegundo}>{crianca.status}</Text>
+
 
                                 </View>
                             </Pressable>
@@ -163,34 +166,45 @@ const styles = StyleSheet.create({
         width: "48%",
         backgroundColor: "#0d99ff",
         borderRadius: 15,
-        justifyContent: "flex-start",
-        alignItems: "flex-start",
         padding: 15,
         shadowColor: "#000",
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.3,
         shadowRadius: 4,
         elevation: 5,
+
     },
     cardText: {
         color: "#ffffff",
         fontWeight: "700",
-        fontSize: 15,
+        fontSize: 18,
         textAlign: "left",
-        margin: 2
+        margin: 1
     },
 
     cardTextsegundo: {
-
-        color: "black",
-        fontWeight: "700",
-        fontSize: 13,
-        textAlign: "center",
+        textTransform: "uppercase",
+        backgroundColor: "#ffa600f0",
         margin: 2,
-        backgroundColor: "#ffbf00",
-        borderRadius: 50,
-        marginTop: 50,
-        width: 60
+        textAlign: "center",
+        borderRadius: 15,
+        fontSize: 11,
+        width: 80,
+        color: "black"
+
+
+    },
+    cardPeriodo: {
+
+        textTransform: "uppercase",
+        backgroundColor: "#fffffff0",
+        margin: 2,
+        textAlign: "center",
+        borderRadius: 15,
+        fontSize: 11,
+        width: 50,
+        color: "black"
+
     },
     cadastrarTexto: {
         textAlign: "center",

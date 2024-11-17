@@ -375,3 +375,37 @@ UPDATE "PUBLIC"."VAN" SET "ID"=? ,"ACESSIBILIDADE"=? ,"ANO_FABRICACAO"=? ,"ANTEC
 2024-11-11 02:04:33.207624-03:00 jdbc[13]: exception
 org.h2.jdbc.JdbcSQLDataException: Data conversion error converting "'' (VAN: ""IMAGEM_ID"" BIGINT)"; SQL statement:
 UPDATE "PUBLIC"."VAN" SET "ID"=? ,"ACESSIBILIDADE"=? ,"ANO_FABRICACAO"=? ,"ANTECEDENTES_CRIMINAIS"=? ,"AR_CONDICIONADO"=? ,"CAMERAS_SEGURANCA"=? ,"CINTO_SEGURANCA"=? ,"CNH"=? ,"COR"=? ,"CORTINAS"=? ,"EXTINTOR_INCENDIO"=? ,"FABRICANTE"=? ,"MODELO"=? ,"PLACA"=? ,"QUANTIDADE_ASSENTOS"=? ,"RENAVAM"=? ,"TV_ENTRETENIMENTO"=? ,"IMAGEM_ID"=? ,"MOTORISTA_ID"=?  WHERE "ID"=? [22018-224]
+2024-11-16 00:06:34.889421-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "ALTER TABLE CRIANCA [*]WHERE STATUS = ""RETIRADA """; expected "., ADD, SET, RENAME, DROP, ALTER"; SQL statement:
+ALTER TABLE CRIANCA WHERE STATUS = "RETIRADA " [42001-224]
+2024-11-16 00:08:21.476852-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CRIANÇA" not found; SQL statement:
+UPDATE criança
+SET status = 'novo_status' 
+WHERE id = 1 [42102-224]
+2024-11-17 09:40:35.886231-03:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "CRIANÇA" not found; SQL statement:
+UPDATE criança
+SET status = 'AUSENTE' [42102-224]
+2024-11-17 11:22:29.330759-03:00 jdbc[35]: null
+org.h2.message.DbException: The connection was not closed by the application and is garbage collected [90018-224]
+	at org.h2.message.DbException.get(DbException.java:223)
+	at org.h2.message.DbException.get(DbException.java:199)
+	at org.h2.message.DbException.get(DbException.java:188)
+	at org.h2.jdbc.JdbcConnection.closeOld(JdbcConnection.java:218)
+	at org.h2.jdbc.JdbcConnection.<init>(JdbcConnection.java:135)
+	at org.h2.Driver.connect(Driver.java:59)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:137)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:360)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:202)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:461)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:724)
+	at com.zaxxer.hikari.pool.HikariPool$PoolEntryCreator.call(HikariPool.java:703)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1570)
+Caused by: org.h2.jdbc.JdbcSQLNonTransientConnectionException: The connection was not closed by the application and is garbage collected [90018-224]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:690)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:489)
+	... 16 more

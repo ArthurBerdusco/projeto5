@@ -25,7 +25,6 @@ export default function RootLayout() {
         name="screen/auth/loginScreen"
         options={{
           title: 'Login',
-          headerLeft: () => null  // Remove a seta de voltar
         }}
       />
 
