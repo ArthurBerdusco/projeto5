@@ -83,17 +83,50 @@ export default function Index() {
   }, [page]);
 
 
-  const confirmarEmbarque = () => {
+  const confirmarEmbarque = async () => {
     if (criancaAtual < criancas.length) {
-      setCriancas(prevCriancas =>
-        prevCriancas.map((crianca, index) =>
-          index === criancaAtual ? { ...crianca, confirmado: true } : crianca
-        )
-      );
-      setCriancaAtual(prev => prev + 1);
+      const crianca = criancas[criancaAtual];
+
+      try {
+        await alterarStatus(crianca.id, "EMBARCADO");
+
+        setCriancas(prevCriancas =>
+          prevCriancas.map((c, index) =>
+            index === criancaAtual ? { ...c, confirmado: true } : c
+          )
+        );
+
+        setCriancaAtual(prev => prev + 1);
+
+        console.log(`Status da criança ${crianca.id} atualizado para RETIRADA.`);
+      } catch (error) {
+        console.error("Erro ao atualizar o status da criança:", error);
+      }
     }
   };
 
+  const alterarStatus = async (criancaId: number, status: string) => {
+    try {
+      const response = await fetch(`${config.IP_SERVER}/crianca/${criancaId}/status?status=${status}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao atualizar o status da criança");
+      }
+
+      setCriancas(prevCriancas =>
+        prevCriancas.map(crianca =>
+          crianca.id === criancaId ? { ...crianca, status } : crianca
+        )
+      );
+
+      console.log(`Status da criança ${criancaId} atualizado para ${status}`);
+    } catch (error) {
+      console.error("Erro ao atualizar o status da criança:", error);
+    }
+  };
 
   //5MB escolas atendidas (3 imagens) // 4Byte count
   const fetchEscolasAtendidas = async (idMotorista: string | null) => {
@@ -117,7 +150,7 @@ export default function Index() {
       return [];
     }
   };
-  
+
   const fetchCriancas = async (idMotorista: string | null) => {
     if (!idMotorista) return [];
     try {
@@ -210,9 +243,9 @@ export default function Index() {
                     }
                   >
                     <Text style={styles.quantidadeCrianca}>{escola.quantidadeCriancas} Crianças</Text>
-                    <View style={{ flexDirection: "row", justifyContent: "flex-start" }}>
-                      <Image source={require('@/app/assets/icons/school.png')} />
-                      <Text style={styles.nomeEscola}>{escola.nome}</Text>
+                    <View style={{ flexDirection: "row", justifyContent: "flex-start", alignItems: "center", gap: 5 }}>
+                      <Image source={require('@/app/assets/icons/school.png')} style={{ marginBottom: 2 }} />
+                      <Text style={styles.nomeEscola} numberOfLines={1} >{escola.nome}</Text>
                     </View>
                   </Pressable>
 
@@ -234,7 +267,7 @@ export default function Index() {
                     style={[styles.cardsCriancas, isActive && { backgroundColor: '#007bff' }]}
                     onLongPress={drag}
                   >
-                    <Text style={styles.nomeEscola}>{item.nome}</Text>
+                    <Text style={styles.nomeKid}>{item.nome}</Text>
                   </Pressable>
                 )}
               />
@@ -259,7 +292,6 @@ const styles = StyleSheet.create({
   },
   titulo: {
     fontSize: 20,
-    marginLeft: 20,
     fontWeight: "bold",
   },
   containerCards: {
@@ -286,7 +318,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   cardsCriancas: {
-    height: 100,
+    height: 90,
     width: 320,
     backgroundColor: "#0EAFFF",
     borderRadius: 10,
@@ -297,7 +329,19 @@ const styles = StyleSheet.create({
   nomeEscola: {
     fontWeight: "bold",
     color: "white",
+    fontSize: 14,
+
+
+
+  },
+
+  nomeKid: {
+    fontWeight: "bold",
+    color: "white",
     fontSize: 16,
+
+
+
   },
   quantidadeCrianca: {
     fontWeight: "400",

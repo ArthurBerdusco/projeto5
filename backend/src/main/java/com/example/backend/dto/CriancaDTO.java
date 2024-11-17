@@ -18,8 +18,9 @@ public class CriancaDTO {
     private Long idMotorista;
     private String nomeMotorista;
     private String periodo;
-    
+
     private String nomeResponsavel;
     private String telefoneResponsavel;
     private String nomeEscola;
+    private String status;
 }

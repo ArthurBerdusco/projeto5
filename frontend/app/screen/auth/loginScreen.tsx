@@ -59,7 +59,7 @@ export default function LoginScreen() {
                 Alert.alert("Error", "Não foi possível fazer login.");
             }
         } catch (error) {
-            Alert.alert("Error", "Erro de conexão com o backend.");
+            // Alert.alert("Error", "Erro de conexão com o backend.");
         } finally {
             setLoading(false)
         }
