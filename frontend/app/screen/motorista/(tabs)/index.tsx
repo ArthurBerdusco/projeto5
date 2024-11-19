@@ -51,6 +51,7 @@ export default function Index() {
   const [escolasAtendidas, setEscolasAtendidas] = useState([]);
   const [criancas, setCriancas] = useState<Crianca[]>([]);
   const [criancaAtual, setCriancaAtual] = useState(0);
+  const [modoBotao, setModoBotao] = useState("BUSCAR_NA_ESCOLA");
 
   const [page, setPage] = useState(0);
 
@@ -82,7 +83,38 @@ export default function Index() {
     }).start();
   }, [page]);
 
+  const confirmarAcao = async () => {
+    if (criancaAtual < criancas.length) {
+      const crianca = criancas[criancaAtual];
+      const novoStatus = modoBotao === "BUSCAR_NA_ESCOLA" ? "BUSCADO" : "EMBARCADO";
 
+      try {
+        await alterarStatus(crianca.id, novoStatus);
+
+        setCriancas((prevCriancas) =>
+          prevCriancas.map((c, index) =>
+            index === criancaAtual ? { ...c, confirmado: true } : c
+          )
+        );
+
+        setCriancaAtual((prev) => prev + 1);
+
+        console.log(`Status da criança ${crianca.id} atualizado para ${novoStatus}.`);
+      } catch (error) {
+        console.error("Erro ao atualizar o status da criança:", error);
+      }
+    }
+  };
+
+  const alternarModo = () => {
+    setModoBotao((prevModo) =>
+      prevModo === "BUSCAR_NA_ESCOLA" ? "EMBARCAR" : "BUSCAR_NA_ESCOLA"
+    );
+    setCriancaAtual(0);
+    setCriancas((prevCriancas) =>
+      prevCriancas.map((crianca) => ({ ...crianca, confirmado: false }))
+    );
+  };
   const confirmarEmbarque = async () => {
     if (criancaAtual < criancas.length) {
       const crianca = criancas[criancaAtual];
@@ -195,8 +227,10 @@ export default function Index() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <View style={{ flex: 1, backgroundColor: "white" }} {...panResponder.panHandlers}>
 
-        <Pressable style={styles.cardControle} onPress={confirmarEmbarque}>
-          <Text style={styles.title}>Buscar</Text>
+        <Pressable style={styles.cardControle} onPress={confirmarAcao}>
+          <Text style={styles.title}>
+            {modoBotao === "BUSCAR_NA_ESCOLA" ? "Buscar na Escola" : "Embarcar"}
+          </Text>
           <Text style={styles.schoolName}>(ENDERECO DA CRIANÇA)</Text>
 
           <View style={styles.progressContainer}>
@@ -222,6 +256,12 @@ export default function Index() {
               </View>
             )}
           </View>
+        </Pressable>
+
+        <Pressable style={[styles.cardControle, { backgroundColor: "gray" }]} onPress={alternarModo}>
+          <Text style={styles.title}>
+            Mudar para {modoBotao === "BUSCAR_NA_ESCOLA" ? "Embarcar" : "Buscar na Escola"}
+          </Text>
         </Pressable>
 
         <Animated.View style={[styles.slideContainer, { transform: [{ translateX }] }]}>
