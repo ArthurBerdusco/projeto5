@@ -1,4 +1,4 @@
-# OTIO - Aplicativo Mobile de Conexão Pais e Perueiros 🚀
+# OTIO - Aplicativo Mobile de Conexão Pais e Perueiros 🚌🧑‍🧒‍🧒
 
 ## 📘 Visão Geral
 
@@ -6,7 +6,7 @@ O **OTIO** é um aplicativo mobile desenvolvido em **React Native** e com backen
 
 ---
 
-## 🧑‍🤝‍🧑 Equipe de Desenvolvimento
+## 🧑‍💻👩‍💻 Equipe de Desenvolvimento
 
 - **Arthur Silva**  
 - **Kayke Ribeiro**  
