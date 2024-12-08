@@ -38,18 +38,15 @@ O **OTIO** é um aplicativo mobile desenvolvido em **React Native** e com backen
 
 - **Buscar Perueiros**  
   Interface para procurar perueiros que atendem às escolas das crianças.  
-  ![Cadastro de Criança](docs/imagens/responsavel_crianca.jpeg)  
 
 - **Solicitar Propostas**  
   Pais podem solicitar propostas diretamente aos perueiros para transporte escolar.  
 
 - **Gerenciar Ausências das Crianças**  
   Interface para informar e gerenciar a ausência das crianças de forma rápida e prática.  
-  ![Gerenciar Ausências](docs/imagens/responsavel_crianca_ausencia.jpeg)  
 
 - **Perfil Responsável**  
   Perfil personalizável com foto e informações relevantes.  
-  ![Perfil Responsável](docs/imagens/responsavel_perfil.jpeg)  
 
 ---
 
@@ -57,19 +54,15 @@ O **OTIO** é um aplicativo mobile desenvolvido em **React Native** e com backen
 
 - **Gerenciamento de Perfil e Van**  
   Interface para personalizar o perfil e os detalhes das vans.  
-  ![Perfil do Perueiro](docs/imagens/perueiro_perfil.jpeg)  
 
 - **Gerenciar Rotas e Escolas**  
   Vinculação das escolas e gerenciamento das rotas e informações das crianças.  
-  ![Escolas Atendidas](docs/imagens/perueiro_escolasatendidas.jpeg)  
 
 - **Emitir Ofertas**  
   Perueiros criam ofertas para pais, facilitando a comunicação e vínculo.  
-  ![Ofertas do Perueiro](docs/imagens/perueiro_ofertas.jpeg)  
 
 - **Home Interface**  
   Tela principal do perueiro com todas as informações em destaque.  
-  ![Home Perueiro](docs/imagens/perueiro_home.jpeg)  
 
 ---
 
@@ -80,7 +73,6 @@ O **OTIO** é um aplicativo mobile desenvolvido em **React Native** e com backen
 
 - **Gestão Centralizada**  
   Ferramentas administrativas para gerenciar todos os dados e funcionalidades do sistema.  
-  ![Dashboard Backoffice](docs/imagens/perueiro_escolas.jpeg)  
 
 ---
 
