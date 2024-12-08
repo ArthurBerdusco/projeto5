@@ -75,6 +75,38 @@ O **OTIO** é um aplicativo mobile desenvolvido em **React Native** e com backen
 
 ---
 
+## 🔐 Segurança do Sistema
+
+- **Spring Security** para autenticação e controle de acesso robusto.
+- Controle de acesso personalizado para pais, perueiros e administradores.
+
+---
+
+## 📁 Estrutura do Projeto
+
+### 🔹 Backend (Spring Boot)
+- **Model:** Representação das entidades (Pais, Perueiros, Escolas, Crianças).
+- **Controller:** Conecta a View ao Model e gerencia as requisições HTTP.
+- **View:** Interface no frontend React Native.
+
+### 🔹 Frontend (React Native)
+Interface responsiva e fácil de usar para interagir entre pais e perueiros.
+
+---
+
+## 📜 Licença
+
+- Este projeto segue os termos acadêmicos e educativos do SENAC e é destinado ao aprendizado e uso não comercial.
+
+---
+
+## 🙌 Agradecimentos
+
+- Obrigado aos membros da equipe que tornaram esse projeto possível:
+- Arthur, Kayke, Eliseu, Samuel, Thales, Lucas e Alexsandro.
+
+---
+
 ## 📜 Tabela das Imagens
 
 | **Descrição**                   | **Imagem**                         |
@@ -95,45 +127,3 @@ O **OTIO** é um aplicativo mobile desenvolvido em **React Native** e com backen
 
 ---
 
-## 🔐 Segurança do Sistema
-
-- **Spring Security** para autenticação e controle de acesso robusto.
-- Controle de acesso personalizado para pais, perueiros e administradores.
-
----
-
-## 📁 Estrutura do Projeto
-
-### 🔹 Backend (Spring Boot)
-- **Model:** Representação das entidades (Pais, Perueiros, Escolas, Crianças).
-- **Controller:** Conecta a View ao Model e gerencia as requisições HTTP.
-- **View:** Interface no frontend React Native.
-
-### 🔹 Frontend (React Native)
-Interface responsiva e fácil de usar para interagir entre pais e perueiros.
-
----
-
-## ⚛️ Configuração do Projeto
-
-### 🔹 Backend (Spring Boot)
-1. Configure o banco de dados MySQL.
-2. Ajuste as propriedades `application.properties`.
-3. Compile e inicie o projeto com:  
-   ```bash
-   ./mvnw
-
----
-
-## 📜 Licença
-
-- Este projeto segue os termos acadêmicos e educativos do SENAC e é destinado ao aprendizado e uso não comercial.
-
----
-
-## 🙌 Agradecimentos
-
-- Obrigado aos membros da equipe que tornaram esse projeto possível:
-- Arthur, Kayke, Eliseu, Samuel, Thales, Lucas e Alexsandro.
-
----
