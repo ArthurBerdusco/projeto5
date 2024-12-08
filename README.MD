@@ -34,7 +34,6 @@ O **OTIO** é um aplicativo mobile desenvolvido em **React Native** e com backen
 
 - **Cadastro e Login**  
   Interface intuitiva para cadastro e login dos pais responsáveis.  
-  ![Login](docs/imagens/login.jpeg)  
 
 - **Buscar Perueiros**  
   Interface para procurar perueiros que atendem às escolas das crianças.  
@@ -73,6 +72,27 @@ O **OTIO** é um aplicativo mobile desenvolvido em **React Native** e com backen
 
 - **Gestão Centralizada**  
   Ferramentas administrativas para gerenciar todos os dados e funcionalidades do sistema.  
+
+---
+
+## 📜 Tabela das Imagens
+
+| **Descrição**                   | **Imagem**                         |
+|---------------------------------|-------------------------------------|
+| Cadastro                       | ![Cadastro](docs/imagens/cadastro.jpeg) |
+| Login                           | ![Login](docs/imagens/login.jpeg) |
+| Perueiro - Escolas Atendidas  | ![Escolas Atendidas](docs/imagens/perueiro_escolasatendidas.jpeg) |
+| Perueiro - Procurar Escolas   | ![Procurar Escolas](docs/imagens/perueiro_escolas_procurar.jpeg) |
+| Perueiro - Escola das Crianças| ![Escola das Crianças](docs/imagens/perueiro_escola_criancas.jpeg) |
+| Perueiro - Home               | ![Home](docs/imagens/perueiro_home.jpeg) |
+| Perueiro - Minha Van         | ![Minha Van](docs/imagens/perueiro_minhavan.jpeg) |
+| Perueiro - Ofertas            | ![Ofertas](docs/imagens/perueiro_ofertas.jpeg) |
+| Perueiro - Organizar Crianças | ![Organizar Crianças](docs/imagens/perueiro_organizarcriancas.jpeg) |
+| Perueiro - Perfil             | ![Perfil](docs/imagens/perueiro_perfil.jpeg) |
+| Responsável - Criança Ausência | ![Responsável Ausência](docs/imagens/responsavel_crianca_ausencias.jpeg) |
+| Responsável - Perfil          | ![Perfil Responsável](docs/imagens/responsavel_perfil.jpeg) |
+| Responsável - Criança Perueiro | ![Responsável Perueiro](docs/imagens/responsavel_crianca_perueiro.jpeg) |
+| Responsável - Home            | ![Home Responsável](docs/imagens/responsavel_home.jpeg) |
 
 ---
 
