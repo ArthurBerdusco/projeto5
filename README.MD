@@ -79,11 +79,10 @@ O **OTIO** é um aplicativo mobile desenvolvido em **React Native** e com backen
 
 | **Descrição**                   | **Imagem**                         |
 |---------------------------------|-------------------------------------|
-| Cadastro                       | ![Cadastro](docs/imagens/cadastro.jpeg) |
 | Login                           | ![Login](docs/imagens/login.jpeg) |
 | Perueiro - Escolas Atendidas  | ![Escolas Atendidas](docs/imagens/perueiro_escolasatendidas.jpeg) |
 | Perueiro - Procurar Escolas   | ![Procurar Escolas](docs/imagens/perueiro_escolas_procurar.jpeg) |
-| Perueiro - Escola das Crianças| ![Escola das Crianças](docs/imagens/perueiro_escola_criancas.jpeg) |
+| Perueiro - Crianças por escola | ![Escola das Crianças](docs/imagens/perueiro_escola_criancas.jpeg) |
 | Perueiro - Home               | ![Home](docs/imagens/perueiro_home.jpeg) |
 | Perueiro - Minha Van         | ![Minha Van](docs/imagens/perueiro_minhavan.jpeg) |
 | Perueiro - Ofertas            | ![Ofertas](docs/imagens/perueiro_ofertas.jpeg) |
